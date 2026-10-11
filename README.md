@@ -25,8 +25,34 @@ python3 -m http.server 8080
 (ou `npx serve`, `php -S localhost:8080`, etc.)
 
 ## Déploiement
+
+### Statique simple
 N'importe quel hébergeur statique : **Netlify, Vercel, Cloudflare Pages, GitHub Pages, Nginx**.
 Il suffit de servir le répertoire tel quel (racine = ce dossier).
+
+### Docker + Caddy (reverse-proxy existant)
+Une image nginx servant le site en HTTP est fournie (`Dockerfile` + `docker-compose.yml`).
+Caddy termine le TLS et reverse-proxy vers le conteneur sur le réseau Docker partagé.
+
+```bash
+# 1. Vérifier le nom du réseau de Caddy
+docker network ls              # ex. "reverse_default"
+# 2. (si besoin) ajuster `name:` dans docker-compose.yml
+# 3. Construire + démarrer
+docker compose up -d --build
+```
+
+Bloc Caddyfile correspondant (le conteneur s'appelle `endoriumspace`, port 80) :
+
+```
+endorium.space {
+    import tls_alpn_only
+    reverse_proxy endoriumspace:80
+}
+```
+
+Puis recharger Caddy (`caddy reload` ou `docker exec <caddy> caddy reload ...`).
+Pour mettre à jour le site : `docker compose up -d --build`.
 
 ## À personnaliser avant mise en ligne
 Les valeurs entre crochets `[...]` sont des **placeholders** :

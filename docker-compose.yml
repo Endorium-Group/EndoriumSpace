@@ -1,0 +1,24 @@
+# Site vitrine EndoriumSpace — servi en HTTP statique, derrière ton Caddy.
+#
+# Caddy termine le TLS (Let's Encrypt) et reverse-proxy `endorium.space`
+# vers ce conteneur via le réseau Docker partagé (pas de port publié ici).
+#
+# 1) Vérifie le nom du réseau utilisé par Caddy :  docker network ls
+#    (souvent "<dossier>_default", ex. "reverse_default" si ton Caddy est dans ~/reverse)
+#    puis ajuste `name:` ci-dessous si besoin.
+# 2) Démarre :  docker compose up -d --build
+# 3) Mets à jour ton Caddyfile (voir plus bas) puis recharge Caddy.
+
+services:
+  endoriumspace:
+    build: .
+    image: endoriumspace:latest
+    container_name: endoriumspace
+    restart: unless-stopped
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+    name: reverse_default   # ← nom du réseau de ton Caddy (à vérifier)
