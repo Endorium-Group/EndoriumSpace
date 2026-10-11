@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Question — Communauté EndoriumFort</title>
+  <link rel="icon" type="image/png" href="../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+  <header class="hdr">
+    <div class="hdr-in">
+      <a class="brand" href="../index.html"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../index.html">Site</a>
+        <a href="../docs/">Docs</a>
+        <a href="./" class="active">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <main class="qd" id="qd">Chargement…</main>
+
+  <script src="../assets/md.js"></script>
+  <script src="data/questions.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var params = new URLSearchParams(location.search);
+    var id = parseInt(params.get("id"), 10);
+    var slug = params.get("slug");
+    var Q = window.EFQA || [];
+    var q = Q.filter(function (x) { return (id && x.id === id) || (slug && x.slug === slug); })[0];
+    var el = document.getElementById("qd");
+
+    if (!q) {
+      el.innerHTML = '<p class="back"><a href="./">← Communauté</a></p><h1>Question introuvable</h1><p>Cette question n\'existe pas ou a été déplacée.</p>';
+    } else {
+      document.title = q.title + " — Communauté EndoriumFort";
+      var answers = (q.answers || []).slice().sort(function (a, b) {
+        if (a.accepted !== b.accepted) return a.accepted ? -1 : 1;
+        return b.votes - a.votes;
+      });
+      var tagsHtml = (q.tags || []).map(function (t) { return '<a class="tag" href="./?tag=' + t + '">' + t + "</a>"; }).join(" ");
+
+      function post(body, votes, accepted, author, date, isQuestion) {
+        return '<div class="post">' +
+          '<div class="votes">' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5l7 8H5z"/></svg>' +
+            '<span class="score">' + votes + "</span>" +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l-7-8h14z"/></svg>' +
+            (accepted ? '<span class="acc" title="Réponse acceptée"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>' : "") +
+          "</div>" +
+          '<div class="md">' + EFMD.render(body) +
+            '<div class="whobox">' + (isQuestion ? "demandé" : "répondu") + " par <strong>" + author + "</strong> · " + date + "</div>" +
+          "</div>" +
+        "</div>";
+      }
+
+      el.innerHTML =
+        '<p class="back"><a href="./">← Toutes les questions</a></p>' +
+        "<h1>" + q.title + "</h1>" +
+        '<div class="sub">' + (q.views || 0) + " vues · " + tagsHtml + "</div>" +
+        post(q.body, q.votes, false, q.author, q.date, true) +
+        '<div class="ans-head">' + answers.length + " réponse" + (answers.length > 1 ? "s" : "") + "</div>" +
+        answers.map(function (a) { return post(a.body, a.votes, a.accepted, a.author, a.date, false); }).join("") +
+        '<p class="disclaimer">Contenu communautaire curé. Une correction ou une réponse à proposer ? Contribuez via le dépôt du projet.</p>';
+
+      EFMD.addCopyButtons(el);
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", function () {
+      var n = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", n);
+      try { localStorage.setItem("ef-theme", n); } catch (e) {}
+    });
+  })();
+  </script>
+</body>
+</html>

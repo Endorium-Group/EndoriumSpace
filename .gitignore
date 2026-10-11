@@ -1,0 +1,14 @@
+# Dépendances / build (si vous ajoutez un bundler plus tard)
+node_modules/
+dist/
+.cache/
+
+# OS / éditeurs
+.DS_Store
+Thumbs.db
+*.local
+.vscode/
+.idea/
+
+# Logs
+*.log

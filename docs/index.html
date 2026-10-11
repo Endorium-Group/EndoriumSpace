@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documentation — EndoriumFort</title>
+  <meta name="description" content="Documentation EndoriumFort Community Edition : installation, utilisation et procédures d'exploitation." />
+  <link rel="icon" type="image/png" href="../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../index.html"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../index.html">Site</a>
+        <a href="./" class="active">Docs</a>
+        <a href="../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="content">
+      <article class="content-inner md" id="content">Chargement…</article>
+    </main>
+  </div>
+
+  <script src="../assets/md.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    // Sommaire : sections → pages (fichiers dans content/).
+    var NAV = [
+      { group: "Prise en main", pages: [
+        { slug: "introduction", title: "Introduction", file: "introduction.md" },
+        { slug: "installation", title: "Installation (Docker)", file: "installation.md" },
+        { slug: "premier-demarrage", title: "Premier démarrage", file: "premier-demarrage.md" }
+      ]},
+      { group: "Utilisation", pages: [
+        { slug: "ressources", title: "Déclarer une ressource", file: "ressources.md" },
+        { slug: "session-ssh", title: "Session SSH", file: "session-ssh.md" },
+        { slug: "proxy-rbi", title: "Proxy HTTP & navigateur isolé", file: "proxy-rbi.md" },
+        { slug: "coffre", title: "Coffre-fort de secrets", file: "coffre.md" },
+        { slug: "mfa", title: "MFA (TOTP & passkeys)", file: "mfa.md" },
+        { slug: "utilisateurs", title: "Utilisateurs & rôles", file: "utilisateurs.md" },
+        { slug: "audit", title: "Journal d'audit", file: "audit.md" }
+      ]},
+      { group: "Exploitation", pages: [
+        { slug: "sauvegarde", title: "Sauvegarde & restauration", file: "sauvegarde.md" },
+        { slug: "mise-a-jour", title: "Mise à jour", file: "mise-a-jour.md" },
+        { slug: "durcissement", title: "Durcissement", file: "durcissement.md" },
+        { slug: "depannage", title: "Dépannage", file: "depannage.md" }
+      ]},
+      { group: "Référence", pages: [
+        { slug: "configuration", title: "Variables d'environnement", file: "configuration.md" },
+        { slug: "editions", title: "Éditions (CE/EE)", file: "editions.md" }
+      ]}
+    ];
+
+    var byslug = {};
+    NAV.forEach(function (g) { g.pages.forEach(function (p) { byslug[p.slug] = p; }); });
+    var first = NAV[0].pages[0].slug;
+
+    // Sidebar
+    var sb = document.getElementById("sidebar");
+    NAV.forEach(function (g) {
+      var h = document.createElement("h4"); h.textContent = g.group; sb.appendChild(h);
+      g.pages.forEach(function (p) {
+        var a = document.createElement("a"); a.href = "#/" + p.slug; a.textContent = p.title; a.dataset.slug = p.slug; sb.appendChild(a);
+      });
+    });
+
+    var content = document.getElementById("content");
+    var cache = {};
+
+    function load(slug) {
+      var p = byslug[slug] || byslug[first];
+      sb.querySelectorAll("a").forEach(function (a) { a.classList.toggle("active", a.dataset.slug === p.slug); });
+      document.getElementById("sidebar").classList.remove("open");
+      if (cache[p.slug]) { paint(p, cache[p.slug]); return; }
+      fetch("content/" + p.file).then(function (r) { return r.ok ? r.text() : "# " + p.title + "\n\n*Page en cours de rédaction.*"; })
+        .then(function (md) { cache[p.slug] = md; paint(p, md); })
+        .catch(function () { content.innerHTML = "<p>Impossible de charger la page.</p>"; });
+    }
+    function paint(p, md) {
+      content.innerHTML = EFMD.render(md);
+      EFMD.addCopyButtons(content);
+      document.title = p.title + " — Documentation EndoriumFort";
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener("hashchange", function () { load(location.hash.replace(/^#\//, "") || first); });
+    load(location.hash.replace(/^#\//, "") || first);
+
+    // Recherche : indexe tout le contenu une fois.
+    var index = null;
+    function buildIndex() {
+      if (index) return Promise.resolve(index);
+      var all = [];
+      NAV.forEach(function (g) { g.pages.forEach(function (p) { all.push(p); }); });
+      return Promise.all(all.map(function (p) {
+        return (cache[p.slug] ? Promise.resolve(cache[p.slug]) : fetch("content/" + p.file).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) { cache[p.slug] = t; return t; }))
+          .then(function (t) { return { slug: p.slug, title: p.title, group: groupOf(p.slug), text: EFMD.strip(t).toLowerCase() }; });
+      })).then(function (rows) { index = rows; return rows; });
+    }
+    function groupOf(slug) { var r = ""; NAV.forEach(function (g) { g.pages.forEach(function (p) { if (p.slug === slug) r = g.group; }); }); return r; }
+
+    var input = document.getElementById("search");
+    var box = document.getElementById("searchResults");
+    var timer;
+    input.addEventListener("input", function () {
+      clearTimeout(timer);
+      var q = input.value.trim().toLowerCase();
+      if (q.length < 2) { box.hidden = true; return; }
+      timer = setTimeout(function () {
+        buildIndex().then(function (rows) {
+          var hits = rows.filter(function (r) { return r.title.toLowerCase().indexOf(q) >= 0 || r.text.indexOf(q) >= 0; }).slice(0, 8);
+          if (!hits.length) { box.innerHTML = '<div class="empty">Aucun résultat.</div>'; box.hidden = false; return; }
+          box.innerHTML = hits.map(function (h) { return '<a href="#/' + h.slug + '"><div class="s-title">' + h.title + '</div><div class="s-crumb">' + h.group + '</div></a>'; }).join("");
+          box.hidden = false;
+        });
+      }, 120);
+    });
+    document.addEventListener("click", function (e) { if (!e.target.closest(".search")) box.hidden = true; });
+    box.addEventListener("click", function () { box.hidden = true; input.value = ""; });
+
+    // Thème + menu mobile
+    document.getElementById("themeToggle").addEventListener("click", function () {
+      var n = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", n);
+      try { localStorage.setItem("ef-theme", n); } catch (e) {}
+    });
+    document.getElementById("menuBtn").addEventListener("click", function () { document.getElementById("sidebar").classList.toggle("open"); });
+  })();
+  </script>
+</body>
+</html>
