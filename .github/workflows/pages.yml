@@ -1,0 +1,77 @@
+# Publishes the site to GitHub Pages, with the interactive demo under /demo/.
+# The demo is the EndoriumFort Enterprise frontend (private NergYR/EndoriumFort,
+# pinned below, frontend/ only) built against the in-browser API of demo/src/.
+# Secret EF_SOURCE_TOKEN: fine-grained token, read-only "Contents" on that repo.
+name: Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      ee_ref:
+        description: "EndoriumFort tag or branch for the demo"
+        required: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  EE_REF: ${{ inputs.ee_ref || 'v1.0.52' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Check out EndoriumFort Enterprise frontend
+        uses: actions/checkout@v4
+        with:
+          repository: NergYR/EndoriumFort
+          ref: ${{ env.EE_REF }}
+          token: ${{ secrets.EF_SOURCE_TOKEN }}
+          path: _ee
+          sparse-checkout: frontend
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: _ee/frontend/package-lock.json
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp index.html styles.css main.js 404.html _site/
+          cp -r assets docs community legal _site/
+
+      - name: Build demo
+        # base_path is "/<repo>" on github.io, "" with a custom domain.
+        run: demo/build.sh _ee _site/demo "${{ steps.pages.outputs.base_path }}/demo/"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

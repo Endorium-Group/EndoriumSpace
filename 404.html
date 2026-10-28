@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Page introuvable — EndoriumFort</title>
+  <script>
+    // GitHub Pages serves this page for any unknown path. Routes of the demo
+    // (a single-page app under …/demo/) go back to it as ?p=/route.
+    (function () {
+      var path = location.pathname;
+      var i = path.indexOf("/demo/");
+      if (i !== -1) {
+        var base = path.slice(0, i + 5);
+        location.replace(base + "/?p=" + encodeURIComponent(path.slice(i + 5)) + location.hash);
+      }
+    })();
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px;
+      background: #0b1220; color: #dbe5f3; font: 16px/1.5 "IBM Plex Sans", system-ui, sans-serif; text-align: center;
+    }
+    h1 { font: 600 28px/1.2 "Space Grotesk", system-ui, sans-serif; margin: 0 0 8px; }
+    p { margin: 0 0 20px; color: #94a3b8; }
+    a { color: #7dd3fc; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Page introuvable</h1>
+    <p>Cette page n'existe pas ou a été déplacée.</p>
+    <a id="home" href="/">Retour à l'accueil</a>
+  </main>
+  <script>
+    // Project sites live under /<repo>/: link to that root, not the domain's.
+    var seg = location.pathname.split("/").filter(Boolean)[0];
+    if (seg && location.hostname.endsWith(".github.io")) document.getElementById("home").href = "/" + seg + "/";
+  </script>
+</body>
+</html>

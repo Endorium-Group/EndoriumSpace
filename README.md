@@ -24,7 +24,51 @@ python3 -m http.server 8080
 ```
 (ou `npx serve`, `php -S localhost:8080`, etc.)
 
+## Démo interactive (`demo/`)
+`/demo/` sert la vraie interface **EndoriumFort Enterprise** (dépôt privé
+`NergYR/EndoriumFort`, version figée dans `.github/workflows/pages.yml`, seul `frontend/`
+est récupéré), sans serveur : l'API est simulée dans le navigateur.
+
+```
+demo/
+├── src/shim.js          # point d'entrée : intercepte fetch/WebSocket, sous-chemin, bandeau « Démo »
+├── src/api.js           # API simulée (état en sessionStorage, réinitialisable)
+├── src/shell.js         # terminal SSH / exec Kubernetes simulés, garde de commandes, enregistrement
+├── src/host.js          # sorties des commandes des hôtes simulés
+├── src/fixtures.json    # réponses enregistrées depuis un vrai bastion Enterprise
+├── capture/             # régénère fixtures.json (voir capture/README.md)
+├── vite.config.demo.mjs # build du frontend pour la démo (sources produit non modifiées)
+└── build.sh             # demo/build.sh <checkout EndoriumFort> <sortie> [base]
+```
+
+- Connexion avec n'importe quel mot de passe : `admin`, `c.moreau` (opérateur), `s.lefevre` (auditeur).
+- Simulé avec l'état de l'onglet : politiques JIT, profils, demandes et double validation,
+  ouverture de session (motif, ticket, objectif, MFA), coffre (mot de passe injecté), terminal SSH
+  et exec Kubernetes, garde de commandes, enregistrements rejouables, Session DNA et paquets de preuve
+  (chaîne recalculée comme sur le bastion), journal.
+- Rejoué tel qu'enregistré : SSO, LDAP, SCIM, SIEM/ITSM, relais, cluster, ITDR, centre de sécurité.
+- Non simulé : navigateur isolé (RBI), VNC et RDP (message explicite).
+- Données 100 % fictives ; rien ne quitte le navigateur.
+
+Build local :
+```bash
+git clone --depth 1 --branch v1.0.52 https://github.com/NergYR/EndoriumFort /tmp/ee   # accès requis
+demo/build.sh /tmp/ee ./_site/demo /demo/
+```
+
+Après une montée de version : changer `EE_REF` dans le workflow, relancer la capture
+(`demo/capture/README.md`) et vérifier la démo.
+
 ## Déploiement
+
+### GitHub Pages (en place)
+Le workflow `.github/workflows/pages.yml` publie le site + la démo à chaque push sur `master`
+(ou à la main, avec un tag au choix) sur https://endorium-group.github.io/EndoriumSpace/.
+Prérequis une seule fois :
+- *Settings → Pages → Source : GitHub Actions* ;
+- secret `EF_SOURCE_TOKEN` : jeton *fine-grained*, accès **lecture seule « Contents »** au seul
+  dépôt `NergYR/EndoriumFort` (le workflow n'en récupère que `frontend/`).
+`404.html` renvoie les liens profonds de la démo (ex. `/demo/sessions`) vers l'application.
 
 ### Statique simple
 N'importe quel hébergeur statique : **Netlify, Vercel, Cloudflare Pages, GitHub Pages, Nginx**.

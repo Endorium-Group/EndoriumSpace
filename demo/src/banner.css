@@ -1,0 +1,57 @@
+.efdemo {
+  position: fixed;
+  right: 16px;
+  bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+  z-index: 2147483000;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 12px;
+  background: rgba(11, 18, 32, 0.94);
+  color: #dbe5f3;
+  font: 12.5px/1.45 "IBM Plex Sans", system-ui, sans-serif;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.efdemo p {
+  margin: 0 0 4px;
+}
+.efdemo p:last-child {
+  margin: 0;
+}
+.efdemo .efdemo__tag {
+  flex: none;
+  padding: 2px 9px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  color: #fff;
+  font: 600 12px/1.6 "IBM Plex Sans", system-ui, sans-serif;
+  cursor: pointer;
+}
+.efdemo--closed {
+  padding: 6px;
+}
+.efdemo--closed .efdemo__body {
+  display: none;
+}
+.efdemo code {
+  font: 11.5px "IBM Plex Mono", ui-monospace, monospace;
+  color: #7dd3fc;
+}
+.efdemo a,
+.efdemo .efdemo__reset {
+  font: inherit;
+  color: #7dd3fc;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+.efdemo a:hover,
+.efdemo .efdemo__reset:hover {
+  text-decoration: underline;
+}
