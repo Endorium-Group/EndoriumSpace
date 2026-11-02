@@ -6,7 +6,7 @@ EndoriumFort suit un modèle **open-core**.
 
 - **Gratuite et open-source**, dépôt public.
 - Buildable et exécutable **seule**, sans licence.
-- Couvre tout ce que décrit cette documentation : SSH web, proxy HTTP, navigateur isolé, MFA, coffre-fort, RBAC, audit infalsifiable, [rapports d'activité](#/rapports), [partage de fichiers](#/partage-fichiers), 1 nœud autonome.
+- Couvre tout ce que décrit cette documentation : SSH web, proxy HTTP, navigateur isolé, MFA, coffre-fort, RBAC, audit infalsifiable, [rapports d'activité](#/rapports), [partage de fichiers](#/partage-fichiers), transfert de fichiers dans les sessions SSH (SFTP, repli SCP), 1 nœud autonome.
 
 ## Enterprise Edition (EE)
 
@@ -16,7 +16,6 @@ Ajoute des modules premium, **physiquement absents** du dépôt public et activ�
 - **SSO** (OIDC/SAML), **LDAP/AD**, **SCIM**.
 - **Cluster / haute disponibilité**.
 - **Enregistrement & relecture** de sessions, Session DNA, evidence packs.
-- **Transfert de fichiers** dans les sessions SSH (SFTP, repli SCP), autorisé ressource par ressource.
 - **Gouvernance JIT** : double approbation, accès temporaires, identifiants éphémères, élévation.
 - **Security Center**, incidents, ITDR, **SIEM/ITSM**.
 - **Rotation automatique** des secrets + planificateur.
