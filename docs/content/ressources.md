@@ -8,7 +8,7 @@ Une **ressource** est une cible à laquelle les utilisateurs accèdent via le ba
 2. Allez dans **Ressources → Ajouter**.
 3. Renseignez :
    - **Nom** : libellé lisible (ex. « Serveur de prod — DB »).
-   - **Protocole** : `ssh` ou `http`/`https` (le `rdp`/`vnc` relève de l'édition Enterprise).
+   - **Protocole** : `ssh`, `http`/`https` ou `fileshare` (drive de fichiers, voir [Partage de fichiers](#/partage-fichiers)) ; le `rdp`/`vnc` relève de l'édition Enterprise.
    - **Cible** : l'adresse de la machine (IP ou nom d'hôte **tel que vu par le bastion**).
    - **Port** : le port du service (22 pour SSH, 80/443 pour HTTP(S)…).
 4. Enregistrez.
@@ -32,5 +32,6 @@ Voir [Utilisateurs & rôles](#/utilisateurs).
 Depuis le tableau de bord, ouvrez une session vers la ressource :
 - SSH → [Session SSH](#/session-ssh)
 - Web → [Proxy HTTP & navigateur isolé](#/proxy-rbi)
+- Fichiers → [Partage de fichiers](#/partage-fichiers)
 
 > Pour atteindre des ressources sur un **réseau distant** (autre site, domicile d'un intervenant), un **relais** est nécessaire — fonctionnalité Enterprise.

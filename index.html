@@ -126,6 +126,9 @@
           <article class="card"><span class="badge badge--ce">CE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M8 7h.01M8 17h.01"/></svg></div><h3>Audit infalsifiable</h3><p>Journal d'événements chaîné (HMAC) : toute altération est détectable et vérifiable.</p></article>
           <article class="card"><span class="badge badge--ee">EE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div><h3>SSO, LDAP/AD, SCIM</h3><p>Fédération d'identité (OIDC/SAML), annuaire et provisioning automatisé.</p></article>
           <article class="card"><span class="badge badge--ee">EE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="8" y="14" width="8" height="6" rx="1"/><path d="M6.5 11v2M17.5 11v2M12 16v-2"/></svg></div><h3>Cluster &amp; relais</h3><p>Haute disponibilité et accès multi-sites via relais déployés sur des réseaux distants.</p></article>
+          <article class="card"><span class="badge badge--ce">CE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><h3>Rapports d'activité</h3><p>Sessions, connexions, demandes et commandes bloquées sur un jour, un mois, un trimestre ou un an, comparés à la période précédente. Export CSV, lui-même journalisé.</p></article>
+          <article class="card"><span class="badge badge--ce">CE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v5M9.5 13.5 12 11l2.5 2.5"/></svg></div><h3>Partage de fichiers</h3><p>Un drive web par utilisateur, avec partages en lecture seule ou lecture/écriture et expiration. Servi par un service isolé, ouvert comme une session du bastion.</p></article>
+          <article class="card"><span class="badge badge--ee">EE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v13M3 13l4 4 4-4M17 20V7M13 11l4-4 4 4"/></svg></div><h3>Transfert de fichiers SSH</h3><p>Parcourir, télécharger et déposer des fichiers sur la cible d'une session (SFTP, repli SCP). Désactivé par défaut, autorisé ressource par ressource.</p></article>
         </div>
       </div>
     </section>
@@ -138,8 +141,8 @@
           <h2>Une seule image. Votre infrastructure.</h2>
         </div>
         <div class="arch reveal">
-          <div class="node"><div class="k">Déploiement</div><h3>Une image Docker</h3><p>Backend, interface et agent dans une image unique. Aussi Helm/Kubernetes et tarball signé pour l'air-gap.</p></div>
-          <div class="node"><div class="k">Accès</div><h3>Protocoles unifiés</h3><p>SSH, RDP, VNC, proxy HTTP et navigateur isolé, derrière une authentification et un audit communs.</p></div>
+          <div class="node"><div class="k">Déploiement</div><h3>Une image Docker</h3><p>Backend, interface et agent dans une image unique ; le partage de fichiers dans un service séparé et cloisonné. Aussi Helm/Kubernetes et tarball signé pour l'air-gap.</p></div>
+          <div class="node"><div class="k">Accès</div><h3>Protocoles unifiés</h3><p>SSH, RDP, VNC, proxy HTTP, navigateur isolé et drive de fichiers, derrière une authentification et un audit communs.</p></div>
           <div class="node"><div class="k">Portée</div><h3>Direct ou via relais</h3><p>Atteignez les ressources locales directement, ou des réseaux distants via un relais — même isolés.</p></div>
         </div>
       </div>
@@ -167,8 +170,11 @@
             <tr><td>MFA (TOTP + passkeys), RBAC</td><td class="yes">✓</td><td class="yes">✓</td></tr>
             <tr><td>Coffre-fort AES-256-GCM</td><td class="yes">✓</td><td class="yes">✓</td></tr>
             <tr><td>Audit infalsifiable &amp; sessions live</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+            <tr><td>Rapports d'activité (jour → année, export CSV)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+            <tr><td>Partage de fichiers (drive web, partages)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
             <tr><td>RDP &amp; VNC</td><td class="no">—</td><td class="yes">✓</td></tr>
             <tr><td>Enregistrement &amp; relecture de sessions</td><td class="no">—</td><td class="yes">✓</td></tr>
+            <tr><td>Transfert de fichiers dans les sessions SSH (SFTP/SCP)</td><td class="no">—</td><td class="yes">✓</td></tr>
             <tr><td>Gouvernance JIT (double approbation, élévation)</td><td class="no">—</td><td class="yes">✓</td></tr>
             <tr><td>SSO (OIDC/SAML), LDAP/AD, SCIM</td><td class="no">—</td><td class="yes">✓</td></tr>
             <tr><td>Cluster / haute disponibilité, relais</td><td class="no">—</td><td class="yes">✓</td></tr>
@@ -195,7 +201,7 @@
         <div class="grid grid-3" style="margin-bottom:34px">
           <article class="card"><h3>Cryptographie éprouvée</h3><p>SHA-256/HMAC, scrypt, AES-256-GCM et CSPRNG via OpenSSL. Aucune cryptographie maison.</p></article>
           <article class="card"><h3>Licence post-quantique</h3><p>Signature hybride Ed25519 + ML-DSA-65, vérifiée 100 % hors-ligne — compatible air-gap.</p></article>
-          <article class="card"><h3>Données protégées</h3><p>Base chiffrée au repos (SQLCipher), secrets en coffre AES-GCM, backend non-root, TLS 1.2/1.3.</p></article>
+          <article class="card"><h3>Données protégées</h3><p>Base chiffrée au repos (SQLCipher), secrets en coffre AES-GCM, backend non-root, TLS 1.2/1.3. Les fichiers partagés restent dans un service à part, sans accès à la base ni au réseau sortant.</p></article>
         </div>
         <div class="center">
           <p style="font-weight:600; color:var(--text); margin-bottom:6px;">Conçu pour s'aligner sur les principaux référentiels</p>
