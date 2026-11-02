@@ -53,7 +53,7 @@ export async function sshThroughBastion(API, token, sessionId, password, command
   return output;
 }
 
-export async function seed(API, { sshHost, sshPort, sshPassword }) {
+export async function seed(API, { sshHost, sshPort, sshPassword, filesUrl }) {
   const { call, login } = client(API);
   const log = (...a) => console.log('[seed]', ...a);
   const soft = async (label, fn) => { try { return await fn(); } catch (e) { log('skip', label, '—', e.message); return null; } };
@@ -91,23 +91,24 @@ export async function seed(API, { sshHost, sshPort, sshPassword }) {
     ssh({ name: 'srv-web-prod-01', tagsCsv: 'zone:prod,app:portail', description: 'Frontal web nginx — production', riskLevel: 'high', requireAccessJustification: true, enableCommandGuard: true }),
     ssh({ name: 'srv-web-prod-02', tagsCsv: 'zone:prod,app:portail', description: 'Frontal web nginx — production', riskLevel: 'high', requireAccessJustification: true, enableCommandGuard: true }),
     ssh({ name: 'db-pg-prod', sshUsername: 'postgres', tagsCsv: 'zone:prod,app:donnees', description: 'PostgreSQL 16 primaire', riskLevel: 'critical', requireAccessJustification: true, requireDualApproval: true, enableCommandGuard: true }),
-    ssh({ name: 'srv-app-recette', tagsCsv: 'zone:recette,app:portail', description: 'Serveur applicatif de recette' }),
-    ssh({ name: 'ci-runner-01', sshUsername: 'runner', tagsCsv: 'zone:outillage', description: 'Runner CI GitLab' }),
+    ssh({ name: 'srv-app-recette', tagsCsv: 'zone:recette,app:portail', description: 'Serveur applicatif de recette', allowFileDownload: true, allowFileUpload: true }),
+    ssh({ name: 'ci-runner-01', sshUsername: 'runner', tagsCsv: 'zone:outillage', description: 'Runner CI GitLab', allowFileDownload: true }),
     { name: 'ad-dc01', target: '10.10.0.10', port: 3389, protocol: 'rdp', tagsCsv: 'zone:infra,app:annuaire', description: 'Contrôleur de domaine Active Directory', riskLevel: 'critical', requireAccessJustification: true, requireDualApproval: true },
     { name: 'win-rds-01', target: '10.10.0.21', port: 3389, protocol: 'rdp', tagsCsv: 'zone:infra', description: 'Serveur de bureaux distants' },
     { name: 'hyperviseur-pve', target: '10.10.0.2', port: 8006, protocol: 'https', tagsCsv: 'zone:infra', description: 'Console Proxmox VE', riskLevel: 'high' },
     { name: 'grafana', target: 'grafana.interne.local', port: 443, protocol: 'https', tagsCsv: 'zone:outillage,app:supervision', description: 'Tableaux de bord de supervision' },
     { name: 'automate-ligne-3', target: '192.168.50.30', port: 5900, protocol: 'vnc', tagsCsv: 'zone:ot', description: 'IHM automate atelier — ligne 3', riskLevel: 'high' },
     ssh({ name: 'switch-coeur', sshUsername: 'netadmin', tagsCsv: 'zone:reseau', description: 'Commutateur cœur de réseau', riskLevel: 'high' }),
-    { name: 'k8s-prod', target: 'k8s-api.interne.local', port: 6443, protocol: 'k8s', tagsCsv: 'zone:prod,app:plateforme', description: 'Cluster Kubernetes de production', riskLevel: 'high' }
+    { name: 'k8s-prod', target: 'k8s-api.interne.local', port: 6443, protocol: 'k8s', tagsCsv: 'zone:prod,app:plateforme', description: 'Cluster Kubernetes de production', riskLevel: 'high' },
+    { name: 'partage-equipes', target: 'fichiers', protocol: 'fileshare', tagsCsv: 'zone:outillage', description: 'Drive des équipes : livrables, exports, procédures' }
   ];
   for (const f of defs) res[f.name] = await post('/api/resources', { riskLevel: 'low', ...f });
   const id = (name) => res[name]?.id;
 
   const assign = {
-    'c.moreau': ['srv-web-prod-01', 'srv-web-prod-02', 'srv-app-recette', 'ci-runner-01', 'grafana', 'db-pg-prod', 'k8s-prod'],
-    'l.bernard': ['ad-dc01', 'win-rds-01', 'hyperviseur-pve', 'switch-coeur'],
-    'n.petit': ['srv-app-recette', 'grafana', 'automate-ligne-3'],
+    'c.moreau': ['srv-web-prod-01', 'srv-web-prod-02', 'srv-app-recette', 'ci-runner-01', 'grafana', 'db-pg-prod', 'k8s-prod', 'partage-equipes'],
+    'l.bernard': ['ad-dc01', 'win-rds-01', 'hyperviseur-pve', 'switch-coeur', 'partage-equipes'],
+    'n.petit': ['srv-app-recette', 'grafana', 'automate-ligne-3', 'partage-equipes'],
     'prestataire.acme': ['srv-app-recette']
   };
   for (const [u, list] of Object.entries(assign)) for (const r of list) if (id(r)) await post(`/api/users/${users[u].id}/resources/${id(r)}`, {});
@@ -190,5 +191,42 @@ export async function seed(API, { sshHost, sshPort, sshPassword }) {
   // Background jobs, so detections and sweeps show results.
   for (const job of ['itdr-scan', 'vault-rotation-sweep']) await post(`/api/automation/jobs/${job}/run`, {});
 
-  return { admin, adminPassword, totpSecret: setup.secret, userPassword, users, res, sessions, requests: { r1, r2, r3, r4 } };
+  // File share drives, filled through the real file service.
+  const drives = filesUrl ? await soft('drives', () => seedDrives(API, filesUrl, res['partage-equipes'], { 'c.moreau': op, 'l.bernard': lb, admin: admin })) : null;
+
+  return { admin, adminPassword, totpSecret: setup.secret, userPassword, users, res, sessions, requests: { r1, r2, r3, r4 }, drives };
+}
+
+// Opens a drive session for each user (bastion session → ticket → service
+// cookie) and fills it: folders, files, and a share from c.moreau to l.bernard.
+export async function seedDrives(API, filesUrl, resource, logins) {
+  const { call } = client(API);
+  const rid = resource.id;
+  const drives = {};
+  for (const [user, login] of Object.entries(logins)) {
+    const session = await call(login.token, '/api/sessions', { method: 'POST', body: { resourceId: rid, target: resource.target, user, protocol: 'fileshare', port: resource.port, justification: 'Échange de livrables', purpose: 'Partage de fichiers' } });
+    const ticket = await call(login.token, `/api/sessions/${session.id}/fileshare-ticket`, { method: 'POST' });
+    const open = await fetch(`${filesUrl}/files/api/r/${rid}/session`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-EF-Files': '1' }, body: JSON.stringify({ ticket: ticket.ticket }) });
+    const cookie = (open.headers.get('set-cookie') || '').split(';')[0];
+    const send = async (method, route, body, raw) => {
+      const r = await fetch(`${filesUrl}/files/api/r/${rid}/${route}`, { method, headers: { 'X-EF-Files': '1', Cookie: cookie, ...(raw ? { 'Content-Type': 'application/octet-stream' } : body ? { 'Content-Type': 'application/json' } : {}) }, body: raw || (body ? JSON.stringify(body) : undefined) });
+      const text = await r.text();
+      try { return JSON.parse(text); } catch (_) { return text; }
+    };
+    drives[user] = { session, ticket, opened: await open.json(), send };
+  }
+  const cm = drives['c.moreau'].send;
+  await cm('POST', 'mkdir', { root: 'home', path: '/', name: 'Livrables release 4.12' });
+  await cm('POST', 'mkdir', { root: 'home', path: '/', name: 'Procédures' });
+  const put = (send, dir, name, content) => send('PUT', `upload?root=home&path=${encodeURIComponent(dir)}&name=${encodeURIComponent(name)}`, null, content);
+  await put(cm, '/Livrables release 4.12', 'notes-de-version.md', '# Release 4.12\n\n- Correctif cache des sessions\n- Mise à jour nginx 1.28\n');
+  await put(cm, '/Livrables release 4.12', 'plan-de-deploiement.txt', 'Fenêtre : mardi 21:00-22:00\nRetour arrière : tag 4.11.3\n');
+  await put(cm, '/Procédures', 'redemarrage-portail.md', '# Redémarrage du portail\n\n1. Drainer srv-web-prod-01\n2. systemctl restart nginx\n');
+  await put(cm, '/', 'inventaire-serveurs.csv', 'nom;zone;os\nsrv-web-prod-01;prod;Debian 13\nsrv-web-prod-02;prod;Debian 13\n');
+  const share = await cm('POST', 'shares', { path: '/Livrables release 4.12', grantee: 'l.bernard', mode: 'rw', expiresInDays: 30 });
+  await cm('POST', 'shares', { path: '/Procédures', grantee: 'admin', mode: 'ro', expiresInDays: 0 });
+  const lbs = drives['l.bernard'].send;
+  await lbs('POST', 'mkdir', { root: 'home', path: '/', name: 'Exports AD' });
+  await put(lbs, '/Exports AD', 'comptes-inactifs-2026-10.csv', 'compte;dernier_login\nj.durand;2026-06-02\n');
+  return { rid, share, drives };
 }

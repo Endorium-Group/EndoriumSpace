@@ -35,6 +35,7 @@ demo/
 ├── src/api.js           # API simulée (état en sessionStorage, réinitialisable)
 ├── src/shell.js         # terminal SSH / exec Kubernetes simulés, garde de commandes, enregistrement
 ├── src/host.js          # sorties des commandes des hôtes simulés
+├── src/v56.js           # rapports (port de reporting.cc), transfert SSH, drive de fichiers
 ├── src/fixtures.json    # réponses enregistrées depuis un vrai bastion Enterprise
 ├── capture/             # régénère fixtures.json (voir capture/README.md)
 ├── vite.config.demo.mjs # build du frontend pour la démo (sources produit non modifiées)
@@ -45,14 +46,15 @@ demo/
 - Simulé avec l'état de l'onglet : politiques JIT, profils, demandes et double validation,
   ouverture de session (motif, ticket, objectif, MFA), coffre (mot de passe injecté), terminal SSH
   et exec Kubernetes, garde de commandes, enregistrements rejouables, Session DNA et paquets de preuve
-  (chaîne recalculée comme sur le bastion), journal.
+  (chaîne recalculée comme sur le bastion), journal, rapports d'activité (calculés sur le journal,
+  avec 180 jours d'historique simulé), transfert de fichiers SSH, drive de fichiers et partages.
 - Rejoué tel qu'enregistré : SSO, LDAP, SCIM, SIEM/ITSM, relais, cluster, ITDR, centre de sécurité.
 - Non simulé : navigateur isolé (RBI), VNC et RDP (message explicite).
 - Données 100 % fictives ; rien ne quitte le navigateur.
 
 Build local :
 ```bash
-git clone --depth 1 --branch v1.0.52 https://github.com/NergYR/EndoriumFort /tmp/ee   # accès requis
+git clone --depth 1 --branch v1.0.56 https://github.com/NergYR/EndoriumFort /tmp/ee   # accès requis
 demo/build.sh /tmp/ee ./_site/demo /demo/
 ```
 

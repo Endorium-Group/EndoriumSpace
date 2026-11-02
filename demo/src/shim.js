@@ -25,18 +25,87 @@ const deepLink = new URLSearchParams(window.location.search).get('p');
 if (deepLink && deepLink.startsWith('/')) window.history.replaceState(null, '', deepLink);
 
 // ── API ──────────────────────────────────────────────────────────────────────
+// /api/* is the bastion; /files/api/* the file share service next to it.
+const simulated = (url) => url.origin === window.location.origin && (url.pathname.startsWith('/api/') || url.pathname.startsWith('/files/api/'));
 const realFetch = window.fetch.bind(window);
 window.fetch = async (input, init = {}) => {
   const url = new URL(typeof input === 'string' || input instanceof URL ? String(input) : input.url, window.location.origin);
-  if (url.origin !== window.location.origin || !url.pathname.startsWith('/api/')) return realFetch(input, init);
+  if (!simulated(url)) return realFetch(input, init);
   const method = String(init.method || (input instanceof Request ? input.method : 'GET')).toUpperCase();
   let body = null;
   if (typeof init.body === 'string') {
     try { body = JSON.parse(init.body); } catch (_) { body = init.body; }
   }
   await new Promise((resolve) => setTimeout(resolve, 60 + Math.random() * 140));
-  return handle(method, url, body);
+  return handle(method, url, body, init.body);
 };
+
+// The drive uploads with XMLHttpRequest (for its progress bar).
+const RealXHR = window.XMLHttpRequest;
+class DemoXHR extends RealXHR {
+  open(method, href, ...rest) {
+    const url = new URL(href, window.location.origin);
+    this.demo = simulated(url) ? { method: String(method).toUpperCase(), url, status: 0, text: '' } : null;
+    if (!this.demo) super.open(method, href, ...rest);
+  }
+  setRequestHeader(name, value) {
+    if (!this.demo) super.setRequestHeader(name, value);
+  }
+  get status() { return this.demo ? this.demo.status : super.status; }
+  get responseText() { return this.demo ? this.demo.text : super.responseText; }
+  get readyState() { return this.demo ? (this.demo.status ? 4 : 1) : super.readyState; }
+  abort() {
+    if (!this.demo) return super.abort();
+    this.demo.aborted = true;
+    this.onabort?.();
+  }
+  async send(data) {
+    if (!this.demo) return super.send(data);
+    const total = data?.size || 1;
+    for (const step of [0.35, 0.7, 1]) {
+      await new Promise((r) => setTimeout(r, 150));
+      if (this.demo.aborted) return;
+      this.upload.onprogress?.({ lengthComputable: true, loaded: total * step, total });
+    }
+    const response = await handle(this.demo.method, this.demo.url, null, data);
+    this.demo.text = await response.text();
+    this.demo.status = response.status;
+    this.onload?.();
+  }
+}
+window.XMLHttpRequest = DemoXHR;
+
+// Download links (drive files, SSH transfer) point at simulated routes: fetch
+// them here and hand the browser the file.
+const isDownload = (href) => {
+  try {
+    const url = new URL(href, window.location.origin);
+    return simulated(url) && /\/download$/.test(url.pathname) ? url : null;
+  } catch (_) { return null; }
+};
+async function saveDownload(url) {
+  const response = await handle('GET', url, null, null);
+  if (!response.ok) return;
+  const name = (response.headers.get('Content-Disposition') || '').match(/filename="([^"]+)"/)?.[1] || 'fichier';
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(await response.blob());
+  link.download = name;
+  realClick.call(link);
+  setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+}
+const realClick = HTMLAnchorElement.prototype.click;
+HTMLAnchorElement.prototype.click = function click() {
+  const url = isDownload(this.href);
+  if (url) return void saveDownload(url);
+  return realClick.call(this);
+};
+document.addEventListener('click', (event) => {
+  const link = event.target?.closest?.('a[href]');
+  const url = link && isDownload(link.href);
+  if (!url) return;
+  event.preventDefault();
+  saveDownload(url);
+}, true);
 installWebSocket();
 
 // ── Banner ───────────────────────────────────────────────────────────────────

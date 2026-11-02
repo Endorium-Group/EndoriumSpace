@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  EE_REF: ${{ inputs.ee_ref || 'v1.0.52' }}
+  EE_REF: ${{ inputs.ee_ref || 'v1.0.56' }}
 
 jobs:
   build:

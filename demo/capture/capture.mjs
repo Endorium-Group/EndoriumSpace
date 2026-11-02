@@ -15,6 +15,9 @@ import { hostOutput } from '../src/host.js';
 const EE = path.resolve(process.argv[2] || '');
 const API = process.argv[3] || 'http://localhost:8095';
 const UI_PORT = 5176;
+const FILES_PORT = 8090; // the Vite dev server proxies /files here
+// Shared with the bastion, which must run with the same ENDORIUMFORT_FILESHARE_SECRET.
+const FILES_SECRET = process.env.ENDORIUMFORT_FILESHARE_SECRET || '';
 const UI = `http://localhost:${UI_PORT}`;
 const SSH_PORT = 2299;
 const OUT = new URL('../src/fixtures.json', import.meta.url);
@@ -82,7 +85,20 @@ function startUi() {
 
 const sshPassword = 'demo-ssh-' + Math.random().toString(36).slice(2, 10);
 const sshServer = await startFakeSsh(sshPassword);
-const seeded = await seed(API, { sshHost: '127.0.0.1', sshPort: SSH_PORT, sshPassword });
+
+// The file share service, on a throwaway data directory.
+let filesService = null;
+if (FILES_SECRET) {
+  const dataDir = fs.mkdtempSync(path.join(fs.realpathSync(process.env.TMPDIR || '/tmp'), 'ef-files-'));
+  filesService = spawn(path.join(EE, 'fileshare/endoriumfort-files'), [], {
+    env: { ...process.env, ENDORIUMFORT_FILESHARE_SECRET: FILES_SECRET, EF_FS_LISTEN: `127.0.0.1:${FILES_PORT}`, EF_FS_DATA_DIR: dataDir, EF_FS_COOKIE_SECURE: 'false' },
+    stdio: 'ignore'
+  });
+  await new Promise((r) => setTimeout(r, 800));
+} else {
+  console.log('[capture] ENDORIUMFORT_FILESHARE_SECRET not set: no file share drives');
+}
+const seeded = await seed(API, { sshHost: '127.0.0.1', sshPort: SSH_PORT, sshPassword, filesUrl: FILES_SECRET ? `http://127.0.0.1:${FILES_PORT}` : '' });
 const { call, login } = client(API);
 const T = seeded.admin.token;
 
@@ -98,6 +114,30 @@ for (const s of seeded.sessions) {
   await read(`/api/evidence-packs/sessions/${s.id}`);
   await read(`/api/recordings?sessionId=${s.id}`);
 }
+// Reports (the demo recomputes them; these pin the shape) and the CSV export.
+for (const period of ['day', 'month', 'quarter', 'year']) await read(`/api/reports?period=${period}`);
+await read('/api/reports/export?period=month');
+
+// The drives as each user sees them, straight from the file service.
+const drives = {};
+if (seeded.drives) {
+  const { rid, share } = seeded.drives;
+  for (const [user, d] of Object.entries(seeded.drives.drives)) {
+    drives[user] = {
+      session: d.opened,
+      me: await d.send('GET', 'me'),
+      home: await d.send('GET', 'list?root=home&path=/'),
+      shares: await d.send('GET', 'shares')
+    };
+    for (const entry of drives[user].home.entries || []) {
+      if (entry.dir) drives[user][`home:/${entry.name}`] = await d.send('GET', `list?root=home&path=${encodeURIComponent('/' + entry.name)}`);
+    }
+  }
+  if (share?.id) drives['l.bernard'][`share:${share.id}`] = await seeded.drives.drives['l.bernard'].send('GET', `list?root=share:${encodeURIComponent(share.id)}&path=/`);
+  drives.resourceId = rid;
+  drives.ticket = { ...seeded.drives.drives['c.moreau'].ticket, ticket: 'demo-ticket' };
+}
+
 const recordings = await call(T, '/api/recordings').catch(() => ({ items: [] }));
 for (const r of recordings.items || recordings || []) if (r?.id) await read(`/api/recordings/${r.id}/cast`);
 for (const r of Object.values(seeded.res)) if (r) await read(`/api/relays/resolve/${r.id}`);
@@ -117,6 +157,7 @@ try {
 } finally {
   try { process.kill(-ui.pid); } catch (_) {}
   sshServer.close();
+  if (filesService) filesService.kill();
 }
 
 // ── Assemble ─────────────────────────────────────────────────────────────────
@@ -141,6 +182,7 @@ const fixtures = {
   edition: 'enterprise',
   // The demo shifts every recorded time by (now - capturedAt).
   capturedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+  drives,
   health: await get('/api/health'),
   bootstrap: await get('/api/auth/bootstrap-status'),
   twoFa: await get('/api/auth/2fa-status'),
@@ -197,9 +239,11 @@ out = JSON.stringify(parsed, null, 1)
   .replaceAll(`127.0.0.1:${SSH_PORT}`, '10.30.1.15:22')
   .replaceAll('@127.0.0.1', '@10.30.1.15')
   .replaceAll(`127.0.0.1:${new URL(API).port}`, 'bastion-01.interne.local:8443')
+  // Last resort (aggregates such as report targets): the recette host.
+  .replaceAll('127.0.0.1', '10.30.1.15')
   .replaceAll(`localhost:${UI_PORT}`, 'demo.endorium.local')
   .replaceAll(API.replace(/^https?:\/\//, ''), 'demo.endorium.local');
-for (const secret of [sshPassword, seeded.adminPassword, seeded.userPassword, seeded.totpSecret, T, op.token, auditor.token]) {
+for (const secret of [FILES_SECRET, sshPassword, seeded.adminPassword, seeded.userPassword, seeded.totpSecret, T, op.token, auditor.token]) {
   if (secret && out.includes(secret)) out = out.replaceAll(secret, 'demo-redacted');
 }
 fs.writeFileSync(OUT, out + '\n');

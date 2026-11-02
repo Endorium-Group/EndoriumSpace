@@ -2,7 +2,7 @@
 // to the seeded bastion) as each demo role and records every /api exchange.
 // Run by capture.mjs.
 const ADMIN_SECTIONS = ['resources', 'users', 'routing', 'jit', 'enterprise', 'vault', 'itdr', 'k8s', 'appearance', 'security', 'license'];
-const PAGES = ['/carte', '/sessions', '/demandes', '/journal', '/preuves', '/zones', '/compte'];
+const PAGES = ['/carte', '/sessions', '/demandes', '/journal', '/preuves', '/rapports', '/zones', '/compte'];
 
 // `chromium` comes from the EE checkout's Playwright (see capture.mjs).
 export async function recordUi(UI, logins, chromium) {

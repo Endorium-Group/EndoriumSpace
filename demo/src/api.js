@@ -1,10 +1,11 @@
 // Simulated EndoriumFort Enterprise API, served in the browser for the demo.
-// Everything comes from a tour of a real EE v1.0.52 bastion (fixtures.json,
+// Everything comes from a tour of a real EE v1.0.56 bastion (fixtures.json,
 // see demo/capture/): the core flows are kept as state in this tab, every
 // other route replays the answer the product gave.
 import raw from './fixtures.json';
+import { buildHistory, buildReport, reportCsv, hostTree, listHost, hostFileContent, driveFromCapture, listDrive } from './v56.js';
 
-const STATE_KEY = 'ef_demo_state_v2';
+const STATE_KEY = 'ef_demo_state_v4';
 const HEX = '9d3f1c7a52e8b046';
 const MIN = 60 * 1000;
 // The capture lasted a couple of minutes; spread it over the last few hours.
@@ -57,7 +58,7 @@ function buildState() {
     guardRules: clone(fx.guardRules),
     integrations: clone(fx.integrations),
     sessions: clone(fx.capturedSessions).sort((a, b) => a.id - b.id),
-    audit: clone(fx.capturedAudit).sort((a, b) => a.id - b.id),
+    audit: [],
     requests: items('GET /api/access-requests').sort((a, b) => a.id - b.id),
     policies: items('GET /api/access-policies'),
     profiles: items('GET /api/access-profiles'),
@@ -68,6 +69,15 @@ function buildState() {
     rotation,
     nextId: {}
   };
+  // Months of older activity first (for the reports), then the capture.
+  const captured = clone(fx.capturedAudit).sort((a, b) => a.id - b.id);
+  const history = buildHistory(s.users, s.resources, s.userResources, captured[0]?.createdAt || iso());
+  s.audit = [...history, ...captured].map((event, i) => ({ ...event, id: i + 1, key: `${HEX}:${i + 1}`, role: event.role || roleOf(s.users, event.actor) }));
+  const { drives, shares } = driveFromCapture(fx.drives);
+  s.drives = drives;
+  s.shares = shares;
+  s.hosts = {};
+  s.ticketed = [];
   for (const [key, value] of Object.entries(RECORDED)) {
     const m = key.match(/^GET \/api\/users\/(\d+)\/access-profiles$/);
     if (m) s.userProfiles[m[1]] = clone(value.body.profileIds || []);
@@ -92,6 +102,10 @@ function load() {
 }
 function save() {
   try { sessionStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (_) {}
+}
+
+function roleOf(users, actor) {
+  return actor === 'system' ? 'system' : users.find((u) => u.username === actor)?.role || 'operator';
 }
 
 function pushAudit(type, actor, payload) {
@@ -334,7 +348,7 @@ async function evidencePack(sessionId) {
 }
 
 // ── Router ───────────────────────────────────────────────────────────────────
-export function handle(method, url, body) {
+export function handle(method, url, body, rawBody) {
   load();
   const p = url.pathname.replace(/\/+$/, '');
   const me = currentUser();
@@ -661,12 +675,219 @@ export function handle(method, url, body) {
   // Settings (stored only in this tab)
   if (p === '/api/settings/integrations') return method === 'GET' ? json({ items: state.integrations }) : ok({ items: state.integrations });
 
+  // ── 1.0.53–1.0.56 ──
+  const v56 = handleV56(method, url, p, body, rawBody, me, actor);
+  if (v56) return v56;
+
   // Everything else: what the real bastion answered.
   const recorded = replay(method, url);
   if (recorded) return recorded;
   if (method === 'GET') return text('404 Not Found', 404);
   // Writes the tour never made (password, 2FA, branding…) are accepted and change nothing.
   return ok();
+}
+
+// ── Reports, SSH file transfer, file share drive ────────────────────────────
+const canReadAudit = (me) => me.role === 'admin' || me.role === 'auditor';
+const MAX_UPLOAD_MB = 512;
+const download = (name, content) => new Response(new Blob([content]), {
+  status: 200,
+  headers: { 'Content-Type': 'application/octet-stream', 'Content-Disposition': `attachment; filename="${name}"` }
+});
+
+function sshContext(id, me) {
+  const session = state.sessions.find((x) => x.id === id);
+  if (!session) return { error: text('Session not found', 404) };
+  if (session.status !== 'active') return { error: text('Session closed', 409) };
+  if (session.protocol !== 'ssh') return { error: text('File transfer is only available on SSH sessions', 400) };
+  if (session.operator !== me.username) return { error: text('Forbidden', 403) };
+  const resource = state.resources.find((r) => r.id === session.resourceId);
+  if (!resource) return { error: text('Resource not found', 404) };
+  if (!resource.allowFileDownload && !resource.allowFileUpload) return { error: text('File transfer is disabled for this resource', 403) };
+  const user = resource.sshUsername || me.username;
+  state.hosts[id] ||= hostTree(user);
+  return { session, resource, tree: state.hosts[id], home: `/home/${user}`, host: resource.name };
+}
+
+function handleV56(method, url, p, body, rawBody, me, actor) {
+  let m;
+  // Reports
+  if (p === '/api/reports' || p === '/api/reports/export') {
+    if (!canReadAudit(me)) return text('Forbidden', 403);
+    const { error, report } = buildReport(state.audit, url.searchParams);
+    if (error) return text(error, 400);
+    if (p === '/api/reports') return json(report);
+    pushAudit('report.export', actor, { period: report.period, label: report.window.label });
+    save();
+    return new Response(reportCsv(report), {
+      status: 200,
+      headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="endoriumfort-report-${report.period}-${report.window.label}.csv"` }
+    });
+  }
+
+  // SSH file transfer
+  if ((m = p.match(/^\/api\/sessions\/(\d+)\/files(?:\/(download|upload))?$/))) {
+    const ctx = sshContext(Number(m[1]), me);
+    if (ctx.error) return ctx.error;
+    const policy = { canDownload: !!ctx.resource.allowFileDownload, canUpload: !!ctx.resource.allowFileUpload, maxUploadMb: MAX_UPLOAD_MB };
+    const path = url.searchParams.get('path') || '';
+    if (!m[2]) {
+      const listed = listHost(ctx.tree, ctx.home, path);
+      return listed.status === 200 ? json({ ...policy, ...listed.body }) : text(listed.text, listed.status);
+    }
+    if (m[2] === 'download') {
+      if (!policy.canDownload) return text('Downloads are disabled for this resource', 403);
+      const entry = ctx.tree[path];
+      if (!entry) return text(`${path}: no such file or directory`, 404);
+      if (entry.type === 'dir') return text('This is a directory', 400);
+      pushAudit('ssh.file.download', actor, { sessionId: ctx.session.id, resourceId: ctx.resource.id, path, size: entry.size });
+      save();
+      return download(path.split('/').pop(), hostFileContent(ctx.tree, path, ctx));
+    }
+    if (!policy.canUpload) return text('Uploads are disabled for this resource', 403);
+    const uploadId = url.searchParams.get('uploadId') || '';
+    const offset = Number(url.searchParams.get('offset')) || 0;
+    const final = url.searchParams.get('final') === '1';
+    const size = rawBody?.size ?? rawBody?.byteLength ?? 0;
+    state.uploads ||= {};
+    const pending = (state.uploads[uploadId] ||= { received: 0 });
+    if (offset !== pending.received) return json({ error: 'offset_mismatch', expected: pending.received }, 409);
+    if (offset === 0 && ctx.tree[path] && url.searchParams.get('overwrite') !== '1') {
+      delete state.uploads[uploadId];
+      return json({ error: 'exists', message: 'A file already exists at this path' }, 409);
+    }
+    pending.received += size;
+    if (pending.received > MAX_UPLOAD_MB * 1048576) return text(`File exceeds the maximum upload size (${MAX_UPLOAD_MB} MB)`, 413);
+    if (!final) { save(); return json({ status: 'partial', received: pending.received }); }
+    delete state.uploads[uploadId];
+    ctx.tree[path] = { type: 'file', size: pending.received, mtime: Math.floor(Date.now() / 1000), content: null };
+    pushAudit('ssh.file.upload', actor, { sessionId: ctx.session.id, resourceId: ctx.resource.id, path, size: pending.received });
+    save();
+    return json({ status: 'ok', path, size: pending.received, sha256: '', via: 'sftp' });
+  }
+
+  // File share: the bastion side
+  if ((m = p.match(/^\/api\/sessions\/(\d+)\/fileshare-ticket$/))) {
+    const session = state.sessions.find((x) => x.id === Number(m[1]));
+    if (!session) return text('Session not found', 404);
+    if (session.protocol !== 'fileshare') return text('Not a file share session', 400);
+    if (session.status !== 'active') return text('Session is no longer active', 409);
+    if (session.operator !== me.username) return text('Forbidden', 403);
+    const resource = state.resources.find((r) => r.id === session.resourceId);
+    if (!state.ticketed.includes(session.id)) {
+      state.ticketed.push(session.id);
+      pushAudit('fileshare.open', actor, { sessionId: session.id, resourceId: session.resourceId, resourceName: resource?.name });
+      save();
+    }
+    return json({ status: 'ok', ticket: `demo-ticket-${session.id}-${session.resourceId}`, resourceId: session.resourceId, resourceName: resource?.name || '', user: actor, sessionId: session.id, ticketTtlSeconds: 60 });
+  }
+  if ((m = p.match(/^\/api\/resources\/(\d+)\/fileshare\/directory$/))) {
+    const rid = Number(m[1]);
+    const names = state.users.filter((u) => u.username !== actor && (u.role === 'admin' || (state.userResources[u.id] || []).includes(rid))).map((u) => u.username).sort();
+    return ok({ items: names.map((username) => ({ username })) });
+  }
+
+  // File share: the drive service (/files/api/r/<rid>/...)
+  if ((m = p.match(/^\/files\/api\/r\/(\d+)\/([a-z]+)(?:\/([^/]+))?$/))) {
+    const rid = Number(m[1]);
+    const route = m[2];
+    const fail = (message, status) => json({ error: message }, status);
+    const expiresAt = new Date(Date.now() + 15 * MIN).toISOString().replace(/\.\d+Z$/, 'Z');
+    if (route === 'session' && method === 'POST') return json({ user: actor, resourceId: rid, expiresAt, ttlSeconds: 900 });
+    if (route === 'session') return json({ status: 'ok' });
+    const home = (state.drives[actor] ||= {});
+    const used = Object.values(home).reduce((n, e) => n + (e.dir ? 0 : e.size), 0);
+    if (route === 'me') return json({ user: actor, resourceId: rid, expiresAt, usedBytes: used, quotaBytes: 10737418240, maxUploadBytes: 2147483648 });
+    // A root is the user's home or a share made to them.
+    const view = (rootName) => {
+      if (!rootName || rootName === 'home') return { drive: home, base: '', root: 'home', owner: actor, writable: true };
+      const id = rootName.startsWith('share:') ? rootName.slice(6) : '';
+      const share = state.shares.find((x) => x.id === id && x.grantee === actor);
+      if (!share) return null;
+      return { drive: (state.drives[share.owner] ||= {}), base: share.path, root: rootName, owner: share.owner, writable: share.mode === 'rw', name: share.name };
+    };
+    const q = url.searchParams;
+    const b = body && typeof body === 'object' ? body : {};
+    const v = view(route === 'list' || route === 'download' || route === 'upload' ? q.get('root') : b.root);
+    const norm = (path) => '/' + String(path || '/').split('/').filter((x) => x && x !== '.' && x !== '..').join('/');
+    const full = (path) => (v.base + (norm(path) === '/' ? '' : norm(path))) || '/';
+    const stampNow = () => new Date().toISOString();
+    if (['list', 'download', 'upload', 'mkdir', 'rename', 'delete'].includes(route) && !v) return fail('Not found', 404);
+    if (route === 'list') {
+      const listed = listDrive(v.drive, full(q.get('path')), { root: v.root, owner: v.owner, writable: v.writable });
+      return listed ? json({ ...listed, path: norm(q.get('path')) }) : fail('Not found', 404);
+    }
+    if (route === 'download') {
+      const path = full(q.get('path'));
+      const entry = v.drive[path];
+      if (!entry) return fail('Not found', 404);
+      const name = path.split('/').pop();
+      if (entry.dir) return download(`${name}.zip`, 'PK\u0005\u0006' + '\u0000'.repeat(18));
+      return download(name, entry.content || `${name} — fichier de démonstration EndoriumFort\n`);
+    }
+    if (!v?.writable && ['upload', 'mkdir', 'rename', 'delete'].includes(route)) return fail('Read-only share', 403);
+    if (route === 'upload') {
+      const path = full(q.get('path')) + '/' + q.get('name');
+      const target = path.replace(/^\/\//, '/');
+      if (v.drive[target] && q.get('overwrite') !== '1') return fail('A file with this name already exists', 409);
+      const size = rawBody?.size ?? 0;
+      v.drive[target] = { dir: false, size, modified: stampNow(), content: null };
+      save();
+      return json({ name: q.get('name'), size }, 201);
+    }
+    if (route === 'mkdir') {
+      const path = (full(b.path) + '/' + b.name).replace(/^\/\//, '/');
+      if (v.drive[path]) return fail('Already exists', 409);
+      v.drive[path] = { dir: true, size: 0, modified: stampNow(), content: null };
+      save();
+      return json({ status: 'ok' }, 201);
+    }
+    if (route === 'rename') {
+      const from = full(b.path);
+      const to = from.replace(/[^/]+$/, b.newName);
+      if (!v.drive[from]) return fail('Not found', 404);
+      for (const key of Object.keys(v.drive)) {
+        if (key === from || key.startsWith(from + '/')) { v.drive[to + key.slice(from.length)] = v.drive[key]; delete v.drive[key]; }
+      }
+      for (const share of state.shares) if (share.owner === v.owner && share.path === from) Object.assign(share, { path: to, name: b.newName });
+      save();
+      return json({ status: 'ok' });
+    }
+    if (route === 'delete') {
+      const target = full(b.path);
+      for (const key of Object.keys(v.drive)) if (key === target || key.startsWith(target + '/')) delete v.drive[key];
+      state.shares = state.shares.filter((share) => !(share.owner === v.owner && share.path === target));
+      save();
+      return json({ status: 'ok' });
+    }
+    if (route === 'shares' && method === 'GET') {
+      const now = Date.now();
+      const viewOf = (share, owner) => ({ ...share, ...(owner ? {} : { path: undefined }), expired: !!share.expiresAt && Date.parse(share.expiresAt) < now });
+      return json({ outgoing: state.shares.filter((x) => x.owner === actor).map((x) => viewOf(x, true)), incoming: state.shares.filter((x) => x.grantee === actor).map((x) => viewOf(x, false)) });
+    }
+    if (route === 'shares' && method === 'POST') {
+      const path = norm(b.path);
+      const entry = home[path];
+      if (!entry) return fail('Not found', 404);
+      if (!b.grantee || b.grantee === actor) return fail('Invalid grantee', 400);
+      if (b.mode !== 'ro' && b.mode !== 'rw') return fail('Invalid mode', 400);
+      const share = {
+        id: Math.random().toString(16).slice(2, 14) + Math.random().toString(16).slice(2, 14), owner: actor, grantee: b.grantee,
+        name: path.split('/').pop(), path, isDir: entry.dir, mode: entry.dir ? b.mode : 'ro', createdAt: stampNow(),
+        ...(b.expiresInDays ? { expiresAt: new Date(Date.now() + b.expiresInDays * 86400000).toISOString() } : {}), expired: false
+      };
+      state.shares.push(share);
+      save();
+      return json(share, 201);
+    }
+    if (route === 'shares' && method === 'DELETE') {
+      state.shares = state.shares.filter((x) => !(x.id === m[3] && x.owner === actor));
+      save();
+      return json({ status: 'ok' });
+    }
+    return fail('Not found', 404);
+  }
+  return null;
 }
 
 // ── Terminal hooks (shell.js) ────────────────────────────────────────────────

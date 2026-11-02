@@ -5,7 +5,7 @@
 #   demo/build.sh <EndoriumFort checkout> <output dir> [base path]
 #
 # Example (local):
-#   git clone --depth 1 --branch v1.0.52 https://github.com/NergYR/EndoriumFort /tmp/ee
+#   git clone --depth 1 --branch v1.0.56 https://github.com/NergYR/EndoriumFort /tmp/ee
 #   demo/build.sh /tmp/ee ./_site/demo /demo/
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"

@@ -25,7 +25,10 @@ function demo() {
         // Absolute links and public assets get the sub-path.
         .replace(/(["'`])\/assets\//g, `$1${base}assets/`)
         .replace(/href=(["'])\/(?!\/)/g, `href=$1${base}`)
-        .replace(/href=\{`\/(?!\/)/g, `href={\`${base}`);
+        .replace(/href=\{`\/(?!\/)/g, `href={\`${base}`)
+        // Tabs opened at the app root (?files=, ?rbi=) stay under the sub-path.
+        .replaceAll('${window.location.origin}/?', '${window.location.origin}' + base + '?')
+        .replaceAll('window.open(`/?', 'window.open(`' + base + '?');
       if (id.endsWith('/frontend/src/main.jsx')) out = `import ${JSON.stringify(shim)};\n${out}`;
       return out === code ? null : { code: out, map: null };
     }
