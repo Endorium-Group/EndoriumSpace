@@ -1,5 +1,7 @@
 # Installation (paquet Debian)
 
+> Avant d'installer, estimez la machine nécessaire : [Dimensionnement](#/dimensionnement), ou le [calculateur](../index.html#sizing).
+
 Pour une installation sans Docker, la CE est publiée en paquet `.deb` dans un **dépôt APT signé**. Le paquet `endoriumfort-server` installe le backend, l'interface web, la configuration nginx et le service de partage de fichiers, chacun sous un utilisateur système dédié.
 
 Testé sur Debian et Ubuntu récentes, en amd64.

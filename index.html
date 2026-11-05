@@ -49,6 +49,7 @@
         <a href="#features">Fonctionnalités</a>
         <a href="#editions">Éditions</a>
         <a href="#security">Sécurité</a>
+        <a href="#sizing">Dimensionnement</a>
         <a href="#deploy">Déploiement</a>
         <a href="demo/">Démo</a>
         <a href="docs/">Docs</a>
@@ -238,6 +239,91 @@ cosign verify-blob --signature ...  endoriumfort-ee.tar.gz
       </div>
     </section>
 
+    <!-- Sizing --------------------------------------------------------- -->
+    <section class="section" id="sizing">
+      <div class="wrap">
+        <div class="section-head center">
+          <span class="eyebrow">Dimensionnement</span>
+          <h2>De quelle machine avez-vous besoin ?</h2>
+          <p class="lead">Indiquez vos sessions simultanées, vos cibles et la durée de conservation des enregistrements : le calculateur donne les vCPU, la RAM, le disque et les réglages à appliquer.</p>
+        </div>
+        <div class="sz-presets" role="group" aria-label="Partir d'un profil">
+          <button type="button" class="btn" data-sz-preset="lab" aria-pressed="false">Lab / PoC</button>
+          <button type="button" class="btn" data-sz-preset="small" aria-pressed="true">Petite équipe</button>
+          <button type="button" class="btn" data-sz-preset="mid" aria-pressed="false">Taille moyenne</button>
+          <button type="button" class="btn" data-sz-preset="large" aria-pressed="false">Grande taille</button>
+        </div>
+        <div class="sz">
+          <form class="card" id="sizingForm" autocomplete="off" onsubmit="return false">
+            <fieldset>
+              <legend>Sessions simultanées (heure de pointe)</legend>
+              <label class="sz-row"><span>Terminaux SSH web</span><input type="number" min="0" name="ssh"></label>
+              <label class="sz-row"><span>Shells Kubernetes <small>Enterprise</small></span><input type="number" min="0" name="k8s"></label>
+              <label class="sz-row"><span>RDP via le tunnel agent</span><input type="number" min="0" name="rdp"></label>
+              <label class="sz-row"><span>VNC (tunnel ou navigateur)</span><input type="number" min="0" name="vnc"></label>
+              <label class="sz-row"><span>Autres tunnels TCP</span><input type="number" min="0" name="tcp"></label>
+              <label class="sz-row"><span>Connexions au proxy de base de données <small>Enterprise</small></span><input type="number" min="0" name="dbc"></label>
+              <label class="sz-row"><span>Navigateurs isolés (RBI)</span><input type="number" min="0" name="rbi"></label>
+            </fieldset>
+            <fieldset>
+              <legend>Inventaire</legend>
+              <label class="sz-row"><span>Cibles (ressources)</span><input type="number" min="0" name="targets"></label>
+              <label class="sz-row"><span>Comptes utilisateurs</span><input type="number" min="0" name="users"></label>
+              <label class="sz-row"><span>Sessions ouvertes par jour <small>pour le journal d'audit</small></span><input type="number" min="0" name="perday"></label>
+            </fieldset>
+            <fieldset>
+              <legend>Enregistrements (Enterprise)</legend>
+              <label class="sz-check"><input type="checkbox" name="rec"> Enregistrer les sessions</label>
+              <label class="sz-row"><span>Heures de terminal par jour <small>SSH et Kubernetes, tous utilisateurs</small></span><input type="number" min="0" step="0.5" name="sshHours"></label>
+              <label class="sz-row"><span>Ce qu'affichent les terminaux</span>
+                <select name="sshKind">
+                  <option value="0.5">Travail interactif</option>
+                  <option value="5">Logs et builds</option>
+                  <option value="30">Surtout des logs</option>
+                </select></label>
+              <label class="sz-row"><span>Heures de RBI par jour <small>tous utilisateurs</small></span><input type="number" min="0" step="0.5" name="rbiHours"></label>
+              <label class="sz-row"><span>Ce qu'affichent les pages RBI</span>
+                <select name="rbiKind">
+                  <option value="0.5">Consoles d'admin</option>
+                  <option value="1">Tableaux de bord</option>
+                  <option value="5">Vidéo, animations</option>
+                </select></label>
+              <label class="sz-row"><span>Conservation <small>en jours</small></span><input type="number" min="1" name="days"></label>
+              <label class="sz-row"><span>Requêtes SQL par jour <small>journal du proxy de base de données</small></span><input type="number" min="0" name="queries"></label>
+            </fieldset>
+            <fieldset>
+              <legend>Déploiement</legend>
+              <label class="sz-check"><input type="checkbox" name="ha"> Plusieurs instances (haute disponibilité)</label>
+              <label class="sz-check"><input type="checkbox" name="relay"> Des relais portent le trajet vers les cibles</label>
+            </fieldset>
+          </form>
+
+          <div>
+            <section class="card sz-result" aria-live="polite">
+              <h3>Estimation · <span class="sz-profile" id="szProfile"></span></h3>
+              <div class="sz-kpis">
+                <div class="sz-kpi"><b id="szCpu"></b><span>vCPU</span><small id="szCpuD"></small></div>
+                <div class="sz-kpi"><b id="szRam"></b><span>RAM</span><small id="szRamD"></small></div>
+                <div class="sz-kpi"><b id="szRec"></b><span>Disque des enregistrements</span><small id="szRecD"></small></div>
+                <div class="sz-kpi"><b id="szBw"></b><span>Bande passante de pointe</span><small id="szBwD"></small></div>
+              </div>
+              <table><tbody id="szDetails"></tbody></table>
+              <div id="szWarnings"></div>
+            </section>
+            <section class="card sz-settings">
+              <h3>Réglages à appliquer</h3>
+              <div class="sz-tabs" role="tablist" aria-label="Type de déploiement">
+                <button type="button" role="tab" aria-selected="true" data-sz-tab="compose">Docker Compose</button>
+                <button type="button" role="tab" aria-selected="false" data-sz-tab="helm">Helm</button>
+              </div>
+              <div class="code" id="szSnippet"></div>
+            </section>
+          </div>
+        </div>
+        <p class="center sz-note">Estimations arrondies vers le haut à partir de mesures de l'image actuelle, avec 30 % de marge mémoire. Rien n'est envoyé : le calcul se fait dans votre navigateur. Détail des chiffres et des formules : <a href="docs/#/dimensionnement">guide de dimensionnement</a>.</p>
+      </div>
+    </section>
+
     <!-- Deployment ----------------------------------------------------- -->
     <section class="section" id="deploy">
       <div class="wrap">
@@ -350,6 +436,7 @@ cp licence.jws /app/data/license.jws
           <a href="#features">Fonctionnalités</a>
           <a href="#editions">Éditions</a>
           <a href="#security">Sécurité</a>
+          <a href="#sizing">Dimensionnement</a>
           <a href="#deploy">Déploiement</a>
         </div>
         <div>
@@ -379,5 +466,6 @@ cp licence.jws /app/data/license.jws
   </footer>
 
   <script src="main.js"></script>
+  <script src="assets/sizing.js"></script>
 </body>
 </html>

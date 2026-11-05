@@ -1,5 +1,7 @@
 # Installation (Docker)
 
+> Avant d'installer, estimez la machine nécessaire : [Dimensionnement](#/dimensionnement), ou le [calculateur](../index.html#sizing).
+
 Docker est la voie la plus simple. Deux autres méthodes existent : [paquet Debian](#/installation-debian) et [Kubernetes (Helm)](#/kubernetes).
 
 L'image du bastion embarque le backend, l'interface web et nginx. Le **partage de fichiers** tourne dans un second conteneur, volontairement séparé ; le bastion seul suffit si vous n'utilisez pas les lecteurs de fichiers.

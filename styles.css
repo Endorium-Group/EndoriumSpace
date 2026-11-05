@@ -280,3 +280,40 @@ code, .mono { font-family: var(--mono); font-size: 0.9em; }
   .cmp th, .cmp td { padding: 11px 12px; }
   .cmp tbody td:not(:first-child), .cmp thead th:not(:first-child) { width: auto; }
 }
+
+/* ── Calculateur de dimensionnement (#sizing) ─────────────────────────────── */
+.sz { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; text-align: left; }
+.sz-presets { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
+.sz-presets button[aria-pressed="true"] { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-line); }
+.sz > * { min-width: 0; }
+.sz fieldset { border: 0; padding: 0; margin: 0 0 18px; min-width: 0; }
+.sz fieldset:last-child { margin-bottom: 0; }
+.sz legend { font: 600 12px var(--font); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+.sz-row { display: grid; grid-template-columns: 1fr 170px; align-items: center; gap: 12px; padding: 4px 0; font-size: 14.5px; }
+.sz-row small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.3; }
+.sz input[type="number"], .sz select {
+  width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--panel-2); color: var(--text); font: 14px var(--font);
+}
+.sz input:focus-visible, .sz select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sz-check { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 14.5px; }
+.sz-result h3 { margin-top: 0; }
+.sz-profile { color: var(--accent); }
+.sz-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.sz-kpi { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 14px; background: var(--panel-2); }
+.sz-kpi b { display: block; font: 700 1.55rem/1.2 var(--display); font-variant-numeric: tabular-nums; }
+.sz-kpi span { display: block; color: var(--text-2); font-size: 13px; }
+.sz-kpi small { display: block; color: var(--muted); font-size: 12px; }
+.sz table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.sz td { padding: 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--text-2); }
+.sz td:last-child { text-align: right; white-space: nowrap; padding-left: 12px; color: var(--text); font-variant-numeric: tabular-nums; }
+.sz-warn { margin: 10px 0 0; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 13.5px;
+  background: rgba(217, 101, 11, .1); color: var(--priv); border: 1px solid rgba(217, 101, 11, .3); }
+.sz-settings { margin-top: 18px; }
+.sz-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.sz-tabs button { height: 36px; padding: 0 14px; border: 1px solid var(--line-2); background: var(--panel); color: var(--text-2); border-radius: var(--radius-sm); font: 600 13.5px var(--font); cursor: pointer; }
+.sz-tabs button[aria-selected="true"] { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-line); }
+.sz-settings .code { white-space: pre; padding-right: 18px; font-size: 12.5px; }
+.sz-note { margin-top: 18px; font-size: 13.5px; color: var(--muted); }
+@media (max-width: 900px) { .sz { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .sz-row { grid-template-columns: 1fr 130px; } .sz-kpis { grid-template-columns: 1fr; } }

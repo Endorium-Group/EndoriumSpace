@@ -42,7 +42,8 @@ EndoriumSpace/
 ├── assets/
 │   ├── logo-*.png      logos repris du produit
 │   ├── app.css         styles des espaces docs/community/legal
-│   └── md.js           rendu Markdown côté client
+│   ├── md.js           rendu Markdown côté client
+│   └── sizing.js       calculateur de dimensionnement (section #sizing)
 ├── docs/
 │   ├── index.html      espace documentation
 │   └── content/        pages Markdown

@@ -1,5 +1,7 @@
 # Installation (Kubernetes / Helm)
 
+> Avant d'installer, estimez la machine nécessaire : [Dimensionnement](#/dimensionnement), ou le [calculateur](../index.html#sizing).
+
 Le chart Helm est publié dans le registre OCI de GHCR, avec les mêmes numéros de version que les images.
 
 ## Installer
