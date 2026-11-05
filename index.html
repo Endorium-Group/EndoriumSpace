@@ -114,7 +114,7 @@
         <div class="section-head center">
           <span class="eyebrow">Fonctionnalités</span>
           <h2>Tout l'accès à privilèges, en un point de contrôle</h2>
-          <p class="lead">Le socle est gratuit et open-source. Les capacités avancées se débloquent par une licence Enterprise hors-ligne.</p>
+          <p class="lead">Le socle est gratuit pour un usage non commercial, et son code est public. Les capacités avancées se débloquent par une licence Enterprise hors-ligne.</p>
         </div>
         <div class="grid grid-3">
           <article class="card"><span class="badge badge--ce">CE</span><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg></div><h3>Terminal SSH web</h3><p>Sessions SSH dans le navigateur, sans client ni clé en local. Enregistrées et auditées.</p></article>
@@ -161,7 +161,7 @@
           <thead>
             <tr>
               <th>Capacité</th>
-              <th><div class="plan">Community</div><div class="price">Gratuit · open-source</div></th>
+              <th><div class="plan">Community</div><div class="price">Gratuit · code public</div></th>
               <th><div class="plan" style="color:var(--priv)">Enterprise</div><div class="price">Sur devis</div></th>
             </tr>
           </thead>
@@ -201,7 +201,7 @@
         <div class="grid grid-3" style="margin-bottom:34px">
           <article class="card"><h3>Cryptographie éprouvée</h3><p>SHA-256/HMAC, scrypt, AES-256-GCM et CSPRNG via OpenSSL. Aucune cryptographie maison.</p></article>
           <article class="card"><h3>Licence post-quantique</h3><p>Signature hybride Ed25519 + ML-DSA-65, vérifiée 100 % hors-ligne — compatible air-gap.</p></article>
-          <article class="card"><h3>Données protégées</h3><p>Base chiffrée au repos (SQLCipher), secrets en coffre AES-GCM, backend non-root, TLS 1.2/1.3. Les fichiers partagés restent dans un service à part, sans accès à la base ni au réseau sortant.</p></article>
+          <article class="card"><h3>Données protégées</h3><p>Secrets en coffre AES-256-GCM, journal d'audit chaîné par HMAC, backend non-root, TLS 1.2/1.3. Les fichiers partagés restent dans un service à part, sans accès à la base ni au réseau sortant.</p></article>
         </div>
         <div class="center">
           <p style="font-weight:600; color:var(--text); margin-bottom:6px;">Conçu pour s'aligner sur les principaux référentiels</p>
@@ -310,7 +310,7 @@ cp licence.jws /app/data/license.jws
       <div class="wrap">
         <div class="section-head center"><span class="eyebrow">FAQ</span><h2>Questions fréquentes</h2></div>
         <div class="faq">
-          <details><summary>Qu'est-ce que l'« open-core » ?</summary><div class="a">L'édition Community est libre et open-source : vous pouvez l'auditer, la builder et l'exécuter seule. L'édition Enterprise ajoute des modules premium, activés par une licence. Le code premium est physiquement absent du dépôt public.</div></details>
+          <details><summary>Qu'est-ce que l'« open-core » ?</summary><div class="a">L'édition Community a un code public, sous licence source-available : vous pouvez l'auditer, la construire et l'exécuter seule, gratuitement hors usage commercial ou de production. L'édition Enterprise ajoute des modules premium, activés par une licence. Le code premium est physiquement absent du dépôt public.</div></details>
           <details><summary>Mes données partent-elles vers un cloud ?</summary><div class="a">Non. EndoriumFort est auto-hébergé : tout reste sur votre infrastructure. Aucune télémétrie n'est imposée, et les licences Enterprise se vérifient hors-ligne.</div></details>
           <details><summary>Est-ce utilisable en air-gap ?</summary><div class="a">Oui. L'image peut être chargée depuis un tarball signé et la licence se vérifie localement, sans aucun appel réseau — adapté aux environnements totalement isolés.</div></details>
           <details><summary>Comment fonctionne la licence Enterprise ?</summary><div class="a">C'est un fichier signé par une signature hybride post-quantique (Ed25519 + ML-DSA-65), vérifié 100 % hors-ligne. À l'expiration, le premium se désactive proprement sans casser le socle gratuit.</div></details>

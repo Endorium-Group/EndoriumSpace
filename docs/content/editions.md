@@ -1,33 +1,40 @@
 # Éditions (CE / EE)
 
-EndoriumFort suit un modèle **open-core**.
+EndoriumFort suit un modèle **open-core** : un socle au code public et auditable, l'édition Community, et une édition Enterprise sous licence commerciale.
 
 ## Community Edition (CE)
 
-- **Gratuite et open-source**, dépôt public.
-- Buildable et exécutable **seule**, sans licence.
-- Couvre tout ce que décrit cette documentation : SSH web, proxy HTTP, navigateur isolé, MFA, coffre-fort, RBAC, audit infalsifiable, [rapports d'activité](#/rapports), [partage de fichiers](#/partage-fichiers), transfert de fichiers dans les sessions SSH (SFTP, repli SCP), 1 nœud autonome.
+- **Code public**, lisible et auditable : [Endorium-Group/EndoriumFort-CE](https://github.com/Endorium-Group/EndoriumFort-CE).
+- Se construit et fonctionne **seule**, sans licence ni connexion à un service tiers.
+- Couvre tout ce que décrit cette documentation : terminal SSH et transfert de fichiers, navigateur isolé, partage de fichiers, coffre-fort, MFA, rôles et périmètre, règles d'accès, garde-fou de commandes, sessions en direct et observation, journal d'audit infalsifiable, rapports, API.
+- Un nœud, en Docker, en paquet Debian ou sur Kubernetes.
+
+### Ce que la licence CE autorise
+
+La CE est publiée sous la **licence source-available EndoriumFort Community Edition**. Ce n'est **pas** une licence open source au sens de l'OSI.
+
+| | |
+|---|---|
+| **Gratuit** | usage personnel, pédagogique, recherche, évaluation, test, et usage interne **hors production** |
+| **Licence Enterprise requise** | tout **usage commercial ou en production**, y compris la revente en service hébergé ou managé |
+| **Redistribution** | copies conformes autorisées, avec attribution |
+| **Modifications** | permises pour votre usage autorisé ; leur redistribution passe par une contribution au dépôt d'origine |
+
+Le texte qui fait foi est le fichier `LICENSE` du dépôt. Faites-le relire avant de fonder un usage commercial dessus.
 
 ## Enterprise Edition (EE)
 
-Ajoute des modules premium, **physiquement absents** du dépôt public et activés par une **licence hors-ligne** :
+L'édition Enterprise s'adresse aux organisations qui exploitent un bastion en production. Elle ajoute notamment :
 
-- Accès **RDP & VNC**, **relais** multi-sites.
-- **SSO** (OIDC/SAML), **LDAP/AD**, **SCIM**.
-- **Cluster / haute disponibilité**.
-- **Enregistrement & relecture** de sessions, Session DNA, evidence packs.
-- **Gouvernance JIT** : double approbation, accès temporaires, identifiants éphémères, élévation.
-- **Security Center**, incidents, ITDR, **SIEM/ITSM**.
-- **Rotation automatique** des secrets + planificateur.
+- des **protocoles** supplémentaires, dont les accès graphiques ;
+- l'**intégration à l'annuaire** et l'authentification unique de l'organisation ;
+- la **gouvernance des accès** : validations, accès temporaires, politiques centralisées ;
+- l'**enregistrement des sessions** et la production de preuves ;
+- l'**exploitation à grande échelle** : sites distants, haute disponibilité, intégration au SOC ;
+- le **support** de l'éditeur.
 
-## La licence Enterprise
+Elle se déploie hors-ligne, sans serveur de licence ni appel extérieur : elle convient aux environnements isolés. Arrivée à expiration, sa licence désactive les fonctions Enterprise sans toucher au socle.
 
-- Fichier signé par une **signature hybride post-quantique** (Ed25519 + ML-DSA-65).
-- Vérifiée **100 % hors-ligne** — compatible air-gap.
-- À l'expiration, le premium se désactive proprement **sans casser le socle gratuit**.
+Dans la console CE, les sections Enterprise apparaissent avec un cadenas : elles indiquent ce qu'elles apportent, sans rien débloquer.
 
-## Passer à l'EE
-
-L'image Enterprise peut être diffusée par **tarball signé** (`docker load` + vérification), idéale pour les environnements isolés. Déposez le fichier de licence dans `/app/data/` pour déverrouiller le premium.
-
-> Besoin de l'EE ? Contactez l'équipe depuis le [site](../index.html#contact).
+> Besoin de l'EE, d'une évaluation ou d'un devis ? Écrivez à **contact@endorium.space**, ou passez par le [site](../index.html#contact).

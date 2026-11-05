@@ -1,28 +1,83 @@
-# EndoriumSpace — site vitrine d'EndoriumFort
+<p align="center">
+  <img src="assets/logo-full-blue.png" alt="EndoriumFort" height="68">
+</p>
 
-Site marketing statique pour **EndoriumFort** (bastion PAM souverain, auto-hébergé).
-Design calqué sur l'UI du produit (tokens de couleur, Space Grotesk + IBM Plex, accent bleu→cyan, thème clair/sombre).
+<h1 align="center">EndoriumSpace</h1>
 
-## Contenu
-Site **statique** (HTML/CSS/JS), zéro dépendance, zéro étape de build.
+<p align="center">
+  Site vitrine d'EndoriumFort — bastion PAM souverain et auto-hébergé.<br>
+  Statique, sans dépendance, sans étape de build.
+</p>
+
+<p align="center">
+  <a href="https://endorium.space"><img src="https://img.shields.io/website?url=https%3A%2F%2Fendorium.space&style=flat-square&label=endorium.space" alt="Site"></a>
+  <img src="https://img.shields.io/badge/HTML%20%7C%20CSS%20%7C%20JS-E34F26?style=flat-square&logo=html5&logoColor=white" alt="Stack">
+  <img src="https://img.shields.io/badge/dépendances-0-0e8a16?style=flat-square" alt="Zéro dépendance">
+  <img src="https://img.shields.io/badge/nginx%20%7C%20Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Déploiement">
+</p>
+
+---
+
+## Présentation
+
+Site marketing du produit [EndoriumFort](https://github.com/Endorium-Group/EndoriumFort-CE),
+en français. Le design reprend celui de l'UI du produit : mêmes tokens de
+couleur, Space Grotesk et IBM Plex, accent bleu vers cyan, thème clair et
+sombre.
+
+Trois espaces s'ajoutent à la page d'accueil : la documentation, un fil de
+questions communautaires, et les pages légales. Leur contenu est écrit en
+Markdown et rendu côté client, donc ajouter une page ne demande aucune
+recompilation.
+
+---
+
+## Structure
 
 ```
-.
-├── index.html     # page unique (FR) — toutes les sections
-├── styles.css     # système de design (clair + sombre)
-├── main.js        # thème, menu mobile, onglets, copier, animations
-├── assets/        # logos (repris du produit)
-└── README.md
+EndoriumSpace/
+├── index.html          page d'accueil, toutes les sections
+├── styles.css          système de design (clair + sombre)
+├── main.js             thème, menu mobile, onglets, copie, animations
+├── assets/
+│   ├── logo-*.png      logos repris du produit
+│   ├── app.css         styles des espaces docs/community/legal
+│   └── md.js           rendu Markdown côté client
+├── docs/
+│   ├── index.html      espace documentation
+│   └── content/        pages Markdown
+├── community/
+│   ├── index.html      liste des questions
+│   ├── question.html   vue d'une question
+│   └── data/           contenu des questions
+├── legal/
+│   ├── index.html      espace légal
+│   └── content/        mentions, politiques
+├── Dockerfile          image nginx servant le site
+└── docker-compose.yml  service pour un reverse-proxy Caddy existant
 ```
 
-## Développement / aperçu local
-Comme les chemins d'assets sont relatifs, un simple serveur statique suffit :
+---
+
+## Aperçu local
+
+Les chemins d'assets sont relatifs, donc n'importe quel serveur statique suffit.
 
 ```bash
 python3 -m http.server 8080
 # puis ouvrir http://localhost:8080
 ```
-(ou `npx serve`, `php -S localhost:8080`, etc.)
+
+| Alternative | Commande |
+|---|---|
+| Node | `npx serve` |
+| PHP | `php -S localhost:8080` |
+| Caddy | `caddy file-server --listen :8080` |
+
+Ouvrir `index.html` par `file://` casse le rendu Markdown des espaces `docs/`,
+`community/` et `legal/` : il faut passer par un serveur HTTP.
+
+---
 
 ## Démo interactive (`demo/`)
 `/demo/` sert la vraie interface **EndoriumFort Enterprise** (dépôt privé
@@ -72,23 +127,22 @@ Prérequis une seule fois :
   dépôt `NergYR/EndoriumFort` (le workflow n'en récupère que `frontend/`).
 `404.html` renvoie les liens profonds de la démo (ex. `/demo/sessions`) vers l'application.
 
-### Statique simple
-N'importe quel hébergeur statique : **Netlify, Vercel, Cloudflare Pages, GitHub Pages, Nginx**.
-Il suffit de servir le répertoire tel quel (racine = ce dossier).
+### Hébergeur statique
 
-### Docker + Caddy (reverse-proxy existant)
-Une image nginx servant le site en HTTP est fournie (`Dockerfile` + `docker-compose.yml`).
-Caddy termine le TLS et reverse-proxy vers le conteneur sur le réseau Docker partagé.
+N'importe lequel convient — Netlify, Vercel, Cloudflare Pages, GitHub Pages,
+nginx. Il suffit de servir ce répertoire tel quel, racine comprise.
+
+### Docker derrière un reverse-proxy Caddy
+
+L'image fournie sert le site en HTTP ; Caddy termine le TLS.
 
 ```bash
-# 1. Vérifier le nom du réseau de Caddy
-docker network ls              # ex. "reverse_default"
-# 2. (si besoin) ajuster `name:` dans docker-compose.yml
-# 3. Construire + démarrer
+docker network ls                  # relever le réseau de Caddy, ex. reverse_default
+# ajuster `name:` dans docker-compose.yml si besoin
 docker compose up -d --build
 ```
 
-Bloc Caddyfile correspondant (le conteneur s'appelle `endoriumspace`, port 80) :
+Bloc Caddyfile correspondant — le conteneur s'appelle `endoriumspace`, port 80 :
 
 ```
 endorium.space {
@@ -97,22 +151,51 @@ endorium.space {
 }
 ```
 
-Puis recharger Caddy (`caddy reload` ou `docker exec <caddy> caddy reload ...`).
-Pour mettre à jour le site : `docker compose up -d --build`.
+Recharger ensuite Caddy (`caddy reload`, ou
+`docker exec <caddy> caddy reload --config /etc/caddy/Caddyfile`). Pour publier
+une mise à jour : `docker compose up -d --build`.
 
-## À personnaliser avant mise en ligne
-Les valeurs entre crochets `[...]` sont des **placeholders** :
-- `[contact@votre-domaine]` — adresse de contact (CTA + footer).
-- `[lien-depot-public]`, `[lien-documentation]` — liens du footer.
-- `[Mentions légales à compléter]`.
-- `index.html` → balise `og:image` : mettre une **URL absolue** (https://votre-domaine/assets/logo-full-blue.png) pour un bon rendu au partage.
-- URL de registre/chart dans la section Déploiement (exemples à adapter).
+---
 
-## Règles de contenu (à respecter)
-- **Aucune fabrication** : pas de faux clients, logos, témoignages, chiffres ni certifications.
-- Conformité = **« conçu pour s'aligner / prêt pour l'audit »**, **jamais « certifié »** (aucun audit tiers à ce jour).
-- Pas de secrets réels dans les exemples de code.
+## À compléter avant mise en ligne
 
-## Bilingue (EN)
-Le site est en français. Pour une version anglaise, dupliquer `index.html` en `en/index.html`,
-traduire le contenu et ajouter un sélecteur de langue dans l'en-tête.
+Les valeurs entre crochets sont des placeholders.
+
+| Placeholder | Emplacement | Remplacer par |
+|---|---|---|
+| `[contact@votre-domaine]` | CTA et pied de page | l'adresse de contact réelle |
+| `[lien-depot-public]` | pied de page | l'URL du dépôt CE |
+| `[lien-documentation]` | pied de page | l'URL de la documentation |
+| `[Mentions légales à compléter]` | `legal/content/` | les mentions légales |
+| `og:image` | `index.html` | une URL **absolue**, sinon l'aperçu au partage est vide |
+| URL de registre et de chart | section Déploiement | les URL réelles |
+
+---
+
+## Règles de contenu
+
+Contraignantes : elles protègent la crédibilité du produit, et nous exposent
+juridiquement si elles sont enfreintes.
+
+- **Aucune fabrication** — pas de faux clients, logos, témoignages, chiffres ni
+  certifications.
+- **Conformité** — écrire « conçu pour s'aligner » ou « prêt pour l'audit »,
+  jamais « certifié » : aucun audit tiers n'a été réalisé à ce jour.
+- **Aucun secret réel** dans les exemples de code.
+
+---
+
+## Version anglaise
+
+Le site est en français. Pour l'anglais : dupliquer `index.html` en
+`en/index.html`, traduire, puis ajouter un sélecteur de langue dans l'en-tête.
+
+---
+
+## Liens
+
+| Ressource | Lien |
+|---|---|
+| Produit (Community Edition) | [Endorium-Group/EndoriumFort-CE](https://github.com/Endorium-Group/EndoriumFort-CE) |
+| Documentation produit | [docs/index.md](https://github.com/Endorium-Group/EndoriumFort-CE/blob/master/docs/index.md) |
+| Site en production | [endorium.space](https://endorium.space) |

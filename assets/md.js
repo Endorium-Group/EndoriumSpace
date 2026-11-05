@@ -91,7 +91,15 @@
       if (/^\s*[-*]\s+/.test(line)) {
         para = flushPara(para);
         var ul = [];
-        while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { ul.push("<li>" + inline(lines[i].replace(/^\s*[-*]\s+/, "")) + "</li>"); i++; }
+        while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+          // Case à cocher « - [ ] » / « - [x] » (listes de contrôle).
+          var item = lines[i].replace(/^\s*[-*]\s+/, "");
+          var box = /^\[( |x|X)\]\s+/.exec(item);
+          ul.push(box
+            ? '<li class="task"><span class="box">' + (box[1] === " " ? "☐" : "☑") + "</span> " + inline(item.slice(box[0].length)) + "</li>"
+            : "<li>" + inline(item) + "</li>");
+          i++;
+        }
         out.push("<ul>" + ul.join("") + "</ul>");
         continue;
       }

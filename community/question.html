@@ -44,33 +44,26 @@
     } else {
       document.title = q.title + " — Communauté EndoriumFort";
       var answers = (q.answers || []).slice().sort(function (a, b) {
-        if (a.accepted !== b.accepted) return a.accepted ? -1 : 1;
-        return b.votes - a.votes;
+        return (a.accepted === b.accepted) ? 0 : (a.accepted ? -1 : 1);
       });
-      var tagsHtml = (q.tags || []).map(function (t) { return '<a class="tag" href="./?tag=' + t + '">' + t + "</a>"; }).join(" ");
+      var tagsHtml = (q.tags || []).map(function (t) { return '<a class="tag" href="./?tag=' + encodeURIComponent(t) + '">' + t + "</a>"; }).join(" ");
 
-      function post(body, votes, accepted, author, date, isQuestion) {
-        return '<div class="post">' +
-          '<div class="votes">' +
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5l7 8H5z"/></svg>' +
-            '<span class="score">' + votes + "</span>" +
-            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l-7-8h14z"/></svg>' +
-            (accepted ? '<span class="acc" title="Réponse acceptée"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>' : "") +
-          "</div>" +
-          '<div class="md">' + EFMD.render(body) +
-            '<div class="whobox">' + (isQuestion ? "demandé" : "répondu") + " par <strong>" + author + "</strong> · " + date + "</div>" +
-          "</div>" +
-        "</div>";
+      function post(body, accepted, date, isQuestion) {
+        return '<div class="post solo"><div class="md">' +
+          (accepted ? '<span class="ans-badge">Réponse de référence</span>' : "") +
+          EFMD.render(body) +
+          '<div class="whobox">' + (isQuestion ? "Question fréquente" : "Réponse de l'équipe EndoriumFort") + " · " + date + "</div>" +
+        "</div></div>";
       }
 
       el.innerHTML =
-        '<p class="back"><a href="./">← Toutes les questions</a></p>' +
+        '<p class="back"><a href="./">← Communauté</a></p>' +
         "<h1>" + q.title + "</h1>" +
-        '<div class="sub">' + (q.views || 0) + " vues · " + tagsHtml + "</div>" +
-        post(q.body, q.votes, false, q.author, q.date, true) +
-        '<div class="ans-head">' + answers.length + " réponse" + (answers.length > 1 ? "s" : "") + "</div>" +
-        answers.map(function (a) { return post(a.body, a.votes, a.accepted, a.author, a.date, false); }).join("") +
-        '<p class="disclaimer">Contenu communautaire curé. Une correction ou une réponse à proposer ? Contribuez via le dépôt du projet.</p>';
+        '<div class="sub">' + tagsHtml + "</div>" +
+        post(q.body, false, q.date, true) +
+        '<div class="ans-head">Réponse</div>' +
+        answers.map(function (a) { return post(a.body, a.accepted, a.date, false); }).join("") +
+        '<p class="disclaimer">Votre cas est différent, ou cette réponse vous semble inexacte ? Ouvrez une <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/new?category=q-a" target="_blank" rel="noopener">discussion</a> — sans secrets dans vos extraits.</p>';
 
       EFMD.addCopyButtons(el);
     }

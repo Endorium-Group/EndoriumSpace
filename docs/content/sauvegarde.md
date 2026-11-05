@@ -1,29 +1,49 @@
 # Sauvegarde & restauration
 
-Toutes les données persistantes d'EndoriumFort vivent dans les **volumes** `/app/data` (base, configuration, licence, journal d'audit) et `/app/recordings` (enregistrements de sessions, EE).
-
 ## Ce qu'il faut sauvegarder
 
-1. Le volume **`/app/data`** (indispensable).
-2. Le volume **`/app/recordings`** (si vous utilisez l'enregistrement).
-3. **Hors volume** : vos clés/secrets d'environnement — en particulier `ENDORIUMFORT_VAULT_KEY`, `ENDORIUMFORT_DB_ENCRYPTION_KEY`, `ENDORIUMFORT_AUDIT_HMAC_KEY`. **Sans ces clés, les données chiffrées sont irrécupérables.**
+| Quoi | Où | Indispensable |
+|---|---|---|
+| Volume de données | `/app/data` (Docker), `/var/lib/endoriumfort` (Debian) | **oui** : base SQLite, journal d'audit |
+| Base PostgreSQL | votre serveur | **oui**, si vous l'utilisez ([Base de données](#/base-de-donnees)) |
+| Volume du partage de fichiers | `/data` du conteneur `endoriumfort-files`, `/var/lib/endoriumfort-files` (Debian) | si vous utilisez les lecteurs |
+| Clés et configuration | votre fichier `.env`, `docker-compose.override.yml` ou `/etc/endoriumfort/` | **oui** |
 
-## Sauvegarde (exemple)
+> **Les clés ne sont pas dans les volumes.** `ENDORIUMFORT_VAULT_KEY` déchiffre les secrets ; `ENDORIUMFORT_AUDIT_HMAC_KEY` permet de vérifier le journal. Sans elles, une sauvegarde de volume ne restaure ni les secrets ni la preuve d'intégrité. Conservez-les dans un gestionnaire de secrets, **séparément** des archives de données.
+
+Le volume du partage de fichiers est **séparé** de celui du bastion : il s'oublie facilement.
+
+## Sauvegarder (Docker)
+
+Arrêtez le bastion le temps de la copie, pour une base et un journal cohérents :
 
 ```
-# Arrêter proprement pour une copie cohérente (ou s'appuyer sur un snapshot)
-docker stop endoriumfort
+docker stop endoriumfort endoriumfort-files
 
-# Archiver les volumes
 docker run --rm -v ef-data:/data -v "$PWD":/backup alpine \
   tar czf /backup/ef-data-$(date +%F).tar.gz -C /data .
 
-docker start endoriumfort
+docker run --rm -v ef-files:/data -v "$PWD":/backup alpine \
+  tar czf /backup/ef-files-$(date +%F).tar.gz -C /data .
+
+docker start endoriumfort-files endoriumfort
 ```
 
-Planifiez cette sauvegarde (cron) et **stockez les clés d'environnement séparément**, dans un gestionnaire de secrets.
+L'interruption dure quelques secondes. Sans arrêt, préférez un **instantané** du système de fichiers ou du volume (LVM, ZFS, snapshot cloud) : une copie à chaud d'une base SQLite en cours d'écriture peut être incohérente.
 
-## Restauration
+Planifiez la sauvegarde (cron, timer systemd) et testez une restauration au moins une fois.
+
+## Sauvegarder (Debian)
+
+```
+sudo systemctl stop endoriumfort endoriumfort-files
+sudo tar czf ef-$(date +%F).tar.gz /var/lib/endoriumfort /var/lib/endoriumfort-files /etc/endoriumfort
+sudo systemctl start endoriumfort-files endoriumfort
+```
+
+`/etc/endoriumfort` contient vos clés : chiffrez l'archive, ou stockez-la à part.
+
+## Restaurer (Docker)
 
 ```
 docker stop endoriumfort
@@ -32,10 +52,21 @@ docker run --rm -v ef-data:/data -v "$PWD":/backup alpine \
 docker start endoriumfort
 ```
 
-Fournissez au conteneur restauré **les mêmes variables d'environnement** (mêmes clés) que lors de la sauvegarde.
+Même principe pour `ef-files`. Fournissez au bastion **exactement les mêmes clés** qu'au moment de la sauvegarde.
 
 ## Vérifier après restauration
 
-- `docker logs endoriumfort` ne signale pas d'erreur de base/déchiffrement.
-- Connexion admin OK, ressources et secrets présents.
-- [Journal d'audit](#/audit) → « Vérifier l'intégrité » → intègre.
+- `docker logs endoriumfort` : pas d'erreur de base.
+- Connexion administrateur, ressources présentes.
+- Une session vers une ressource dont le mot de passe est dans le coffre : elle s'authentifie, donc la clé du coffre est la bonne.
+- **Journal → Vérifier l'intégrité** : intègre.
+
+## Plan de reprise
+
+Notez quelque part hors du bastion :
+
+- la version de l'image en service ;
+- l'emplacement des sauvegardes et des clés ;
+- la procédure ci-dessus.
+
+Un bastion est un point de passage obligé : s'il tombe, plus personne n'administre rien. Prévoyez un accès de secours documenté aux cibles critiques, sous scellés.

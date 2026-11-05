@@ -47,21 +47,34 @@
     var NAV = [
       { group: "Prise en main", pages: [
         { slug: "introduction", title: "Introduction", file: "introduction.md" },
+        { slug: "concepts", title: "Concepts", file: "concepts.md" },
         { slug: "installation", title: "Installation (Docker)", file: "installation.md" },
-        { slug: "premier-demarrage", title: "Premier démarrage", file: "premier-demarrage.md" }
+        { slug: "installation-debian", title: "Installation (Debian)", file: "installation-debian.md" },
+        { slug: "kubernetes", title: "Installation (Kubernetes)", file: "kubernetes.md" },
+        { slug: "premier-demarrage", title: "Premier démarrage", file: "premier-demarrage.md" },
+        { slug: "console", title: "Visite de la console", file: "console.md" }
       ]},
-      { group: "Utilisation", pages: [
+      { group: "Accès", pages: [
         { slug: "ressources", title: "Déclarer une ressource", file: "ressources.md" },
+        { slug: "regles-acces", title: "Règles d'accès", file: "regles-acces.md" },
         { slug: "session-ssh", title: "Session SSH", file: "session-ssh.md" },
-        { slug: "proxy-rbi", title: "Proxy HTTP & navigateur isolé", file: "proxy-rbi.md" },
-        { slug: "coffre", title: "Coffre-fort de secrets", file: "coffre.md" },
-        { slug: "mfa", title: "MFA (TOTP & passkeys)", file: "mfa.md" },
+        { slug: "garde-fou-ssh", title: "Garde-fou de commandes SSH", file: "garde-fou-ssh.md" },
+        { slug: "proxy-rbi", title: "Navigateur isolé (RBI)", file: "proxy-rbi.md" },
+        { slug: "partage-fichiers", title: "Partage de fichiers", file: "partage-fichiers.md" },
+        { slug: "sessions", title: "Sessions", file: "sessions.md" }
+      ]},
+      { group: "Identités & secrets", pages: [
         { slug: "utilisateurs", title: "Utilisateurs & rôles", file: "utilisateurs.md" },
+        { slug: "mfa", title: "MFA (TOTP & passkeys)", file: "mfa.md" },
+        { slug: "coffre", title: "Coffre-fort de secrets", file: "coffre.md" }
+      ]},
+      { group: "Traçabilité", pages: [
         { slug: "audit", title: "Journal d'audit", file: "audit.md" },
-        { slug: "rapports", title: "Rapports d'activité", file: "rapports.md" },
-        { slug: "partage-fichiers", title: "Partage de fichiers", file: "partage-fichiers.md" }
+        { slug: "rapports", title: "Rapports", file: "rapports.md" }
       ]},
       { group: "Exploitation", pages: [
+        { slug: "tls-reverse-proxy", title: "TLS & reverse-proxy", file: "tls-reverse-proxy.md" },
+        { slug: "base-de-donnees", title: "Base de données", file: "base-de-donnees.md" },
         { slug: "sauvegarde", title: "Sauvegarde & restauration", file: "sauvegarde.md" },
         { slug: "mise-a-jour", title: "Mise à jour", file: "mise-a-jour.md" },
         { slug: "durcissement", title: "Durcissement", file: "durcissement.md" },
@@ -69,9 +82,15 @@
       ]},
       { group: "Référence", pages: [
         { slug: "configuration", title: "Variables d'environnement", file: "configuration.md" },
+        { slug: "api", title: "API REST", file: "api.md" },
+        { slug: "glossaire", title: "Glossaire", file: "glossaire.md" },
         { slug: "editions", title: "Éditions (CE/EE)", file: "editions.md" }
       ]}
     ];
+
+    // Ordre de lecture, pour les liens précédent / suivant.
+    var ORDER = [];
+    NAV.forEach(function (g) { g.pages.forEach(function (p) { ORDER.push(p); }); });
 
     var byslug = {};
     NAV.forEach(function (g) { g.pages.forEach(function (p) { byslug[p.slug] = p; }); });
@@ -99,7 +118,12 @@
         .catch(function () { content.innerHTML = "<p>Impossible de charger la page.</p>"; });
     }
     function paint(p, md) {
-      content.innerHTML = EFMD.render(md);
+      var i = ORDER.indexOf(p), prev = ORDER[i - 1], next = ORDER[i + 1];
+      content.innerHTML = EFMD.render(md) +
+        '<nav class="pager">' +
+          (prev ? '<a class="prev" href="#/' + prev.slug + '"><span>Précédent</span>' + prev.title + '</a>' : '<span></span>') +
+          (next ? '<a class="next" href="#/' + next.slug + '"><span>Suivant</span>' + next.title + '</a>' : '<span></span>') +
+        '</nav>';
       EFMD.addCopyButtons(content);
       document.title = p.title + " — Documentation EndoriumFort";
       window.scrollTo(0, 0);
