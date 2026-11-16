@@ -3,9 +3,10 @@
 // see demo/capture/): the core flows are kept as state in this tab, every
 // other route replays the answer the product gave.
 import raw from './fixtures.json';
+import { seedWorkspace, handleWorkspace, journalFile, takeView, WORKSPACE_PERMISSIONS } from './workspace.js';
 import { buildHistory, buildReport, reportCsv, hostTree, listHost, hostFileContent, driveFromCapture, listDrive } from './v56.js';
 
-const STATE_KEY = 'ef_demo_state_v4';
+const STATE_KEY = 'ef_demo_state_v5';
 const HEX = '9d3f1c7a52e8b046';
 const MIN = 60 * 1000;
 // The capture lasted a couple of minutes; spread it over the last few hours.
@@ -78,6 +79,7 @@ function buildState() {
   s.shares = shares;
   s.hosts = {};
   s.ticketed = [];
+  seedWorkspace(s);
   for (const [key, value] of Object.entries(RECORDED)) {
     const m = key.match(/^GET \/api\/users\/(\d+)\/access-profiles$/);
     if (m) s.userProfiles[m[1]] = clone(value.body.profileIds || []);
@@ -94,7 +96,10 @@ let state;
 function load() {
   if (state) return state;
   try {
-    const saved = sessionStorage.getItem(STATE_KEY);
+    // A tab opened by the console (drive, isolated browser) is opened blank
+    // before its session exists: the opener's state is the fresh one.
+    const fromOpener = window.opener && window.opener !== window ? window.opener.sessionStorage.getItem(STATE_KEY) : null;
+    const saved = fromOpener || sessionStorage.getItem(STATE_KEY);
     if (saved) state = JSON.parse(saved);
   } catch (_) {}
   if (!state) state = buildState();
@@ -151,7 +156,7 @@ const csv = (v) => String(v || '').split(',').map((x) => x.trim()).filter(Boolea
 const globMatch = (pattern, value) => new RegExp('^' + String(pattern || '*').split('*').map((p) => p.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$').test(value);
 
 function visibleResources(user) {
-  if (!user || user.role !== 'operator') return state.resources;
+  if (!user || (user.role !== 'operator' && user.role !== 'workspace')) return state.resources;
   const ids = new Set(state.userResources[user.id] || []);
   return state.resources.filter((r) => ids.has(r.id));
 }
@@ -253,6 +258,7 @@ function loginResponse(user) {
   const now = Date.now();
   return {
     ...clone(fx.login[role]),
+    ...(user.role === 'workspace' ? { permissions: [...WORKSPACE_PERMISSIONS] } : {}),
     user: user.username,
     role: user.role,
     totpEnabled: !!user.totpEnabled,
@@ -675,6 +681,10 @@ export function handle(method, url, body, rawBody) {
   // Settings (stored only in this tab)
   if (p === '/api/settings/integrations') return method === 'GET' ? json({ items: state.integrations }) : ok({ items: state.integrations });
 
+  // ── Endorium Workspace (portal, file traceability, view-only documents) ──
+  const workspace = handleWorkspace(state, method, url, p, body, me, { json, text, pushAudit, save, canReadAudit });
+  if (workspace) return workspace;
+
   // ── 1.0.53–1.0.56 ──
   const v56 = handleV56(method, url, p, body, rawBody, me, actor);
   if (v56) return v56;
@@ -804,7 +814,7 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
       const id = rootName.startsWith('share:') ? rootName.slice(6) : '';
       const share = state.shares.find((x) => x.id === id && x.grantee === actor);
       if (!share) return null;
-      return { drive: (state.drives[share.owner] ||= {}), base: share.path, root: rootName, owner: share.owner, writable: share.mode === 'rw', name: share.name };
+      return { drive: (state.drives[share.owner] ||= {}), base: share.path, root: rootName, owner: share.owner, writable: share.mode === 'rw', viewOnly: share.mode === 'view', name: share.name };
     };
     const q = url.searchParams;
     const b = body && typeof body === 'object' ? body : {};
@@ -814,13 +824,22 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
     const stampNow = () => new Date().toISOString();
     if (['list', 'download', 'upload', 'mkdir', 'rename', 'delete'].includes(route) && !v) return fail('Not found', 404);
     if (route === 'list') {
-      const listed = listDrive(v.drive, full(q.get('path')), { root: v.root, owner: v.owner, writable: v.writable });
+      const listed = listDrive(v.drive, full(q.get('path')), { root: v.root, owner: v.owner, writable: v.writable, viewOnly: !!v.viewOnly });
       return listed ? json({ ...listed, path: norm(q.get('path')) }) : fail('Not found', 404);
     }
+    // The file service journals every operation under the item's real place.
+    const trace = (action, file, extra = {}) => journalFile(state, { action, user: actor, resourceId: rid, root: v?.root || 'home', owner: v?.owner || actor, file, ...extra });
     if (route === 'download') {
       const path = full(q.get('path'));
       const entry = v.drive[path];
       if (!entry) return fail('Not found', 404);
+      if (v.viewOnly) {
+        trace('download', path, { outcome: 'denied', detail: 'view only' });
+        save();
+        return fail('View only: open it in the document viewer', 403);
+      }
+      trace('download', path, entry.dir ? { detail: 'zip' } : { bytes: entry.size });
+      save();
       const name = path.split('/').pop();
       if (entry.dir) return download(`${name}.zip`, 'PK\u0005\u0006' + '\u0000'.repeat(18));
       return download(name, entry.content || `${name} — fichier de démonstration EndoriumFort\n`);
@@ -832,6 +851,7 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
       if (v.drive[target] && q.get('overwrite') !== '1') return fail('A file with this name already exists', 409);
       const size = rawBody?.size ?? 0;
       v.drive[target] = { dir: false, size, modified: stampNow(), content: null };
+      trace('upload', target, { bytes: size });
       save();
       return json({ name: q.get('name'), size }, 201);
     }
@@ -839,6 +859,7 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
       const path = (full(b.path) + '/' + b.name).replace(/^\/\//, '/');
       if (v.drive[path]) return fail('Already exists', 409);
       v.drive[path] = { dir: true, size: 0, modified: stampNow(), content: null };
+      trace('mkdir', path);
       save();
       return json({ status: 'ok' }, 201);
     }
@@ -850,6 +871,7 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
         if (key === from || key.startsWith(from + '/')) { v.drive[to + key.slice(from.length)] = v.drive[key]; delete v.drive[key]; }
       }
       for (const share of state.shares) if (share.owner === v.owner && share.path === from) Object.assign(share, { path: to, name: b.newName });
+      trace('rename', from, { fileTarget: to });
       save();
       return json({ status: 'ok' });
     }
@@ -857,6 +879,7 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
       const target = full(b.path);
       for (const key of Object.keys(v.drive)) if (key === target || key.startsWith(target + '/')) delete v.drive[key];
       state.shares = state.shares.filter((share) => !(share.owner === v.owner && share.path === target));
+      trace('delete', target);
       save();
       return json({ status: 'ok' });
     }
@@ -870,18 +893,21 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
       const entry = home[path];
       if (!entry) return fail('Not found', 404);
       if (!b.grantee || b.grantee === actor) return fail('Invalid grantee', 400);
-      if (b.mode !== 'ro' && b.mode !== 'rw') return fail('Invalid mode', 400);
+      if (b.mode !== 'ro' && b.mode !== 'rw' && b.mode !== 'view') return fail('Invalid mode', 400);
       const share = {
         id: Math.random().toString(16).slice(2, 14) + Math.random().toString(16).slice(2, 14), owner: actor, grantee: b.grantee,
-        name: path.split('/').pop(), path, isDir: entry.dir, mode: entry.dir ? b.mode : 'ro', createdAt: stampNow(),
+        name: path.split('/').pop(), path, isDir: entry.dir, mode: entry.dir || b.mode === 'view' ? b.mode : 'ro', createdAt: stampNow(),
         ...(b.expiresInDays ? { expiresAt: new Date(Date.now() + b.expiresInDays * 86400000).toISOString() } : {}), expired: false
       };
       state.shares.push(share);
+      journalFile(state, { action: 'share.create', user: actor, resourceId: rid, owner: actor, file: path, target: b.grantee, detail: share.mode });
       save();
       return json(share, 201);
     }
     if (route === 'shares' && method === 'DELETE') {
+      const gone = state.shares.find((x) => x.id === m[3] && x.owner === actor);
       state.shares = state.shares.filter((x) => !(x.id === m[3] && x.owner === actor));
+      if (gone) journalFile(state, { action: 'share.revoke', user: actor, resourceId: rid, owner: actor, file: gone.path, target: gone.grantee });
       save();
       return json({ status: 'ok' });
     }
@@ -916,4 +942,14 @@ export function findSession(id) {
 export function guardRules() {
   load();
   return state.guardRules.filter((r) => r.enabled);
+}
+
+// A view token, redeemed once by the person it was issued to (the isolated
+// browser's start message, shell.js).
+export function redeemView(token) {
+  load();
+  const me = currentUser();
+  const view = me ? takeView(state, token, me.username) : null;
+  save();
+  return view;
 }

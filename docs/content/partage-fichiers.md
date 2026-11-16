@@ -75,3 +75,15 @@ docker exec endoriumfort-files /endoriumfort-files purge 12    # supprime l'espa
 
 - Une seule instance du service. Un redémarrage oblige seulement l'interface à redemander un accès, ce qu'elle fait seule.
 - Pas de chiffrement applicatif au repos : placez le volume sur un stockage chiffré si nécessaire.
+
+## Publier un serveur de fichiers existant
+
+Une ressource dont la cible est `smb://serveur[:port]/partage[/dossier]` publie ce dossier comme **lecteur commun** : tous ceux qui ouvrent la ressource voient les mêmes fichiers, avec les droits du compte de service (identifiant et mot de passe de la ressource, conservés dans le coffre). Le service de fichiers ne joint que les serveurs autorisés par `EF_FS_SMB_ALLOWED_HOSTS` (noms, adresses ou plages CIDR).
+
+## Partage « Aperçu seulement » *(Enterprise)*
+
+En plus de **Lecture seule** et **Lecture/écriture**, un partage peut être **Aperçu seulement**. L'invité voit les fichiers, mais leur téléchargement est refusé. Ils s'ouvrent dans l'aperçu sécurisé, filigrané à son nom (voir [Endorium Workspace](#/workspace)).
+
+## Traçabilité
+
+Chaque opération est rattachée au **propriétaire** et au **chemin réel** du fichier, même lorsqu'elle passe par un partage. **Journal › Fichiers** retrouve ainsi tout l'historique d'un fichier ou d'un dossier.

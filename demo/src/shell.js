@@ -1,7 +1,8 @@
 // Toy remote shell behind the simulated SSH WebSocket. The bastion side is
 // faithful (start/input/resize messages, "Command blocked by bastion guard"
 // warning, audit event); the host side is a scripted Linux prompt.
-import { findSession, guardRules, recordGuardBlock, saveRecording } from './api.js';
+import { findSession, guardRules, recordGuardBlock, saveRecording, redeemView } from './api.js';
+import { documentFrame } from './workspace.js';
 import { hostOutput } from './host.js';
 
 const PREFIX = String.raw`(^|[;&|]\s*)(sudo\s+)?(?:[A-Za-z0-9_./-]*/)?`;
@@ -215,6 +216,33 @@ class K8sSocket extends SshSocket {
   }
 }
 
+// A view-only document in the isolated browser (#106): the picture the
+// bastion's Chromium would stream, watermarked, sent as JPEG frames.
+class DocumentSocket extends FakeSocket {
+  send(raw) {
+    let msg;
+    try { msg = JSON.parse(raw); } catch (_) { return; }
+    if (msg.type !== 'start') return;  // no paste, typing or shortcuts in a viewer
+    if (!msg.view) {
+      this.sendJson({ type: 'error', message: `Démo : ${UNSIMULATED.rbi} nécessite un vrai bastion — cette fonction n'est pas simulée.` });
+      return;
+    }
+    const view = redeemView(msg.view);
+    if (!view) {
+      this.sendJson({ type: 'error', message: 'Document not available' });
+      return;
+    }
+    const width = msg.width || 1280;
+    const height = msg.height || 800;
+    const frame = () => documentFrame(view, width, height).then((jpeg) => {
+      if (this.readyState === 1) this.emit('message', jpeg);
+    });
+    this.sendJson({ type: 'status', message: 'connected' });
+    frame();
+    this.timer = setInterval(frame, 30000);  // the watermark's clock
+  }
+}
+
 // Graphical protocols (isolated browser, VNC, RDP) need a real bastion.
 const UNSIMULATED = { rbi: "l'isolation de navigation (RBI)", vnc: 'le bureau à distance VNC', rdp: 'le bureau à distance RDP' };
 class UnsimulatedSocket extends FakeSocket {
@@ -233,6 +261,7 @@ export function installWebSocket() {
     if (path === '/api/ws/ssh') return new SshSocket(url);
     if (path === '/api/ws/shadow') return new ShadowSocket(url);
     if (path === '/api/ws/k8s') return new K8sSocket(url);
+    if (path === '/api/ws/rbi') return new DocumentSocket(url);
     if (path.startsWith('/api/ws/')) return new UnsimulatedSocket(url, path.slice('/api/ws/'.length));
     return new RealWebSocket(url, protocols);
   }

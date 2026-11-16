@@ -117,7 +117,7 @@ function mountBanner() {
     <button type="button" class="efdemo__tag" aria-expanded="true">Démo</button>
     <div class="efdemo__body">
       <p>Édition Enterprise, données fictives : rien ne quitte votre navigateur.</p>
-      <p>Connexion avec n'importe quel mot de passe : <code>admin</code>, <code>c.moreau</code> (opérateur) ou <code>s.lefevre</code> (auditeur).</p>
+      <p>Connexion avec n'importe quel mot de passe : <code>admin</code>, <code>c.moreau</code> (opérateur), <code>s.lefevre</code> (auditeur) ou <code>m.durand</code> (Workspace : le portail des collaborateurs).</p>
       <p><button type="button" class="efdemo__reset">Réinitialiser</button> · <a href="${BASE.replace(/\/demo$/, '')}/">← Retour au site</a></p>
     </div>`;
   bar.querySelector('.efdemo__reset').addEventListener('click', () => {

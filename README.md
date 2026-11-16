@@ -98,19 +98,23 @@ demo/
 └── build.sh             # demo/build.sh <checkout EndoriumFort> <sortie> [base]
 ```
 
-- Connexion avec n'importe quel mot de passe : `admin`, `c.moreau` (opérateur), `s.lefevre` (auditeur).
+- Connexion avec n'importe quel mot de passe : `admin`, `c.moreau` (opérateur), `s.lefevre` (auditeur),
+  `m.durand` (rôle Workspace : le portail à tuiles des collaborateurs).
 - Simulé avec l'état de l'onglet : politiques JIT, profils, demandes et double validation,
   ouverture de session (motif, ticket, objectif, MFA), coffre (mot de passe injecté), terminal SSH
   et exec Kubernetes, garde de commandes, enregistrements rejouables, Session DNA et paquets de preuve
   (chaîne recalculée comme sur le bastion), journal, rapports d'activité (calculés sur le journal,
-  avec 180 jours d'historique simulé), transfert de fichiers SSH, drive de fichiers et partages.
+  avec 180 jours d'historique simulé), transfert de fichiers SSH, drive de fichiers et partages ; Endorium Workspace (`demo/src/workspace.js`) :
+  portail et ressources publiées, partage « aperçu seulement » avec aperçu filigrané (image dessinée
+  dans le navigateur à la place du flux du navigateur isolé), journal par fichier (Journal › Fichiers)
+  et pack de preuve des fichiers.
 - Rejoué tel qu'enregistré : SSO, LDAP, SCIM, SIEM/ITSM, relais, cluster, ITDR, centre de sécurité.
-- Non simulé : navigateur isolé (RBI), VNC et RDP (message explicite).
+- Non simulé : navigateur isolé (RBI) hors aperçu de document, VNC et RDP (message explicite).
 - Données 100 % fictives ; rien ne quitte le navigateur.
 
 Build local :
 ```bash
-git clone --depth 1 --branch v1.0.56 https://github.com/NergYR/EndoriumFort /tmp/ee   # accès requis
+git clone --depth 1 --branch dev https://github.com/NergYR/EndoriumFort /tmp/ee   # accès requis
 demo/build.sh /tmp/ee ./_site/demo /demo/
 ```
 
