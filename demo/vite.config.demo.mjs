@@ -29,7 +29,9 @@ function demo() {
         // Tabs opened at the app root (?files=, ?rbi=) stay under the sub-path.
         .replaceAll('${window.location.origin}/?', '${window.location.origin}' + base + '?')
         .replaceAll('window.open(`/?', 'window.open(`' + base + '?');
-      if (id.endsWith('/frontend/src/main.jsx')) out = `import ${JSON.stringify(shim)};\n${out}`;
+      // The entry moved to src/app/ after 1.0.56; both layouts are accepted.
+      if (id.endsWith('/frontend/src/main.jsx') || id.endsWith('/frontend/src/app/main.jsx'))
+        out = `import ${JSON.stringify(shim)};\n${out}`;
       return out === code ? null : { code: out, map: null };
     }
   };
