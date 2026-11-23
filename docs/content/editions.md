@@ -6,7 +6,7 @@ EndoriumFort suit un modèle **open-core** : un socle au code public et auditabl
 
 - **Code public**, lisible et auditable : [Endorium-Group/EndoriumFort-CE](https://github.com/Endorium-Group/EndoriumFort-CE).
 - Se construit et fonctionne **seule**, sans licence ni connexion à un service tiers.
-- Couvre tout ce que décrit cette documentation : terminal SSH et transfert de fichiers, navigateur isolé, partage de fichiers, coffre-fort, MFA, rôles et périmètre, règles d'accès, garde-fou de commandes, sessions en direct et observation, journal d'audit infalsifiable, rapports, API.
+- Couvre tout ce que décrit cette documentation, hors pages et sections marquées *Enterprise* : terminal SSH et transfert de fichiers, navigateur isolé, machine de rebond, accès direct aux applications, partage de fichiers, Workspace et appareils connus, coffre-fort, MFA, rôles et périmètre, règles d'accès, garde-fou de commandes, sessions en direct et observation, journal d'audit infalsifiable, rapports, API.
 - Un nœud, en Docker, en paquet Debian ou sur Kubernetes.
 
 ### Ce que la licence CE autorise
@@ -26,11 +26,12 @@ Le texte qui fait foi est le fichier `LICENSE` du dépôt. Faites-le relire avan
 
 L'édition Enterprise s'adresse aux organisations qui exploitent un bastion en production. Elle ajoute notamment :
 
-- des **protocoles** supplémentaires, dont les accès graphiques ;
+- des **protocoles** supplémentaires, dont les accès graphiques : RDP dans le navigateur, applications publiées (RemoteApp), VNC ;
+- la **connexion automatique** aux applications web, leurs **règles de transfert** et les certificats automatiques ;
 - l'**intégration à l'annuaire** et l'authentification unique de l'organisation ;
 - la **gouvernance des accès** : validations, accès temporaires, politiques centralisées ;
 - l'**enregistrement des sessions** et la production de preuves ;
-- l'**exploitation à grande échelle** : sites distants, haute disponibilité, intégration au SOC ;
+- l'**exploitation à grande échelle** : sites distants reliés par des [relais](#/relais), haute disponibilité, intégration au SOC ;
 - le **support** de l'éditeur.
 
 Elle se déploie hors-ligne, sans serveur de licence ni appel extérieur : elle convient aux environnements isolés. Arrivée à expiration, sa licence désactive les fonctions Enterprise sans toucher au socle.

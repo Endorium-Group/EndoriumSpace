@@ -3,6 +3,7 @@
 // warning, audit event); the host side is a scripted Linux prompt.
 import { findSession, guardRules, recordGuardBlock, saveRecording, redeemView } from './api.js';
 import { documentFrame } from './workspace.js';
+import { startJumphost } from './jumphost.js';
 import { hostOutput } from './host.js';
 
 const PREFIX = String.raw`(^|[;&|]\s*)(sudo\s+)?(?:[A-Za-z0-9_./-]*/)?`;
@@ -223,6 +224,12 @@ class DocumentSocket extends FakeSocket {
     let msg;
     try { msg = JSON.parse(raw); } catch (_) { return; }
     if (msg.type !== 'start') return;  // no paste, typing or shortcuts in a viewer
+    // A jump host desktop (EndoriumFort #86): simulated in jumphost.js.
+    const desk = !msg.view && findSession(msg.sessionId);
+    if (desk && desk.resource?.protocol === 'jumphost' && desk.session.status === 'active') {
+      startJumphost(this, msg, desk);
+      return;
+    }
     if (!msg.view) {
       this.sendJson({ type: 'error', message: `Démo : ${UNSIMULATED.rbi} nécessite un vrai bastion — cette fonction n'est pas simulée.` });
       return;

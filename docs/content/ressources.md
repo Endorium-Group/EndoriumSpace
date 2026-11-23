@@ -71,4 +71,4 @@ Retirer l'affectation retire l'accès immédiatement : l'opérateur ne la voit p
 
 Depuis la **Carte**, double-cliquez la ressource. En cas d'échec, voir [Dépannage](#/depannage).
 
-> **Atteindre un autre réseau** — le bastion doit pouvoir joindre la cible directement. Pour des cibles situées sur un autre site ou derrière un NAT, l'édition Enterprise propose des relais ; en CE, passez par un VPN entre les deux réseaux.
+> **Atteindre un autre réseau** — le bastion doit pouvoir joindre la cible directement. Pour des cibles situées sur un autre site ou derrière un NAT, l'édition Enterprise propose des [relais](#/relais), sans port à ouvrir sur le site ; en CE, passez par un VPN entre les deux réseaux.

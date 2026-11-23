@@ -38,12 +38,22 @@ Les gros fichiers sont écrits sur disque côté bastion, pas chargés en mémoi
 
 > **Important en CE** — ces transferts fonctionnent, mais **ne sont pas arbitrés** : il n'existe pas de politique pour refuser un sens, plafonner un volume par type ou bloquer des extensions. **Tout transfert est autorisé** dès que la ressource est accessible. Si vous devez cloisonner les flux de fichiers, n'exposez pas la ressource à des opérateurs qui ne doivent pas en échanger. La gouvernance des transferts relève de l'édition Enterprise.
 
+## Usage bureautique
+
+Le navigateur isolé fait tourner les applications métier telles qu'elles sont, comme un navigateur ordinaire :
+
+- **plusieurs fichiers** par sélection, et le glisser-déposer sur la page ;
+- **impression** : `window.print()` produit un PDF, remis comme un téléchargement ;
+- **fenêtres et nouveaux onglets** ouverts par la page : ils prennent l'écran, et *Fermer cette fenêtre* revient à la précédente ;
+- **boîtes de dialogue** JavaScript (alerte, confirmation, saisie) affichées dans la console ;
+- **copier** depuis la page vers le poste avec Ctrl+C (journalisé, jamais le texte lui-même).
+
 ## Moteurs de rendu
 
 | Moteur | Où | Remarques |
 |---|---|---|
 | `tiles` | images Docker publiées | Rendu par zones modifiées. Gère les listes déroulantes natives et les transferts de fichiers. Choisi automatiquement quand il est présent. |
-| `cdp` | paquet Debian, images construites sans le module | Chromium en flux d'images. Ne sait pas afficher les menus déroulants natifs (`<select>`) ni transférer de fichiers. |
+| `cdp` | paquet Debian, images construites sans le module | Chromium en flux d'images. Transferts de fichiers, impression, fenêtres et onglets multiples (voir ci-dessous). Seul moteur de la [machine de rebond](#/machine-de-rebond) et de la connexion automatique. Ne sait pas afficher les menus déroulants natifs (`<select>`). |
 
 Le moteur actif est affiché dans les journaux de démarrage du conteneur. Pour forcer un choix : `ENDORIUMFORT_RBI_ENGINE=tiles` ou `cdp`.
 
@@ -69,4 +79,5 @@ Ouverture et fermeture du navigateur isolé sont journalisées (`rbi.open`, `rbi
 
 - **Linux uniquement** : le bastion doit tourner sur un hôte Linux (c'est le cas de l'image Docker).
 - Pas de son, pas de webcam ni de micro.
-- Les accès graphiques **RDP et VNC** relèvent de l'édition Enterprise.
+- Les accès graphiques **RDP et VNC** relèvent de l'édition Enterprise ([RDP dans le navigateur](#/rdp-navigateur)).
+- Pour une application du quotidien qui doit être fluide, voir l'[accès direct](#/acces-direct).
