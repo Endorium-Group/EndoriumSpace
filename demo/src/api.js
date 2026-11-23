@@ -4,9 +4,11 @@
 // other route replays the answer the product gave.
 import raw from './fixtures.json';
 import { seedWorkspace, handleWorkspace, journalFile, takeView, WORKSPACE_PERMISSIONS } from './workspace.js';
+import { seedJumphost } from './jumphost.js';
+import { seedRecentFeatures } from './recent.js';
 import { buildHistory, buildReport, reportCsv, hostTree, listHost, hostFileContent, driveFromCapture, listDrive } from './v56.js';
 
-const STATE_KEY = 'ef_demo_state_v5';
+const STATE_KEY = 'ef_demo_state_v6';
 const HEX = '9d3f1c7a52e8b046';
 const MIN = 60 * 1000;
 // The capture lasted a couple of minutes; spread it over the last few hours.
@@ -80,6 +82,8 @@ function buildState() {
   s.hosts = {};
   s.ticketed = [];
   seedWorkspace(s);
+  seedJumphost(s);
+  seedRecentFeatures(s);
   for (const [key, value] of Object.entries(RECORDED)) {
     const m = key.match(/^GET \/api\/users\/(\d+)\/access-profiles$/);
     if (m) s.userProfiles[m[1]] = clone(value.body.profileIds || []);
@@ -474,6 +478,10 @@ export function handle(method, url, body, rawBody) {
     const s = createSession(r, me, body || {});
     save();
     return json(s);
+  }
+  // Direct web access (#132): the application gate is a separate service.
+  if ((m = p.match(/^\/api\/sessions\/(\d+)\/app-ticket$/))) {
+    return text("Démo : l'accès direct à une application (sous-domaine, connexion automatique) nécessite un vrai bastion et sa passerelle d'applications — cette fonction n'est pas simulée.", 503);
   }
   if ((m = p.match(/^\/api\/sessions\/(\d+)\/terminate$/))) {
     const s = state.sessions.find((x) => x.id === Number(m[1]));
@@ -914,6 +922,18 @@ function handleV56(method, url, p, body, rawBody, me, actor) {
     return fail('Not found', 404);
   }
   return null;
+}
+
+// ── Jump host hooks (jumphost.js) ────────────────────────────────────────────
+export function recordAudit(type, actor, payload) {
+  load();
+  pushAudit(type, actor, payload);
+  save();
+}
+
+export function currentUsername() {
+  load();
+  return currentUser()?.username || 'anonymous';
 }
 
 // ── Terminal hooks (shell.js) ────────────────────────────────────────────────

@@ -92,6 +92,9 @@ demo/
 ├── src/shell.js         # terminal SSH / exec Kubernetes simulés, garde de commandes, enregistrement
 ├── src/host.js          # sorties des commandes des hôtes simulés
 ├── src/v56.js           # rapports (port de reporting.cc), transfert SSH, drive de fichiers
+├── src/workspace.js     # portail Workspace, aperçu filigrané, journal par fichier
+├── src/jumphost.js      # machine de rebond : pages dessinées, liste blanche, dossier de session, drives
+├── src/recent.js        # réglages RDP navigateur/RemoteApp et accès direct posés sur des ressources
 ├── src/fixtures.json    # réponses enregistrées depuis un vrai bastion Enterprise
 ├── capture/             # régénère fixtures.json (voir capture/README.md)
 ├── vite.config.demo.mjs # build du frontend pour la démo (sources produit non modifiées)
@@ -107,9 +110,16 @@ demo/
   avec 180 jours d'historique simulé), transfert de fichiers SSH, drive de fichiers et partages ; Endorium Workspace (`demo/src/workspace.js`) :
   portail et ressources publiées, partage « aperçu seulement » avec aperçu filigrané (image dessinée
   dans le navigateur à la place du flux du navigateur isolé), journal par fichier (Journal › Fichiers)
-  et pack de preuve des fichiers.
+  et pack de preuve des fichiers ; machine de rebond (`demo/src/jumphost.js`, ressource
+  `bureau-rebond`, compte `c.moreau`) : bureau, navigateur aux pages dessinées dans le navigateur
+  (intranet, wiki, supervision), liste blanche portée du bastion (site refusé), dossier de session,
+  presse-papiers, copie vers les drives, fenêtres Terminal, journal `jumphost.*`.
+- Montré par les réglages des ressources (`demo/src/recent.js`) : RDP dans le navigateur et
+  application publiée (`win-rds-01`), accès direct avec connexion automatique et règles de
+  transfert (`grafana`) ; leur ouverture affiche un message.
 - Rejoué tel qu'enregistré : SSO, LDAP, SCIM, SIEM/ITSM, relais, cluster, ITDR, centre de sécurité.
-- Non simulé : navigateur isolé (RBI) hors aperçu de document, VNC et RDP (message explicite).
+- Non simulé : navigateur isolé (RBI) hors aperçu de document et machine de rebond, VNC, RDP et
+  accès direct (message explicite).
 - Données 100 % fictives ; rien ne quitte le navigateur.
 
 Build local :

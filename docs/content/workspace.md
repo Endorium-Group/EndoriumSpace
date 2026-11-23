@@ -39,6 +39,14 @@ Une ressource au profil d'accès **bureau** s'ouvre **sans rien remplir** (ni ju
 
 Hors de ces horaires, l'ouverture est refusée et journalisée.
 
+## Appareils connus
+
+Une ressource au profil **bureau** s'ouvre sans contrôle uniquement depuis un **navigateur que la personne a déjà validé**. Depuis un nouveau navigateur, la console demande une fois un code TOTP ou une passkey, puis propose de mémoriser l'appareil. Une vérification récente (10 minutes par défaut, `ENDORIUMFORT_DEVICE_CHECK_MINUTES`) suffit pour les ouvertures suivantes.
+
+Chacun retrouve et retire ses appareils depuis la page **Mon compte** ; un administrateur peut révoquer ceux d'un utilisateur.
+
+En Enterprise, un contexte inhabituel depuis un appareil connu — pays, réseau ou heure — redemande une vérification MFA plutôt que de refuser, et lève une alerte dans le centre de sécurité.
+
 ## Les fichiers
 
 - **Drive web** : un espace par personne, des partages entre collègues avec expiration (voir [Partage de fichiers](#/partage-fichiers)).
