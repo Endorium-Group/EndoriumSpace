@@ -1,25 +1,35 @@
 <!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
 <html lang="fr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Documentation — EndoriumFort</title>
-  <meta name="description" content="Documentation EndoriumFort Community Edition : installation, utilisation et procédures d'exploitation." />
+  <title>Documentation EndoriumFort — bastion PAM auto-hébergé</title>
+  <meta name="description" content="Documentation d'EndoriumFort, bastion PAM auto-hébergé : installation Docker, Debian ou Kubernetes, accès SSH, RDP et navigateur isolé, coffre, audit, exploitation." />
+  <link rel="canonical" href="https://endorium.space/docs/" />
+  <meta property="og:title" content="Documentation EndoriumFort — bastion PAM auto-hébergé" />
+  <meta property="og:description" content="Documentation d'EndoriumFort, bastion PAM auto-hébergé : installation Docker, Debian ou Kubernetes, accès SSH, RDP et navigateur isolé, coffre, audit, exploitation." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://endorium.space/docs/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/png" href="../assets/logo-mark.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/app.css" />
   <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"}]}</script>
 </head>
-<body>
+<body data-root="../">
   <header class="hdr">
     <div class="hdr-in">
       <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-      <a class="brand" href="../index.html"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <a class="brand" href="../"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
       <nav>
-        <a href="../index.html">Site</a>
-        <a href="./" class="active">Docs</a>
+        <a href="../">Site</a>
+        <a href="../docs/" class="active">Docs</a>
         <a href="../community/">Communauté</a>
       </nav>
       <span class="spacer"></span>
@@ -33,151 +43,70 @@
   </header>
 
   <div class="layout">
-    <aside class="sidebar" id="sidebar"></aside>
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../docs/" class="active" aria-current="page">Introduction</a>
+      <a href="../docs/concepts/">Concepts</a>
+      <a href="../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../docs/installation/">Installation (Docker)</a>
+      <a href="../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../docs/ressources/">Déclarer une ressource</a>
+      <a href="../docs/regles-acces/">Règles d'accès</a>
+      <a href="../docs/session-ssh/">Session SSH</a>
+      <a href="../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../docs/workspace/">Endorium Workspace</a>
+      <a href="../docs/sessions/">Sessions</a>
+      <a href="../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../docs/audit/">Journal d'audit</a>
+      <a href="../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../docs/base-de-donnees/">Base de données</a>
+      <a href="../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../docs/durcissement/">Durcissement</a>
+      <a href="../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../docs/configuration/">Variables d'environnement</a>
+      <a href="../docs/api/">API REST</a>
+      <a href="../docs/glossaire/">Glossaire</a>
+      <a href="../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
     <main class="content">
-      <article class="content-inner md" id="content">Chargement…</article>
+      <article class="content-inner md" id="content">
+<h1>Introduction</h1>
+<p><strong>EndoriumFort</strong> est un <strong>bastion</strong> de gestion des accès à privilèges (PAM), auto-hébergé et souverain. Il centralise et sécurise vos accès d'administration — SSH, HTTP, navigateur isolé, partage de fichiers — derrière une authentification forte, un coffre-fort de secrets et un journal d'audit infalsifiable.</p>
+<p>Cette documentation couvre l'<strong>édition Community (CE)</strong> : <strong>gratuite pour un usage non commercial</strong>, à code source ouvert à la lecture et à l'audit, et pleinement fonctionnelle seule.</p>
+<blockquote><p><strong>Licence</strong> — la CE est publiée sous une licence <strong>« source-available »</strong>, et non sous une licence open source au sens de l'OSI. Elle est gratuite pour les usages personnels, pédagogiques, de recherche, d'évaluation et internes <strong>hors production</strong>. Tout <strong>usage commercial ou en production exige une licence Enterprise</strong>. Voir <a href="../docs/editions/">Éditions (CE/EE)</a>.</p></blockquote>
+<h2>Ce que fait la Community Edition</h2>
+<ul><li><strong>Terminal SSH dans le navigateur</strong> — pas de client ni de clé à déployer sur les postes.</li><li><strong>Transfert de fichiers SSH</strong> — parcourir, télécharger et déposer sur la cible (SFTP, repli SCP), désactivé par défaut, autorisé ressource par ressource et sens par sens, plafonné en taille, chaque fichier tracé avec son SHA-256.</li><li><strong>Snippets SSH</strong> — commandes réutilisables, injectées ou exécutées en un clic.</li><li><strong>Garde-fou de commandes</strong> — blocage côté serveur des commandes dangereuses, avec ses propres événements d'audit.</li><li><strong>Proxy HTTP &amp; navigateur isolé (RBI)</strong> — accéder à des interfaces d'administration web de façon isolée.</li><li><strong>Partage de fichiers</strong> — un lecteur web par utilisateur, avec partages et expiration, servi par un service séparé et durci (<a href="../docs/partage-fichiers/">Partage de fichiers</a>).</li><li><strong>Coffre-fort de secrets</strong> — identifiants chiffrés en AES-256-GCM, jamais exposés en clair aux opérateurs.</li><li><strong>MFA forte</strong> — TOTP et passkeys/WebAuthn, imposables à toute l'organisation.</li><li><strong>RBAC</strong> — rôles et permissions (admin, opérateur, auditeur…), avec périmètre d'accès par utilisateur.</li><li><strong>Motif d'accès</strong> — popup de justification et numéro de ticket exigibles par ressource, rattachés à l'audit.</li><li><strong>Sessions en direct</strong>, supervision en lecture seule, et <strong>journal d'audit infalsifiable</strong> (chaîne de hachage vérifiable) exportable en CSV.</li><li><strong>1 nœud autonome</strong>, déployé en <strong>deux conteneurs</strong> (le bastion et le service de partage de fichiers).</li></ul>
+<h2>Au-delà de la CE</h2>
+<p>Les capacités avancées — RDP/VNC, shells Kubernetes, relais multi-sites, SSO/LDAP/SCIM, cluster/HA, enregistrement de sessions, gouvernance JIT, secrets dynamiques, ITDR, Security Center — relèvent de l'<strong>édition Enterprise (EE)</strong>, débloquée par une licence hors-ligne. Voir <a href="../docs/editions/">Éditions (CE/EE)</a>.</p>
+<h2>Prérequis</h2>
+<ul><li>Un hôte Linux avec <strong>Docker</strong> (ou Kubernetes).</li><li>Un volume persistant pour les données.</li><li>Un nom de domaine + certificat TLS (recommandé en production).</li></ul>
+<p>Prêt ? Passez à l'<a href="../docs/installation/">installation</a>.</p>
+<nav class="pager"><span></span><a class="next" href="../docs/concepts/"><span>Suivant</span>Concepts</a></nav>
+      </article>
     </main>
   </div>
 
   <script src="../assets/md.js"></script>
-  <script>
-  (function () {
-    "use strict";
-    // Sommaire : sections → pages (fichiers dans content/).
-    var NAV = [
-      { group: "Prise en main", pages: [
-        { slug: "introduction", title: "Introduction", file: "introduction.md" },
-        { slug: "concepts", title: "Concepts", file: "concepts.md" },
-        { slug: "dimensionnement", title: "Dimensionnement", file: "dimensionnement.md" },
-        { slug: "installation", title: "Installation (Docker)", file: "installation.md" },
-        { slug: "installation-debian", title: "Installation (Debian)", file: "installation-debian.md" },
-        { slug: "kubernetes", title: "Installation (Kubernetes)", file: "kubernetes.md" },
-        { slug: "premier-demarrage", title: "Premier démarrage", file: "premier-demarrage.md" },
-        { slug: "console", title: "Visite de la console", file: "console.md" }
-      ]},
-      { group: "Accès", pages: [
-        { slug: "ressources", title: "Déclarer une ressource", file: "ressources.md" },
-        { slug: "regles-acces", title: "Règles d'accès", file: "regles-acces.md" },
-        { slug: "session-ssh", title: "Session SSH", file: "session-ssh.md" },
-        { slug: "garde-fou-ssh", title: "Garde-fou de commandes SSH", file: "garde-fou-ssh.md" },
-        { slug: "proxy-rbi", title: "Navigateur isolé (RBI)", file: "proxy-rbi.md" },
-        { slug: "machine-de-rebond", title: "Machine de rebond", file: "machine-de-rebond.md" },
-        { slug: "acces-direct", title: "Accès direct aux applications", file: "acces-direct.md" },
-        { slug: "rdp-navigateur", title: "RDP navigateur & RemoteApp", file: "rdp-navigateur.md" },
-        { slug: "partage-fichiers", title: "Partage de fichiers", file: "partage-fichiers.md" },
-        { slug: "workspace", title: "Endorium Workspace", file: "workspace.md" },
-        { slug: "sessions", title: "Sessions", file: "sessions.md" },
-        { slug: "relais", title: "Relais de site", file: "relais.md" }
-      ]},
-      { group: "Identités & secrets", pages: [
-        { slug: "utilisateurs", title: "Utilisateurs & rôles", file: "utilisateurs.md" },
-        { slug: "mfa", title: "MFA (TOTP & passkeys)", file: "mfa.md" },
-        { slug: "coffre", title: "Coffre-fort de secrets", file: "coffre.md" }
-      ]},
-      { group: "Traçabilité", pages: [
-        { slug: "audit", title: "Journal d'audit", file: "audit.md" },
-        { slug: "rapports", title: "Rapports", file: "rapports.md" }
-      ]},
-      { group: "Exploitation", pages: [
-        { slug: "tls-reverse-proxy", title: "TLS & reverse-proxy", file: "tls-reverse-proxy.md" },
-        { slug: "base-de-donnees", title: "Base de données", file: "base-de-donnees.md" },
-        { slug: "sauvegarde", title: "Sauvegarde & restauration", file: "sauvegarde.md" },
-        { slug: "mise-a-jour", title: "Mise à jour", file: "mise-a-jour.md" },
-        { slug: "durcissement", title: "Durcissement", file: "durcissement.md" },
-        { slug: "depannage", title: "Dépannage", file: "depannage.md" }
-      ]},
-      { group: "Référence", pages: [
-        { slug: "configuration", title: "Variables d'environnement", file: "configuration.md" },
-        { slug: "api", title: "API REST", file: "api.md" },
-        { slug: "glossaire", title: "Glossaire", file: "glossaire.md" },
-        { slug: "editions", title: "Éditions (CE/EE)", file: "editions.md" }
-      ]}
-    ];
-
-    // Ordre de lecture, pour les liens précédent / suivant.
-    var ORDER = [];
-    NAV.forEach(function (g) { g.pages.forEach(function (p) { ORDER.push(p); }); });
-
-    var byslug = {};
-    NAV.forEach(function (g) { g.pages.forEach(function (p) { byslug[p.slug] = p; }); });
-    var first = NAV[0].pages[0].slug;
-
-    // Sidebar
-    var sb = document.getElementById("sidebar");
-    NAV.forEach(function (g) {
-      var h = document.createElement("h4"); h.textContent = g.group; sb.appendChild(h);
-      g.pages.forEach(function (p) {
-        var a = document.createElement("a"); a.href = "#/" + p.slug; a.textContent = p.title; a.dataset.slug = p.slug; sb.appendChild(a);
-      });
-    });
-
-    var content = document.getElementById("content");
-    var cache = {};
-
-    function load(slug) {
-      var p = byslug[slug] || byslug[first];
-      sb.querySelectorAll("a").forEach(function (a) { a.classList.toggle("active", a.dataset.slug === p.slug); });
-      document.getElementById("sidebar").classList.remove("open");
-      if (cache[p.slug]) { paint(p, cache[p.slug]); return; }
-      fetch("content/" + p.file).then(function (r) { return r.ok ? r.text() : "# " + p.title + "\n\n*Page en cours de rédaction.*"; })
-        .then(function (md) { cache[p.slug] = md; paint(p, md); })
-        .catch(function () { content.innerHTML = "<p>Impossible de charger la page.</p>"; });
-    }
-    function paint(p, md) {
-      var i = ORDER.indexOf(p), prev = ORDER[i - 1], next = ORDER[i + 1];
-      content.innerHTML = EFMD.render(md) +
-        '<nav class="pager">' +
-          (prev ? '<a class="prev" href="#/' + prev.slug + '"><span>Précédent</span>' + prev.title + '</a>' : '<span></span>') +
-          (next ? '<a class="next" href="#/' + next.slug + '"><span>Suivant</span>' + next.title + '</a>' : '<span></span>') +
-        '</nav>';
-      EFMD.addCopyButtons(content);
-      document.title = p.title + " — Documentation EndoriumFort";
-      window.scrollTo(0, 0);
-    }
-
-    window.addEventListener("hashchange", function () { load(location.hash.replace(/^#\//, "") || first); });
-    load(location.hash.replace(/^#\//, "") || first);
-
-    // Recherche : indexe tout le contenu une fois.
-    var index = null;
-    function buildIndex() {
-      if (index) return Promise.resolve(index);
-      var all = [];
-      NAV.forEach(function (g) { g.pages.forEach(function (p) { all.push(p); }); });
-      return Promise.all(all.map(function (p) {
-        return (cache[p.slug] ? Promise.resolve(cache[p.slug]) : fetch("content/" + p.file).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) { cache[p.slug] = t; return t; }))
-          .then(function (t) { return { slug: p.slug, title: p.title, group: groupOf(p.slug), text: EFMD.strip(t).toLowerCase() }; });
-      })).then(function (rows) { index = rows; return rows; });
-    }
-    function groupOf(slug) { var r = ""; NAV.forEach(function (g) { g.pages.forEach(function (p) { if (p.slug === slug) r = g.group; }); }); return r; }
-
-    var input = document.getElementById("search");
-    var box = document.getElementById("searchResults");
-    var timer;
-    input.addEventListener("input", function () {
-      clearTimeout(timer);
-      var q = input.value.trim().toLowerCase();
-      if (q.length < 2) { box.hidden = true; return; }
-      timer = setTimeout(function () {
-        buildIndex().then(function (rows) {
-          var hits = rows.filter(function (r) { return r.title.toLowerCase().indexOf(q) >= 0 || r.text.indexOf(q) >= 0; }).slice(0, 8);
-          if (!hits.length) { box.innerHTML = '<div class="empty">Aucun résultat.</div>'; box.hidden = false; return; }
-          box.innerHTML = hits.map(function (h) { return '<a href="#/' + h.slug + '"><div class="s-title">' + h.title + '</div><div class="s-crumb">' + h.group + '</div></a>'; }).join("");
-          box.hidden = false;
-        });
-      }, 120);
-    });
-    document.addEventListener("click", function (e) { if (!e.target.closest(".search")) box.hidden = true; });
-    box.addEventListener("click", function () { box.hidden = true; input.value = ""; });
-
-    // Thème + menu mobile
-    document.getElementById("themeToggle").addEventListener("click", function () {
-      var n = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", n);
-      try { localStorage.setItem("ef-theme", n); } catch (e) {}
-    });
-    document.getElementById("menuBtn").addEventListener("click", function () { document.getElementById("sidebar").classList.toggle("open"); });
-  })();
-  </script>
+  <script src="../docs/nav.js"></script>
+  <script src="../assets/page.js"></script>
+  <script src="../assets/docs.js"></script>
 </body>
 </html>

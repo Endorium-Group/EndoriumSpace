@@ -1,0 +1,126 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rapports — Documentation EndoriumFort</title>
+  <meta name="description" content="Rapports d'activité EndoriumFort : sessions, connexions et commandes bloquées par jour, mois, trimestre ou année, comparés à la période précédente, export CSV." />
+  <link rel="canonical" href="https://endorium.space/docs/rapports/" />
+  <meta property="og:title" content="Rapports — Documentation EndoriumFort" />
+  <meta property="og:description" content="Rapports d'activité EndoriumFort : sessions, connexions et commandes bloquées par jour, mois, trimestre ou année, comparés à la période précédente, export CSV." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/rapports/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Rapports","item":"https://endorium.space/docs/rapports/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/" class="active" aria-current="page">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Rapports</h1>
+<p>La section <strong>Rapports</strong> établit des statistiques sur une période calendaire, à partir du <a href="../../docs/audit/">journal d'audit</a>. Réservée aux administrateurs et aux auditeurs.</p>
+<h2>Choisir la période</h2>
+<p>Quatre granularités : <strong>journalier</strong>, <strong>mensuel</strong>, <strong>trimestriel</strong>, <strong>annuel</strong>. Les flèches passent à la période précédente ou suivante ; <strong>En cours</strong> revient à la période actuelle.</p>
+<p>Chaque chiffre est <strong>comparé à la période précédente</strong> de même durée, avec sa tendance.</p>
+<h2>Ce que contient un rapport</h2>
+<h3>Indicateurs</h3>
+<table><thead><tr><th>Indicateur</th><th>Ce qui est compté</th></tr></thead><tbody><tr><td><strong>Événements</strong></td><td>toutes les lignes du journal sur la période</td></tr><tr><td><strong>Sessions ouvertes</strong></td><td>ouvertures réussies</td></tr><tr><td><strong>Connexions</strong></td><td>connexions réussies à la console</td></tr><tr><td><strong>Échecs</strong></td><td>refus et erreurs : mauvais mot de passe, second facteur invalide, accès refusé…</td></tr><tr><td><strong>Administration</strong></td><td>modifications de configuration, de comptes, de ressources</td></tr><tr><td><strong>Utilisateurs actifs</strong></td><td>comptes distincts apparus dans le journal</td></tr></tbody></table>
+<p>Le détail ajoute notamment les sessions fermées, les <strong>accès refusés</strong> par une règle, les échecs de connexion et les <strong>commandes bloquées</strong> par le garde-fou SSH.</p>
+<h3>Chronologie</h3>
+<p>Un graphique par heure (rapport journalier), par jour (mensuel) ou par mois (trimestriel, annuel) : événements, sessions et échecs, les échecs en rouge.</p>
+<h3>Classements</h3>
+<ul><li>les utilisateurs les plus actifs ;</li><li>les cibles les plus fréquentes — la ressource ou le compte nommé par l'événement ;</li><li>les types d'événements les plus fréquents.</li></ul>
+<h2>Exporter</h2>
+<p><strong>Exporter en CSV</strong> télécharge le rapport affiché. L'export est lui-même journalisé (<code>report.export</code>) : on sait qui a extrait quoi.</p>
+<p>Les valeurs commençant par <code>=</code>, <code>+</code>, <code>-</code> ou <code>@</code> sont neutralisées, pour qu'un tableur ne les interprète jamais comme des formules.</p>
+<h2>Calcul</h2>
+<p>Le rapport est calculé <strong>sur le serveur</strong>, à la demande, en relisant le journal, <strong>archives comprises</strong> : il couvre toute la durée de conservation, pas seulement ce qui est en mémoire depuis le dernier redémarrage. Il n'y a ni base statistique séparée ni tâche planifiée. Un rapport reflète donc exactement le journal, et ne peut pas en diverger.</p>
+<p>Sur un journal très volumineux, le serveur ne lit que sa partie la plus récente et l'indique en tête du rapport.</p>
+<h2>Usages</h2>
+<ul><li>Revue mensuelle des accès à privilèges, exigée par la plupart des référentiels.</li><li>Détection de tendances : hausse des échecs de connexion, ressource soudain très sollicitée.</li><li>Pièce jointe à un rapport d'audit, en complément de l'export du journal.</li></ul>
+<h2>API</h2>
+<pre><code>GET /api/reports?period=day|month|quarter|year&amp;date=&lt;AAAA-MM-JJ&gt;&amp;top=&lt;1-50&gt;
+GET /api/reports/export?…</code></pre>
+<p><code>date</code> accepte aussi <code>2026-10</code> ou <code>2026</code>. Permission requise : <code>audit.read</code>.</p>
+<nav class="pager"><a class="prev" href="../../docs/audit/"><span>Précédent</span>Journal d'audit</a><a class="next" href="../../docs/tls-reverse-proxy/"><span>Suivant</span>TLS &amp; reverse-proxy</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

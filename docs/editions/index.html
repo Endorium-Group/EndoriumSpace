@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Éditions (CE/EE) — Documentation EndoriumFort</title>
+  <meta name="description" content="EndoriumFort Community ou Enterprise : ce que contient le socle open-core au code public, et ce qu'ajoute l'édition Enterprise sous licence." />
+  <link rel="canonical" href="https://endorium.space/docs/editions/" />
+  <meta property="og:title" content="Éditions (CE/EE) — Documentation EndoriumFort" />
+  <meta property="og:description" content="EndoriumFort Community ou Enterprise : ce que contient le socle open-core au code public, et ce qu'ajoute l'édition Enterprise sous licence." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/editions/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Éditions (CE/EE)","item":"https://endorium.space/docs/editions/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/" class="active" aria-current="page">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Éditions (CE / EE)</h1>
+<p>EndoriumFort suit un modèle <strong>open-core</strong> : un socle au code public et auditable, l'édition Community, et une édition Enterprise sous licence commerciale.</p>
+<h2>Community Edition (CE)</h2>
+<ul><li><strong>Code public</strong>, lisible et auditable : <a href="https://github.com/Endorium-Group/EndoriumFort-CE" target="_blank" rel="noopener">Endorium-Group/EndoriumFort-CE</a>.</li><li>Se construit et fonctionne <strong>seule</strong>, sans licence ni connexion à un service tiers.</li><li>Couvre tout ce que décrit cette documentation, hors pages et sections marquées <em>Enterprise</em> : terminal SSH et transfert de fichiers, navigateur isolé, machine de rebond, accès direct aux applications, partage de fichiers, Workspace et appareils connus, coffre-fort, MFA, rôles et périmètre, règles d'accès, garde-fou de commandes, sessions en direct et observation, journal d'audit infalsifiable, rapports, API.</li><li>Un nœud, en Docker, en paquet Debian ou sur Kubernetes.</li></ul>
+<h3>Ce que la licence CE autorise</h3>
+<p>La CE est publiée sous la <strong>licence source-available EndoriumFort Community Edition</strong>. Ce n'est <strong>pas</strong> une licence open source au sens de l'OSI.</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>Gratuit</strong></td><td>usage personnel, pédagogique, recherche, évaluation, test, et usage interne <strong>hors production</strong></td></tr><tr><td><strong>Licence Enterprise requise</strong></td><td>tout <strong>usage commercial ou en production</strong>, y compris la revente en service hébergé ou managé</td></tr><tr><td><strong>Redistribution</strong></td><td>copies conformes autorisées, avec attribution</td></tr><tr><td><strong>Modifications</strong></td><td>permises pour votre usage autorisé ; leur redistribution passe par une contribution au dépôt d'origine</td></tr></tbody></table>
+<p>Le texte qui fait foi est le fichier <code>LICENSE</code> du dépôt. Faites-le relire avant de fonder un usage commercial dessus.</p>
+<h2>Enterprise Edition (EE)</h2>
+<p>L'édition Enterprise s'adresse aux organisations qui exploitent un bastion en production. Elle ajoute notamment :</p>
+<ul><li>des <strong>protocoles</strong> supplémentaires, dont les accès graphiques : RDP dans le navigateur, applications publiées (RemoteApp), VNC ;</li><li>la <strong>connexion automatique</strong> aux applications web, leurs <strong>règles de transfert</strong> et les certificats automatiques ;</li><li>l'<strong>intégration à l'annuaire</strong> et l'authentification unique de l'organisation ;</li><li>la <strong>gouvernance des accès</strong> : validations, accès temporaires, politiques centralisées ;</li><li>l'<strong>enregistrement des sessions</strong> et la production de preuves ;</li><li>l'<strong>exploitation à grande échelle</strong> : sites distants reliés par des <a href="../../docs/relais/">relais</a>, haute disponibilité, intégration au SOC ;</li><li>le <strong>support</strong> de l'éditeur.</li></ul>
+<p>Elle se déploie hors-ligne, sans serveur de licence ni appel extérieur : elle convient aux environnements isolés. Arrivée à expiration, sa licence désactive les fonctions Enterprise sans toucher au socle.</p>
+<p>Dans la console CE, les sections Enterprise apparaissent avec un cadenas : elles indiquent ce qu'elles apportent, sans rien débloquer.</p>
+<blockquote><p>Besoin de l'EE, d'une évaluation ou d'un devis ? Écrivez à <strong>contact@endorium.space</strong>, ou passez par le <a href="../../#contact">site</a>.</p></blockquote>
+<nav class="pager"><a class="prev" href="../../docs/glossaire/"><span>Précédent</span>Glossaire</a><span></span></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RDP navigateur &amp; RemoteApp — Documentation EndoriumFort</title>
+  <meta name="description" content="RDP dans le navigateur avec EndoriumFort Enterprise : postes Windows sans client, presse-papiers gouverné, enregistrement, applications publiées RemoteApp." />
+  <link rel="canonical" href="https://endorium.space/docs/rdp-navigateur/" />
+  <meta property="og:title" content="RDP navigateur &amp; RemoteApp — Documentation EndoriumFort" />
+  <meta property="og:description" content="RDP dans le navigateur avec EndoriumFort Enterprise : postes Windows sans client, presse-papiers gouverné, enregistrement, applications publiées RemoteApp." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/rdp-navigateur/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"RDP navigateur & RemoteApp","item":"https://endorium.space/docs/rdp-navigateur/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/" class="active" aria-current="page">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>RDP dans le navigateur et applications publiées (Enterprise)</h1>
+<p>Les postes et serveurs Windows s'ouvrent de deux façons :</p>
+<table><thead><tr><th></th><th>RDP dans le navigateur</th><th>RDP par l'agent</th></tr></thead><tbody><tr><td>Sur le poste</td><td>rien, un navigateur suffit</td><td>l'agent EndoriumFort et le client RDP du système (<code>mstsc</code>, FreeRDP)</td></tr><tr><td>Affichage</td><td>images dans la console</td><td>fenêtre native</td></tr><tr><td>Usage type</td><td>collaborateurs, prestataires, postes non gérés</td><td>administrateurs, longues sessions</td></tr></tbody></table>
+<h2>RDP dans le navigateur</h2>
+<p>Le bastion confie la connexion à une passerelle RDP interne (<code>rdpgate</code>, conteneur séparé, écrite sans dépendance tierce). Elle ouvre la session avec le compte du <strong>coffre</strong> et ne renvoie au navigateur que l'image du bureau. Le mot de passe n'arrive jamais sur le poste.</p>
+<p>Pour l'activer sur une ressource RDP : cocher <strong>Ouvrir dans le navigateur</strong> dans son profil RDP et renseigner le compte dans le coffre.</p>
+<p>Prise en charge : TLS (vérification stricte, empreinte <code>sha256:</code> épinglée, ou ignorée en laboratoire), NLA (CredSSP / NTLMv2), clavier international, curseur distant, redimensionnement de la fenêtre, reconnexion automatique après une coupure réseau, reprise de la session si l'onglet se ferme par accident (60 s). Qualité d'image et images par seconde se règlent par ressource.</p>
+<h2>Gouvernance</h2>
+<ul><li><strong>Presse-papiers texte</strong> autorisé ou non, par ressource (désactivé par défaut). Chaque transfert est journalisé avec son sens, sa longueur et son empreinte SHA-256 — jamais le texte.</li><li><strong>Enregistrement</strong> de la session et relecture depuis les preuves.</li><li><strong>Observation en direct</strong> par un auditeur, en lecture seule, journalisée.</li></ul>
+<h2>Applications publiées (RemoteApp)</h2>
+<p>Une ressource peut publier <strong>une seule application</strong> d'un serveur Windows plutôt que le bureau entier : le logiciel de comptabilité, l'ERP. Elle s'ouvre comme une fenêtre locale, par l'agent (<code>mstsc</code> sous Windows, FreeRDP sous macOS et Linux).</p>
+<table><thead><tr><th>Réglage</th><th>Rôle</th></tr></thead><tbody><tr><td>Programme</td><td>alias RemoteApp (`</td><td></td><td>compta`) ou chemin de l'exécutable</td></tr><tr><td>Arguments, dossier de travail</td><td>facultatifs</td></tr><tr><td>Presse-papiers, imprimantes, lecteurs</td><td>redirections, <strong>désactivées par défaut</strong>, choisies ressource par ressource</td></tr></tbody></table>
+<p>Le profil est servi à l'agent par le bastion : changer un réglage dans la console suffit, rien n'est à redistribuer sur les postes.</p>
+<blockquote><p><strong>Démo</strong> — la ressource <strong>win-rds-01</strong> montre un profil RemoteApp ouvert dans le navigateur (<em>Administration › Ressources</em>). Le flux graphique lui-même n'est pas simulé.</p></blockquote>
+<nav class="pager"><a class="prev" href="../../docs/acces-direct/"><span>Précédent</span>Accès direct aux applications</a><a class="next" href="../../docs/partage-fichiers/"><span>Suivant</span>Partage de fichiers</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

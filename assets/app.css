@@ -49,8 +49,8 @@ code, .mono { font-family: var(--mono); font-size: .9em; }
 /* Layout docs/forum ----------------------------------------------------- */
 .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 0; align-items: start; }
 .sidebar { position: sticky; top: 60px; align-self: start; height: calc(100vh - 60px); overflow-y: auto; border-right: 1px solid var(--line); padding: 22px 16px 60px; }
-.sidebar h4 { font: 600 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 20px 10px 8px; }
-.sidebar h4:first-child { margin-top: 0; }
+.sidebar h4, .sidebar .side-group { font: 600 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 20px 10px 8px; }
+.sidebar h4:first-child, .sidebar .side-group:first-child { margin-top: 0; }
 .sidebar a { display: block; padding: 7px 10px; border-radius: var(--radius-sm); color: var(--text-2); font-size: 14px; }
 .sidebar a:hover { background: var(--sub); color: var(--text); text-decoration: none; }
 .sidebar a.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
@@ -108,6 +108,7 @@ code, .mono { font-family: var(--mono); font-size: .9em; }
 .tag.active { background: var(--accent); color: #fff; }
 .qlist { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
 .qrow { display: grid; grid-template-columns: 88px 1fr; gap: 16px; padding: 18px; border-bottom: 1px solid var(--line); }
+.qrow[hidden], .empty-q[hidden] { display: none; }
 .qrow:last-child { border-bottom: 0; }
 .qstats { display: flex; flex-direction: column; gap: 6px; text-align: right; font-size: 13px; color: var(--text-2); }
 .qstats .n { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--text); }
@@ -157,7 +158,7 @@ code, .mono { font-family: var(--mono); font-size: .9em; }
 .channels { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 0 0 26px; }
 .channel { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); }
 .channel:hover { border-color: var(--accent); text-decoration: none; }
-.channel h3 { margin: 0; font-size: 1.02rem; }
+.channel h3, .channel h2 { margin: 0; font-size: 1.02rem; }
 .channel p { margin: 0; color: var(--text-2); font-size: 14px; flex: 1; }
 .channel .go { font-size: 13px; font-weight: 600; color: var(--accent); }
 .sec-title { font-size: 1.3rem; margin: 34px 0 4px; }

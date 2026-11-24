@@ -1,0 +1,124 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Variables d'environnement — Documentation EndoriumFort</title>
+  <meta name="description" content="Référence des variables d'environnement d'EndoriumFort Community : clés et secrets, réseau et TLS, authentification, base, SSH, navigateur isolé, fichiers." />
+  <link rel="canonical" href="https://endorium.space/docs/configuration/" />
+  <meta property="og:title" content="Variables d'environnement — Documentation EndoriumFort" />
+  <meta property="og:description" content="Référence des variables d'environnement d'EndoriumFort Community : clés et secrets, réseau et TLS, authentification, base, SSH, navigateur isolé, fichiers." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/configuration/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Variables d'environnement","item":"https://endorium.space/docs/configuration/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/" class="active" aria-current="page">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Variables d'environnement</h1>
+<p>Référence des variables lues par l'édition Community. Toutes ont un défaut ; seules les <strong>clés</strong> sont à fournir obligatoirement en production.</p>
+<p>Docker : section <code>environment</code> du fichier compose, ou <code>-e</code> de <code>docker run</code>. Paquet Debian : <code>/etc/endoriumfort/endoriumfort.env</code>. Helm : <code>config</code>, <code>secrets</code> ou <code>extraEnv</code>. Un changement prend effet au <strong>redémarrage</strong> du bastion.</p>
+<h2>Clés et secrets</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_VAULT_KEY</code></td><td><em>(vide)</em></td><td>Clé du coffre, 64 caractères hexadécimaux. <strong>Vide ou invalide : secrets stockés en clair.</strong></td></tr><tr><td><code>ENDORIUMFORT_AUDIT_HMAC_KEY</code></td><td><em>(vide)</em></td><td>Clé de la chaîne d'audit (hexadécimal ou phrase de passe). Vide : chaîne SHA-256 sans clé.</td></tr><tr><td><code>ENDORIUMFORT_FILESHARE_SECRET</code></td><td><em>(vide)</em></td><td>Clé des tickets du partage de fichiers, 32 caractères au moins, identique des deux côtés.</td></tr><tr><td><code>ENDORIUMFORT_FILESHARE_SECRET_FILE</code></td><td><em>(vide)</em></td><td>Variante : chemin d'un fichier contenant cette clé.</td></tr></tbody></table>
+<p>Générez chaque clé avec <code>openssl rand -hex 32</code>, et conservez-les hors de l'hôte.</p>
+<h2>Réseau et TLS</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>EF_HTTP_PORT</code> / <code>EF_HTTPS_PORT</code></td><td><code>80</code> / <code>443</code></td><td>Ports publiés sur l'hôte (fichier compose).</td></tr><tr><td><code>ENDORIUMFORT_PORT</code></td><td><code>8080</code></td><td>Port interne du backend. À ne changer qu'en connaissance de cause.</td></tr><tr><td><code>ENDORIUMFORT_TRUSTED_PROXIES</code></td><td><em>(vide)</em></td><td>Adresses ou CIDR des reverse-proxys dont <code>X-Forwarded-For</code> est cru.</td></tr><tr><td><code>ACME_ENABLED</code></td><td><code>0</code></td><td><code>1</code> : certificat Let's Encrypt automatique.</td></tr><tr><td><code>ACME_DOMAIN</code> / <code>ACME_EMAIL</code></td><td><em>(vide)</em></td><td>Nom DNS public et adresse de contact pour Let's Encrypt.</td></tr><tr><td><code>TZ</code></td><td><code>Europe/Paris</code></td><td>Fuseau horaire du conteneur. Le journal reste horodaté en UTC.</td></tr></tbody></table>
+<h2>Authentification</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_TOKEN_TTL_SECONDS</code></td><td><code>3600</code></td><td>Durée de vie d'une connexion à la console.</td></tr><tr><td><code>ENDORIUMFORT_WEBAUTHN_RP_ID</code></td><td><em>(auto)</em></td><td>Domaine des passkeys, ex. <code>bastion.example.com</code>.</td></tr><tr><td><code>ENDORIUMFORT_WEBAUTHN_ORIGIN</code></td><td><em>(auto)</em></td><td>Origine exacte, ex. <code>https://bastion.example.com</code>.</td></tr><tr><td><code>ENDORIUMFORT_WEBAUTHN_CHALLENGE_TTL_SECONDS</code></td><td><code>180</code></td><td>Délai pour répondre à une demande de passkey.</td></tr></tbody></table>
+<h2>Base de données</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_DB_DSN</code></td><td><em>(vide)</em></td><td>Vide ou chemin : SQLite. <code>postgresql://…</code> : PostgreSQL. Voir <a href="../../docs/base-de-donnees/">Base de données</a>.</td></tr></tbody></table>
+<h2>Sessions SSH</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_SSH_RESUME_GRACE_SECONDS</code></td><td><code>120</code></td><td>Délai de reprise d'une session dont la page s'est fermée (0 à 3600 ; 0 = fin immédiate).</td></tr><tr><td><code>ENDORIUMFORT_SSH_TRANSFER_MAX_UPLOAD_MB</code></td><td><code>100</code></td><td>Taille maximale d'un dépôt de fichier SSH (1 à 10 240). Aussi réglable dans <strong>Administration → Sécurité</strong>.</td></tr></tbody></table>
+<h2>Navigateur isolé</h2>
+<table><thead><tr><th>Variable</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_RBI_ENGINE</code></td><td><em>(auto)</em></td><td><code>tiles</code> ou <code>cdp</code>. Automatique selon l'image.</td></tr><tr><td><code>ENDORIUMFORT_RBI_MAX_SESSIONS</code></td><td><code>12</code></td><td>Navigateurs isolés simultanés.</td></tr><tr><td><code>ENDORIUMFORT_RBI_MAX_FPS</code></td><td><code>20</code></td><td>Images par seconde (0 à 60).</td></tr><tr><td><code>ENDORIUMFORT_RBI_JPEG_QUALITY</code></td><td><code>55</code></td><td>Qualité d'image (1 à 100).</td></tr><tr><td><code>ENDORIUMFORT_RBI_MAX_WIDTH</code> / <code>_MAX_HEIGHT</code></td><td><code>1600</code> / <code>900</code></td><td>Résolution maximale.</td></tr><tr><td><code>ENDORIUMFORT_RBI_MAX_UPLOAD_MB</code></td><td><code>0</code></td><td>Taille maximale d'un dépôt (0 = sans limite).</td></tr><tr><td><code>ENDORIUMFORT_RBI_CHROMIUM</code></td><td><em>(auto)</em></td><td>Chemin du navigateur, pour le moteur <code>cdp</code>. Par défaut, le premier Chromium trouvé dans le <code>PATH</code>.</td></tr><tr><td><code>ENDORIUMFORT_RBI_FLAGS</code></td><td><em>(vide)</em></td><td>Options supplémentaires passées au navigateur.</td></tr></tbody></table>
+<blockquote><p>D'autres variables <code>ENDORIUMFORT_RBI_*</code> (sens de transfert autorisés, extensions bloquées…) apparaissent dans le code : elles relèvent de la gouvernance des transferts de l'édition Enterprise et <strong>n'ont aucun effet en CE</strong>. Voir <a href="../../docs/proxy-rbi/">Navigateur isolé</a>.</p></blockquote>
+<h2>Partage de fichiers</h2>
+<table><thead><tr><th>Variable</th><th>Côté</th><th>Défaut</th><th>Rôle</th></tr></thead><tbody><tr><td><code>ENDORIUMFORT_FILESHARE_UPSTREAM</code></td><td>bastion</td><td><em>(vide)</em></td><td>URL du service, ex. <code>http://endoriumfort-files:8090</code>. Vide : <code>/files/</code> répond 503.</td></tr><tr><td><code>ENDORIUMFORT_FILESHARE_MAX_BODY</code></td><td>bastion</td><td><code>2g</code></td><td>Taille maximale d'une requête vers <code>/files/</code>.</td></tr><tr><td><code>EF_FS_QUOTA_MB</code></td><td>service</td><td><code>10240</code></td><td>Quota par lecteur utilisateur (0 = illimité).</td></tr><tr><td><code>EF_FS_MAX_UPLOAD_MB</code></td><td>service</td><td><code>2048</code></td><td>Taille maximale d'un fichier.</td></tr><tr><td><code>EF_FS_SESSION_TTL_SECONDS</code></td><td>service</td><td><code>900</code></td><td>Durée d'accès au lecteur entre deux renouvellements.</td></tr><tr><td><code>EF_FS_MAX_ZIP_ENTRIES</code></td><td>service</td><td><code>20000</code></td><td>Éléments maximum d'un dossier téléchargé en <code>.zip</code>.</td></tr><tr><td><code>EF_FS_LISTEN</code> / <code>EF_FS_DATA_DIR</code></td><td>service</td><td><code>:8090</code> / <code>/data</code></td><td>Écoute et stockage.</td></tr><tr><td><code>EF_FS_COOKIE_SECURE</code></td><td>service</td><td><code>auto</code></td><td><code>auto</code> suit <code>X-Forwarded-Proto</code>.</td></tr></tbody></table>
+<h2>Ce qui n'est pas réglable</h2>
+<p>Pour éviter les surprises, quelques valeurs <strong>fixes</strong> en CE :</p>
+<ul><li>politique de mot de passe : 8 caractères, majuscule, minuscule, chiffre ;</li><li>limitation de débit des connexions : 10 échecs en 5 minutes, puis blocage progressif ;</li><li>MFA imposée aux administrateurs, facultative pour les autres ;</li><li>pas de déconnexion sur inactivité, ni de rotation automatique du journal d'audit.</li></ul>
+<p>Le fichier compose fourni déclare aussi des variables propres aux modules Enterprise (relais, etc.) : elles sont sans effet en CE.</p>
+<nav class="pager"><a class="prev" href="../../docs/depannage/"><span>Précédent</span>Dépannage</a><a class="next" href="../../docs/api/"><span>Suivant</span>API REST</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

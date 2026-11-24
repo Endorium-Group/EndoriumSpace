@@ -1,0 +1,152 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dépannage — Documentation EndoriumFort</title>
+  <meta name="description" content="Dépannage d'EndoriumFort : conteneur qui ne démarre pas, santé du service, connexion, sessions SSH, navigateur isolé, partage de fichiers, coffre et journal." />
+  <link rel="canonical" href="https://endorium.space/docs/depannage/" />
+  <meta property="og:title" content="Dépannage — Documentation EndoriumFort" />
+  <meta property="og:description" content="Dépannage d'EndoriumFort : conteneur qui ne démarre pas, santé du service, connexion, sessions SSH, navigateur isolé, partage de fichiers, coffre et journal." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/depannage/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Dépannage","item":"https://endorium.space/docs/depannage/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/" class="active" aria-current="page">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Dépannage</h1>
+<p>Premier réflexe, toujours : les journaux.</p>
+<pre><code>docker logs endoriumfort --tail 100        # Docker
+journalctl -u endoriumfort -n 100          # paquet Debian</code></pre>
+<h2>Le conteneur ne démarre pas</h2>
+<ul><li><strong><code>FATAL: database open failed</code></strong> : la base est inaccessible. En SQLite, vérifiez que le volume <code>/app/data</code> est monté et accessible en écriture. En PostgreSQL, vérifiez <code>ENDORIUMFORT_DB_DSN</code>, le réseau et les identifiants (<a href="../../docs/base-de-donnees/">Base de données</a>).</li><li><strong><code>invalid ENDORIUMFORT_TRUSTED_PROXIES entry</code></strong> : seules des adresses IP ou des plages CIDR séparées par des virgules sont acceptées.</li><li><strong>Port déjà utilisé</strong> : un autre service occupe 80 ou 443 sur l'hôte. Changez <code>EF_HTTP_PORT</code> / <code>EF_HTTPS_PORT</code>.</li></ul>
+<h2>Santé du service</h2>
+<pre><code>docker exec endoriumfort curl -sf http://127.0.0.1:8080/api/health</code></pre>
+<p>Une réponse <code>{"status":"ok",…}</code> indique que le backend tourne. Si la console reste inaccessible, le problème est entre le navigateur et nginx : ports, pare-feu, reverse-proxy.</p>
+<h2>Connexion</h2>
+<h3>« Identifiants invalides » avec le compte initial</h3>
+<p>Le compte <code>admin</code> / <code>Admin123</code> n'existe que sur une base <strong>neuve</strong>. Si le volume a déjà servi, c'est le mot de passe choisi alors qui s'applique.</p>
+<h3>Bloqué sur l'écran de configuration initiale</h3>
+<p>C'est voulu : un administrateur doit changer son mot de passe et enrôler un second facteur avant tout le reste (<a href="../../docs/premier-demarrage/">Premier démarrage</a>).</p>
+<h3>« Trop de tentatives »</h3>
+<p>Plus de 10 échecs en 5 minutes pour un identifiant ou une IP déclenchent un blocage temporaire, de 30 secondes à 30 minutes. Attendez ; même le bon mot de passe est refusé pendant le blocage. Le blocage est en mémoire : un redémarrage le lève.</p>
+<p>Si <strong>tout le monde</strong> est bloqué en même temps derrière un reverse-proxy, le bastion voit l'IP du proxy pour tous : renseignez <code>ENDORIUMFORT_TRUSTED_PROXIES</code> (<a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>).</p>
+<h3>Code TOTP refusé</h3>
+<p>L'heure du serveur ou du téléphone dérive. Vérifiez la synchronisation NTP de l'hôte (<code>timedatectl</code>) et l'heure automatique du téléphone.</p>
+<h3>La passkey échoue</h3>
+<ul><li>Le bastion doit être en HTTPS avec un certificat valide.</li><li><code>ENDORIUMFORT_WEBAUTHN_RP_ID</code> et <code>ENDORIUMFORT_WEBAUTHN_ORIGIN</code> doivent correspondre <strong>exactement</strong> à l'URL tapée, port compris.</li><li>Une passkey créée sous un autre nom de domaine ne fonctionne pas : enrôlez-en une nouvelle.</li></ul>
+<p>Le bilan <strong>Administration → Sécurité</strong> signale une configuration WebAuthn invalide.</p>
+<h3>Second facteur perdu</h3>
+<p>Voir <a href="../../docs/mfa/">MFA → Perte d'un facteur</a>.</p>
+<h2>Sessions SSH</h2>
+<h3>La session ne s'ouvre pas</h3>
+<ul><li>La cible doit être <strong>joignable depuis le bastion</strong> : <code>docker exec endoriumfort sh -c 'nc -zv &lt;cible&gt; 22'</code>, si <code>nc</code> est disponible, ou un test depuis l'hôte.</li><li>La cible doit accepter l'authentification <strong>par mot de passe</strong> (<code>PasswordAuthentication yes</code> dans <code>sshd_config</code>) pour le compte utilisé.</li><li>Vérifiez le compte et le mot de passe enregistrés sur la ressource.</li></ul>
+<h3>« This resource requires… »</h3>
+<p>Une <a href="../../docs/regles-acces/">règle d'accès</a> attend un motif, un objet de session ou un ticket. Si le message parle de <strong>dual approval</strong>, la case « Approbation par un second administrateur » est cochée : décochez-la en CE.</p>
+<h3>« Command blocked by bastion guard »</h3>
+<p>Le <a href="../../docs/garde-fou-ssh/">garde-fou</a> a retenu la saisie : commande interdite, ou caractère non ASCII (lettre accentuée) sur une ressource gardée.</p>
+<h3>Un transfert de fichier est refusé</h3>
+<ul><li>Le transfert est désactivé par défaut, et s'active par ressource <strong>et par sens</strong>.</li><li>Vérifiez le plafond (<code>ENDORIUMFORT_SSH_TRANSFER_MAX_UPLOAD_MB</code>, 100 Mo par défaut).</li><li>Sans SFTP sur la cible, le repli SCP transfère mais ne liste pas les répertoires.</li></ul>
+<h2>Navigateur isolé</h2>
+<ul><li><strong>« autant de navigateurs isolés qu'il peut »</strong> : la limite <code>ENDORIUMFORT_RBI_MAX_SESSIONS</code> est atteinte. Attendez ou relevez-la si la mémoire le permet.</li><li><strong>Les menus déroulants ne s'ouvrent pas, les fichiers ne passent pas</strong> : le moteur <code>cdp</code> est actif. Vérifiez le moteur dans les journaux de démarrage (<a href="../../docs/proxy-rbi/">Navigateur isolé</a>).</li><li><strong>Page blanche ou erreur de connexion</strong> : la cible doit être joignable depuis le bastion, à l'adresse et au port de la ressource.</li><li><strong>Rien ne s'ouvre</strong> : le navigateur a bloqué l'ouverture d'onglet. Autorisez les fenêtres surgissantes pour le bastion.</li><li><strong>Image saccadée</strong> : baissez <code>ENDORIUMFORT_RBI_JPEG_QUALITY</code>, puis <code>ENDORIUMFORT_RBI_MAX_FPS</code>.</li></ul>
+<h2>Partage de fichiers</h2>
+<h3><code>/files/</code> répond 503</h3>
+<p>C'est le comportement attendu quand la clé de tickets manque ou ne correspond pas :</p>
+<ul><li><code>ENDORIUMFORT_FILESHARE_SECRET</code> doit être <strong>identique</strong> sur le bastion et sur <code>endoriumfort-files</code>, et faire 32 caractères au moins ;</li><li><code>ENDORIUMFORT_FILESHARE_UPSTREAM</code> doit pointer sur le service, ex. <code>http://endoriumfort-files:8090</code> ;</li><li><code>docker logs endoriumfort-files</code> donne l'erreur exacte.</li></ul>
+<p>Le reste du bastion n'est pas affecté.</p>
+<h3>Un dépôt est refusé</h3>
+<p>Quota de l'espace (<code>EF_FS_QUOTA_MB</code>) ou taille maximale par fichier (<code>EF_FS_MAX_UPLOAD_MB</code>). Derrière un reverse-proxy, vérifiez aussi sa taille maximale de requête.</p>
+<h2>Coffre et journal</h2>
+<h3>Les sessions n'arrivent plus à s'authentifier après une restauration</h3>
+<p>La <code>ENDORIUMFORT_VAULT_KEY</code> fournie n'est pas celle qui a chiffré les secrets. Remettez la bonne clé ; à défaut, ressaisissez les mots de passe (<a href="../../docs/coffre/">Coffre-fort</a>).</p>
+<h3>Le journal est signalé « rompu »</h3>
+<p>Une ligne a été modifiée, supprimée, ou le fichier tronqué (disque plein, copie interrompue). Notez le numéro de ligne indiqué, conservez le fichier en l'état comme élément d'enquête, et comparez avec votre dernière sauvegarde. Avec une clé HMAC, vérifiez aussi que <code>ENDORIUMFORT_AUDIT_HMAC_KEY</code> est celle utilisée à l'écriture.</p>
+<h2>Tous les administrateurs sont bloqués</h2>
+<p>Il n'existe pas de procédure de secours intégrée. Restaurez une sauvegarde antérieure du volume de données où un compte administrateur est encore utilisable — en sachant que les événements depuis seront perdus. D'où l'intérêt d'un compte <code>admin</code> de réserve et de facteurs de secours.</p>
+<h2>Toujours bloqué ?</h2>
+<p>Posez la question dans la <a href="../../community/">Communauté</a>, avec la version, le mode de déploiement et les journaux <strong>sans secrets</strong>.</p>
+<nav class="pager"><a class="prev" href="../../docs/durcissement/"><span>Précédent</span>Durcissement</a><a class="next" href="../../docs/configuration/"><span>Suivant</span>Variables d'environnement</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

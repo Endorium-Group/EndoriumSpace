@@ -1,0 +1,123 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Garde-fou de commandes SSH — Documentation EndoriumFort</title>
+  <meta name="description" content="Le garde-fou SSH d'EndoriumFort bloque côté serveur les commandes dangereuses : activation par ressource, règles fournies et personnalisées, limites." />
+  <link rel="canonical" href="https://endorium.space/docs/garde-fou-ssh/" />
+  <meta property="og:title" content="Garde-fou de commandes SSH — Documentation EndoriumFort" />
+  <meta property="og:description" content="Le garde-fou SSH d'EndoriumFort bloque côté serveur les commandes dangereuses : activation par ressource, règles fournies et personnalisées, limites." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/garde-fou-ssh/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Garde-fou de commandes SSH","item":"https://endorium.space/docs/garde-fou-ssh/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/" class="active" aria-current="page">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Garde-fou de commandes SSH</h1>
+<p>Le <strong>garde-fou</strong> (« SSH guard » dans la console) bloque côté serveur les commandes dangereuses tapées dans une session SSH. Une commande bloquée <strong>n'atteint jamais la cible</strong> : le bastion la retient et journalise le blocage.</p>
+<h2>Activer sur une ressource</h2>
+<p><strong>Administration → Ressources → (ressource SSH) → Règles d'accès → SSH guard (bloque les commandes dangereuses).</strong></p>
+<p>Le garde-fou ne s'applique qu'aux ressources où il est coché. Le bilan de l'onglet <strong>Sécurité</strong> signale les ressources SSH à risque élevé qui ne l'ont pas.</p>
+<h2>Règles fournies</h2>
+<p>Cinq règles sont livrées actives :</p>
+<table><thead><tr><th>Règle</th><th>Ce qu'elle bloque</th></tr></thead><tbody><tr><td><code>wipe_root</code></td><td><code>rm -rf /</code></td></tr><tr><td><code>fork_bomb</code></td><td>la « bombe fork » shell classique</td></tr><tr><td><code>disk_format</code></td><td><code>mkfs</code> et ses variantes (<code>mkfs.ext4</code>…)</td></tr><tr><td><code>raw_disk_dd</code></td><td><code>dd</code> écrivant vers un périphérique <code>/dev/…</code></td></tr><tr><td><code>power_command</code></td><td><code>shutdown</code>, <code>poweroff</code>, <code>reboot</code></td></tr></tbody></table>
+<p>Elles sont reconnues en début de ligne ou après un séparateur (<code>;</code>, <code>&amp;</code>, <code>|</code>), précédées ou non de <code>sudo</code> ou d'un chemin (<code>/sbin/reboot</code>).</p>
+<p>Les règles fournies peuvent être <strong>désactivées</strong> une par une, mais pas supprimées : on assouplit le garde-fou délibérément, on ne perd pas une protection en éditant une liste.</p>
+<h2>Ajouter vos règles</h2>
+<p><strong>Administration → Sécurité → règles du SSH guard.</strong> Saisissez un nom et une commande <strong>en clair</strong>, par exemple <code>systemctl stop postgresql</code> ou <code>iptables -F</code>. Le bastion la convertit lui-même en motif, avec les mêmes tolérances que les règles fournies (séparateurs, <code>sudo</code>, chemin).</p>
+<p>Les expressions régulières brutes ne sont volontairement pas acceptées : une expression erronée bloquerait tout ou rien, et elle serait évaluée à chaque frappe.</p>
+<p>Les règles s'appliquent à <strong>toutes</strong> les ressources où le garde-fou est actif.</p>
+<h2>Ce qui se passe lors d'un blocage</h2>
+<ul><li>la ligne n'est pas envoyée à la cible ;</li><li>l'opérateur voit l'avertissement « Command blocked by bastion guard » ;</li><li>un événement <code>command_guard.block</code> est écrit dans le <a href="../../docs/audit/">journal d'audit</a>, avec la session concernée et la règle déclenchée.</li></ul>
+<h2>Caractères acceptés</h2>
+<p>Sur une ressource gardée, la saisie est limitée aux caractères ASCII imprimables usuels : lettres sans accent, chiffres, espaces et ponctuation du shell. Une saisie contenant d'autres caractères — lettres accentuées, emoji, caractères Unicode — est bloquée comme une commande interdite (raison <code>non_whitelisted_input</code>). Les touches d'édition (Entrée, Retour arrière, Ctrl-C, flèches) passent normalement.</p>
+<p>Si vos opérateurs doivent saisir du texte accentué sur une cible, n'activez pas le garde-fou sur cette ressource.</p>
+<h2>Ses limites</h2>
+<p>Le garde-fou reconstitue la ligne telle que le shell la lirait, guillemets et échappements retirés : <code>r''m</code>, <code>"rm"</code> et <code>r\m</code> sont tous lus <code>rm</code>. Il ne résout pas en revanche les variables (<code>$IFS</code>, <code>${x}</code>), ni les substitutions de commande, ni le contenu d'un script exécuté.</p>
+<blockquote><p>Le garde-fou <strong>élève le niveau</strong> face aux erreurs et aux contournements occasionnels. Ce n'est <strong>pas</strong> une frontière de sécurité face à un opérateur déterminé et malveillant. Combinez-le avec des comptes cibles aux droits minimaux, le motif obligatoire et la relecture du journal.</p></blockquote>
+<nav class="pager"><a class="prev" href="../../docs/session-ssh/"><span>Précédent</span>Session SSH</a><a class="next" href="../../docs/proxy-rbi/"><span>Suivant</span>Navigateur isolé (RBI)</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>
