@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/app.css" />
   <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Utiliser PostgreSQL plutôt que SQLite ?","text":"Nous avons un PostgreSQL géré et sauvegardé. Le bastion peut il l'utiliser ?","dateCreated":"2026-11-04","acceptedAnswer":{"@type":"Answer","text":"Oui, sans changer d'image : Le bastion crée ses tables au premier démarrage. Pour migrer une installation SQLite existante, le dépôt fournit scripts/migrate sqlite to postgres.py . Deux précisions : le journal d'audit reste un fichier sur le volume de données : gardez ce volume et sauvegardez le ; une seule instance du bastion à la fois, même avec PostgreSQL. Voir Base de données.","dateCreated":"2026-11-04","author":{"@type":"Organization","name":"EndoriumFort"}}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Utiliser PostgreSQL plutôt que SQLite ?","text":"Nous avons un PostgreSQL géré et sauvegardé. Le bastion peut il l'utiliser ?","dateCreated":"2026-11-04","acceptedAnswer":{"@type":"Answer","text":"Oui, sans changer d'image : une seule variable choisit le moteur. Le journal de démarrage confirme le choix : [config] database backend=postgresql . Si la base est injoignable, le bastion refuse de démarrer plutôt que de tourner sans comptes ni journal ; la politique de redémarrage du conteneur réessaie, ce qui règle le cas d'un PostgreSQL plus lent à démarrer. Préparer la base Le bastion crée ses tables au premier démarrage. Chiffrez la connexion ( sslmode=require ou verify full ) dès que la base n'est pas sur le même hôte. Migrer une installation SQLite Le dépôt fournit scripts/migrate sqlite to postgres.py , qui produit un script SQL relisible avant application : 1. sauvegardez, puis arrêtez le bastion ; 2. démarrez le une fois avec le nouveau ENDORIUMFORT DB DSN pour créer les tables, puis arrêtez le ; 3. générez et appliquez les données (commandes ci dessous) ; 4. redémarrez le bastion avec ENDORIUMFORT DB DSN . replace vide les tables cibles : à n'utiliser que sur une base qui ne contient que l'amorçage du bastion, jamais sur une base en service. Gardez la même ENDORIUMFORT VAULT KEY : les secrets migrés sont chiffrés avec elle. Deux précisions Le journal d'audit reste un fichier sur le volume de données : gardez ce volume, et sauvegardez le avec la base ( pg dump ou votre sauvegarde continue ne le couvrent pas). Une seule instance du bastion à la fois, même avec PostgreSQL : une partie de son état vit en mémoire, et la chaîne d'audit est strictement séquentielle. Voir Base de données.","dateCreated":"2026-11-24","author":{"@type":"Organization","name":"EndoriumFort"}}}]}</script>
 </head>
 <body>
   <header class="hdr">
@@ -42,12 +42,26 @@
     <div class="sub"><a class="tag" href="../?tag=exploitation">exploitation</a> <a class="tag" href="../?tag=base-de-donnees">base-de-donnees</a></div>
     <div class="post solo"><div class="md"><p>Nous avons un PostgreSQL géré et sauvegardé. Le bastion peut-il l'utiliser ?</p><div class="whobox">Question fréquente · 2026-11-04</div></div></div>
     <div class="ans-head">Réponse</div>
-    <div class="post solo"><div class="md"><span class="ans-badge">Réponse de référence</span><p>Oui, sans changer d'image :</p>
-<pre><code>ENDORIUMFORT_DB_DSN=postgresql://endoriumfort:…@db:5432/endoriumfort?sslmode=require</code></pre>
-<p>Le bastion crée ses tables au premier démarrage. Pour migrer une installation SQLite existante, le dépôt fournit <code>scripts/migrate-sqlite-to-postgres.py</code>.</p>
-<p>Deux précisions :</p>
-<ul><li>le <strong>journal d'audit</strong> reste un fichier sur le volume de données : gardez ce volume et sauvegardez-le ;</li><li>une seule instance du bastion à la fois, même avec PostgreSQL.</li></ul>
-<p>Voir <a href="../../docs/base-de-donnees/">Base de données</a>.</p><div class="whobox">Réponse de l'équipe EndoriumFort · 2026-11-04</div></div></div>
+    <div class="post solo"><div class="md"><span class="ans-badge">Réponse de référence</span><p>Oui, sans changer d'image : une seule variable choisit le moteur.</p>
+<pre><code># SQLite (défaut) : vide, ou un chemin de fichier
+ENDORIUMFORT_DB_DSN=
+
+# PostgreSQL
+ENDORIUMFORT_DB_DSN=postgresql://endoriumfort:&lt;mot-de-passe&gt;@db.example.com:5432/endoriumfort?sslmode=require</code></pre>
+<p>Le journal de démarrage confirme le choix : <code>[config] database backend=postgresql</code>. Si la base est injoignable, le bastion <strong>refuse de démarrer</strong> plutôt que de tourner sans comptes ni journal ; la politique de redémarrage du conteneur réessaie, ce qui règle le cas d'un PostgreSQL plus lent à démarrer.</p>
+<h2>Préparer la base</h2>
+<pre><code>CREATE ROLE endoriumfort LOGIN PASSWORD '&lt;mot-de-passe&gt;';
+CREATE DATABASE endoriumfort OWNER endoriumfort;</code></pre>
+<p>Le bastion crée ses tables au premier démarrage. Chiffrez la connexion (<code>sslmode=require</code> ou <code>verify-full</code>) dès que la base n'est pas sur le même hôte.</p>
+<h2>Migrer une installation SQLite</h2>
+<p>Le dépôt fournit <code>scripts/migrate-sqlite-to-postgres.py</code>, qui produit un script SQL relisible avant application :</p>
+<ol><li>sauvegardez, puis arrêtez le bastion ;</li><li>démarrez-le une fois avec le nouveau <code>ENDORIUMFORT_DB_DSN</code> pour créer les tables, puis arrêtez-le ;</li><li>générez et appliquez les données (commandes ci-dessous) ;</li><li>redémarrez le bastion avec <code>ENDORIUMFORT_DB_DSN</code>.</li></ol>
+<pre><code>scripts/migrate-sqlite-to-postgres.py --replace /chemin/vers/endoriumfort.db &gt; load.sql
+psql "postgresql://..." -v ON_ERROR_STOP=1 -f load.sql</code></pre>
+<p><code>--replace</code> vide les tables cibles : à n'utiliser que sur une base qui ne contient que l'amorçage du bastion, jamais sur une base en service. Gardez la <strong>même</strong> <code>ENDORIUMFORT_VAULT_KEY</code> : les secrets migrés sont chiffrés avec elle.</p>
+<h2>Deux précisions</h2>
+<ul><li>Le <strong>journal d'audit</strong> reste un fichier sur le volume de données : gardez ce volume, et sauvegardez-le avec la base (<code>pg_dump</code> ou votre sauvegarde continue ne le couvrent pas).</li><li>Une <strong>seule instance</strong> du bastion à la fois, même avec PostgreSQL : une partie de son état vit en mémoire, et la chaîne d'audit est strictement séquentielle.</li></ul>
+<p>Voir <a href="../../docs/base-de-donnees/">Base de données</a>.</p><div class="whobox">Réponse de l'équipe EndoriumFort · 2026-11-24</div></div></div>
     <p class="disclaimer">Votre cas est différent, ou cette réponse vous semble inexacte ? Ouvrez une <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/new?category=q-a" target="_blank" rel="noopener">discussion</a> — sans secrets dans vos extraits.</p>
   </main>
 

@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/app.css" />
   <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Faire tourner le bastion derrière Caddy ou Traefik","text":"J'ai déjà un reverse proxy qui gère mes certificats. Que faut il régler ?","dateCreated":"2026-11-04","acceptedAnswer":{"@type":"Answer","text":"Quatre points : 1. WebSocket relayées, avec des délais d'au moins une heure (terminaux SSH, navigateur isolé). 2. En têtes Host , X Forwarded For et X Forwarded Proto: https . 3. ENDORIUMFORT TRUSTED PROXIES = l'adresse du proxy. Sinon le bastion voit l'IP du proxy pour tout le monde : journal faux, et un seul utilisateur maladroit peut bloquer tous les autres par la limitation de débit. 4. Taille de requête suffisante pour les transferts de fichiers. Exemples Caddy et nginx : TLS & reverse proxy.","dateCreated":"2026-11-04","author":{"@type":"Organization","name":"EndoriumFort"}}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Faire tourner le bastion derrière Caddy ou Traefik","text":"J'ai déjà un reverse proxy qui gère mes certificats. Que faut il régler ?","dateCreated":"2026-11-04","acceptedAnswer":{"@type":"Answer","text":"C'est un déploiement courant : le proxy termine le TLS et relaie vers le bastion. Quatre points à respecter. 1. WebSocket : les terminaux SSH et le navigateur isolé utilisent des WebSocket de longue durée. Le proxy doit les relayer, avec des délais d'inactivité d'au moins une heure. 2. En têtes : transmettez Host , X Forwarded For et X Forwarded Proto: https . Ce dernier active l'en tête HSTS. 3. Vraie adresse IP : déclarez l'adresse du proxy dans ENDORIUMFORT TRUSTED PROXIES (voir plus bas). 4. Taille des requêtes : autorisez des corps assez gros pour les transferts de fichiers ; le partage de fichiers accepte 2 Go par défaut. Proxies de confiance Adresses ou plages CIDR, séparées par des virgules. Vide par défaut : personne n'est cru, et un client ne peut pas choisir l'adresse journalisée. Sans ce réglage, le bastion voit l'IP du proxy pour tout le monde : le journal est faux, et un seul utilisateur maladroit peut bloquer tous les autres par la limitation de débit. Caddy Le bastion reste en HTTPS derrière le proxy, avec son certificat auto signé : d'où tls insecure skip verify , sur ce seul saut interne. Caddy relaie les WebSocket sans réglage supplémentaire. nginx Traefik Mêmes principes : un service vers https://endoriumfort:443 qui accepte le certificat interne, et des délais de point d'entrée compatibles avec des sessions d'une heure. Ensuite Déclarez le nom public pour les passkeys ( ENDORIUMFORT WEBAUTHN RP ID et ENDORIUMFORT WEBAUTHN ORIGIN ), puis vérifiez le bilan Administration → Sécurité . Exemples complets : TLS & reverse proxy.","dateCreated":"2026-11-24","author":{"@type":"Organization","name":"EndoriumFort"}}}]}</script>
 </head>
 <body>
   <header class="hdr">
@@ -42,9 +42,38 @@
     <div class="sub"><a class="tag" href="../?tag=reseau">reseau</a> <a class="tag" href="../?tag=tls">tls</a></div>
     <div class="post solo"><div class="md"><p>J'ai déjà un reverse-proxy qui gère mes certificats. Que faut-il régler ?</p><div class="whobox">Question fréquente · 2026-11-04</div></div></div>
     <div class="ans-head">Réponse</div>
-    <div class="post solo"><div class="md"><span class="ans-badge">Réponse de référence</span><p>Quatre points :</p>
-<ol><li><strong>WebSocket</strong> relayées, avec des délais d'au moins une heure (terminaux SSH, navigateur isolé).</li><li>En-têtes <code>Host</code>, <code>X-Forwarded-For</code> et <code>X-Forwarded-Proto: https</code>.</li><li><code>ENDORIUMFORT_TRUSTED_PROXIES</code> = l'adresse du proxy. Sinon le bastion voit l'IP du proxy pour tout le monde : journal faux, et un seul utilisateur maladroit peut bloquer tous les autres par la limitation de débit.</li><li>Taille de requête suffisante pour les transferts de fichiers.</li></ol>
-<p>Exemples Caddy et nginx : <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>.</p><div class="whobox">Réponse de l'équipe EndoriumFort · 2026-11-04</div></div></div>
+    <div class="post solo"><div class="md"><span class="ans-badge">Réponse de référence</span><p>C'est un déploiement courant : le proxy termine le TLS et relaie vers le bastion. Quatre points à respecter.</p>
+<ol><li><strong>WebSocket</strong> : les terminaux SSH et le navigateur isolé utilisent des WebSocket de longue durée. Le proxy doit les relayer, avec des délais d'inactivité d'au moins une heure.</li><li><strong>En-têtes</strong> : transmettez <code>Host</code>, <code>X-Forwarded-For</code> et <code>X-Forwarded-Proto: https</code>. Ce dernier active l'en-tête HSTS.</li><li><strong>Vraie adresse IP</strong> : déclarez l'adresse du proxy dans <code>ENDORIUMFORT_TRUSTED_PROXIES</code> (voir plus bas).</li><li><strong>Taille des requêtes</strong> : autorisez des corps assez gros pour les transferts de fichiers ; le partage de fichiers accepte 2 Go par défaut.</li></ol>
+<h2>Proxies de confiance</h2>
+<pre><code>ENDORIUMFORT_TRUSTED_PROXIES=10.0.0.5,172.18.0.0/16</code></pre>
+<p>Adresses ou plages CIDR, séparées par des virgules. Vide par défaut : personne n'est cru, et un client ne peut pas choisir l'adresse journalisée. Sans ce réglage, le bastion voit l'IP du proxy pour tout le monde : le journal est faux, et un seul utilisateur maladroit peut bloquer tous les autres par la limitation de débit.</p>
+<h2>Caddy</h2>
+<pre><code>bastion.example.com {
+    reverse_proxy https://endoriumfort:443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}</code></pre>
+<p>Le bastion reste en HTTPS derrière le proxy, avec son certificat auto-signé : d'où <code>tls_insecure_skip_verify</code>, sur ce seul saut interne. Caddy relaie les WebSocket sans réglage supplémentaire.</p>
+<h2>nginx</h2>
+<pre><code>location / {
+    proxy_pass https://127.0.0.1:8443;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_read_timeout 3600s;
+    proxy_send_timeout 3600s;
+    client_max_body_size 2g;
+}</code></pre>
+<h2>Traefik</h2>
+<p>Mêmes principes : un service vers <code>https://endoriumfort:443</code> qui accepte le certificat interne, et des délais de point d'entrée compatibles avec des sessions d'une heure.</p>
+<h2>Ensuite</h2>
+<p>Déclarez le nom public pour les passkeys (<code>ENDORIUMFORT_WEBAUTHN_RP_ID</code> et <code>ENDORIUMFORT_WEBAUTHN_ORIGIN</code>), puis vérifiez le bilan <strong>Administration → Sécurité</strong>.</p>
+<p>Exemples complets : <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>.</p><div class="whobox">Réponse de l'équipe EndoriumFort · 2026-11-24</div></div></div>
     <p class="disclaimer">Votre cas est différent, ou cette réponse vous semble inexacte ? Ouvrez une <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/new?category=q-a" target="_blank" rel="noopener">discussion</a> — sans secrets dans vos extraits.</p>
   </main>
 

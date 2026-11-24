@@ -38,21 +38,21 @@
   <url><loc>https://endorium.space/docs/glossaire/</loc><priority>0.7</priority></url>
   <url><loc>https://endorium.space/docs/editions/</loc><priority>0.7</priority></url>
   <url><loc>https://endorium.space/community/</loc><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/mot-de-passe-admin-initial/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/secrets-en-clair-vault-key/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/deposer-iso-hyperviseur-rbi/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/atteindre-reseau-distant/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/chiffrer-base-au-repos/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/mfa-obligatoire/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/verifier-integrite-audit/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/ports-exposes/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/sauvegarde-cles/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/passkey-ne-fonctionne-pas/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/commande-bloquee-garde-fou/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/ssh-cle-publique/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/derriere-reverse-proxy/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/licence-ce-usage-pro/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/postgresql/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-  <url><loc>https://endorium.space/community/signaler-vulnerabilite/</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/mot-de-passe-admin-initial/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/secrets-en-clair-vault-key/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/deposer-iso-hyperviseur-rbi/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/atteindre-reseau-distant/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/chiffrer-base-au-repos/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/mfa-obligatoire/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/verifier-integrite-audit/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/ports-exposes/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/sauvegarde-cles/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/passkey-ne-fonctionne-pas/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/commande-bloquee-garde-fou/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/ssh-cle-publique/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/derriere-reverse-proxy/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/licence-ce-usage-pro/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/postgresql/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://endorium.space/community/signaler-vulnerabilite/</loc><lastmod>2026-11-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://endorium.space/legal/</loc><priority>0.2</priority></url>
 </urlset>
