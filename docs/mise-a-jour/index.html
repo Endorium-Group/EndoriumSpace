@@ -1,0 +1,137 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise à jour — Documentation EndoriumFort</title>
+  <meta name="description" content="Mettre à jour EndoriumFort : version épinglée, docker compose, docker run, paquet Debian ou Kubernetes, et vérification de l'authenticité des images." />
+  <link rel="canonical" href="https://endorium.space/docs/mise-a-jour/" />
+  <meta property="og:title" content="Mise à jour — Documentation EndoriumFort" />
+  <meta property="og:description" content="Mettre à jour EndoriumFort : version épinglée, docker compose, docker run, paquet Debian ou Kubernetes, et vérification de l'authenticité des images." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/mise-a-jour/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Mise à jour","item":"https://endorium.space/docs/mise-a-jour/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/" class="active" aria-current="page">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Mise à jour</h1>
+<p>Les mises à jour sont publiées sous forme de <strong>versions</strong> numérotées. Seule la <strong>dernière version</strong> reçoit les correctifs de sécurité : restez à jour.</p>
+<p>Suivez les nouvelles versions sur la page <a href="https://github.com/Endorium-Group/EndoriumFort-CE/releases" target="_blank" rel="noopener">Releases du dépôt</a> ou dans la catégorie <em>Announcements</em> des <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions" target="_blank" rel="noopener">discussions</a>.</p>
+<h2>Avant de commencer</h2>
+<ol><li><strong>Sauvegardez</strong> (<a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>).</li><li>Notez la version en service : <code>curl -sk https://votre-hote/api/health</code>.</li><li>Lisez les notes de version de la cible, en particulier les changements de comportement.</li></ol>
+<p>Le schéma de la base est mis à jour automatiquement au démarrage de la nouvelle version.</p>
+<h2>Épingler une version</h2>
+<p>En production, préférez un <strong>numéro de version</strong> à <code>latest</code>, pour décider vous-même quand mettre à jour :</p>
+<pre><code>ghcr.io/endorium-group/endoriumfort:&lt;version&gt;
+ghcr.io/endorium-group/endoriumfort-files:&lt;version&gt;</code></pre>
+<p>Le bastion et le service de partage de fichiers se mettent à jour <strong>ensemble, à la même version</strong> : ils partagent le format des tickets d'accès.</p>
+<h2>Docker compose</h2>
+<p>Changez <code>DOCKER_TAG</code> dans <code>.env</code>, puis :</p>
+<pre><code>docker compose pull
+docker compose up -d</code></pre>
+<h2>docker run</h2>
+<pre><code>docker pull ghcr.io/endorium-group/endoriumfort:&lt;version&gt;
+docker stop endoriumfort &amp;&amp; docker rm endoriumfort
+docker run -d --name endoriumfort ... ghcr.io/endorium-group/endoriumfort:&lt;version&gt;</code></pre>
+<p>Reprenez <strong>exactement</strong> les mêmes volumes et variables d'environnement qu'avant.</p>
+<h2>Paquet Debian</h2>
+<pre><code>sudo apt-get update
+sudo apt-get install --only-upgrade endoriumfort-server</code></pre>
+<p>Les services redémarrent d'eux-mêmes ; vos fichiers de <code>/etc/endoriumfort/</code> sont conservés.</p>
+<h2>Kubernetes</h2>
+<pre><code>helm upgrade ef oci://ghcr.io/endorium-group/charts/endoriumfort --version &lt;X.Y.Z&gt; -f mes-valeurs.yaml</code></pre>
+<p>Le chart arrête l'ancien pod avant de démarrer le nouveau : prévoyez une courte coupure.</p>
+<h2>Vérifier l'authenticité d'une image</h2>
+<p>Les images sont signées par Cosign (signature <em>keyless</em> liée au dépôt) :</p>
+<pre><code>cosign verify ghcr.io/endorium-group/endoriumfort:&lt;version&gt; \
+  --certificate-identity-regexp 'https://github.com/Endorium-Group/EndoriumFort-CE/' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com</code></pre>
+<h2>Après la mise à jour</h2>
+<ul><li><code>api/health</code> renvoie la nouvelle version.</li><li><code>docker logs endoriumfort</code> : démarrage sans erreur.</li><li>Connexion, ouverture d'une session de test.</li><li><strong>Journal → Vérifier l'intégrité</strong> : intègre.</li></ul>
+<h2>Revenir en arrière</h2>
+<p>Recréez le conteneur avec le <strong>numéro de version précédent</strong>. Si la nouvelle version a modifié le schéma de la base, restaurez aussi la sauvegarde faite juste avant : une ancienne version ne lit pas forcément un schéma plus récent.</p>
+<nav class="pager"><a class="prev" href="../../docs/sauvegarde/"><span>Précédent</span>Sauvegarde &amp; restauration</a><a class="next" href="../../docs/durcissement/"><span>Suivant</span>Durcissement</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

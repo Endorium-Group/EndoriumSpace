@@ -1,0 +1,136 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Utilisateurs &amp; rôles — Documentation EndoriumFort</title>
+  <meta name="description" content="Gérer les utilisateurs d'EndoriumFort : les trois rôles, création, affectation des ressources, suivi d'activité, modification, mot de passe." />
+  <link rel="canonical" href="https://endorium.space/docs/utilisateurs/" />
+  <meta property="og:title" content="Utilisateurs &amp; rôles — Documentation EndoriumFort" />
+  <meta property="og:description" content="Gérer les utilisateurs d'EndoriumFort : les trois rôles, création, affectation des ressources, suivi d'activité, modification, mot de passe." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/utilisateurs/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Utilisateurs & rôles","item":"https://endorium.space/docs/utilisateurs/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/" class="active" aria-current="page">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Utilisateurs &amp; rôles</h1>
+<p>EndoriumFort applique un contrôle d'accès par <strong>rôle</strong>, complété par un <strong>périmètre</strong> de ressources explicitement affectées. Voir <a href="../../docs/concepts/">Concepts</a> pour le modèle d'ensemble.</p>
+<h2>Les trois rôles</h2>
+<table><thead><tr><th>Rôle</th><th>Vocation</th></tr></thead><tbody><tr><td><strong>Administrateur</strong></td><td>Administration complète : utilisateurs, ressources, règles, configuration. Voit toutes les ressources.</td></tr><tr><td><strong>Opérateur</strong></td><td>Ouvre des sessions vers les ressources qui lui sont affectées. Rôle par défaut.</td></tr><tr><td><strong>Auditeur</strong></td><td>Lecture seule : journal, sessions, rapports. Peut observer une session, pas en ouvrir.</td></tr></tbody></table>
+<p>Les droits viennent <strong>uniquement du rôle</strong> : il n'y a pas d'exception par personne. Pour donner un droit à quelqu'un, changez son rôle.</p>
+<h3>Droits détaillés</h3>
+<table><thead><tr><th>Droit</th><th>Administrateur</th><th>Opérateur</th><th>Auditeur</th></tr></thead><tbody><tr><td>Voir les ressources</td><td>toutes</td><td>affectées</td><td>affectées</td></tr><tr><td>Ouvrir une session</td><td>oui</td><td>oui</td><td>—</td></tr><tr><td>Voir les sessions</td><td>toutes</td><td>les siennes</td><td>toutes</td></tr><tr><td>Terminer une session</td><td>toutes</td><td>les siennes</td><td>—</td></tr><tr><td>Observer une session SSH</td><td>oui</td><td>—</td><td>oui</td></tr><tr><td>Lire le journal d'audit et les rapports</td><td>oui</td><td>—</td><td>oui</td></tr><tr><td>Gérer ressources, utilisateurs, règles</td><td>oui</td><td>—</td><td>—</td></tr><tr><td>Gérer les réglages de la plateforme</td><td>oui</td><td>—</td><td>—</td></tr></tbody></table>
+<p>L'onglet <strong>Profil</strong> d'un utilisateur affiche la liste exacte des droits de son rôle.</p>
+<h2>Créer un utilisateur</h2>
+<p><strong>Administration → Utilisateurs → Nouvel utilisateur.</strong></p>
+<ol><li><strong>Identifiant</strong> — unique, sans distinction de casse : <code>Admin</code> et <code>admin</code> sont le même compte.</li><li><strong>Mot de passe initial</strong> — au moins 8 caractères, avec une majuscule, une minuscule et un chiffre.</li><li><strong>Rôle</strong>.</li><li><strong>Doit changer son mot de passe à la prochaine connexion</strong> — coché par défaut pour un administrateur. Recommandé pour tous : vous ne connaîtrez pas le mot de passe final.</li></ol>
+<p>Un nouvel <strong>administrateur</strong> doit en outre enrôler un second facteur avant de pouvoir agir (<a href="../../docs/mfa/">MFA</a>).</p>
+<h2>Affecter des ressources</h2>
+<p>Onglet <strong>Accès</strong> de l'utilisateur : cochez les ressources qu'il peut ouvrir. L'effet est immédiat dans les deux sens.</p>
+<p>Un administrateur voit toutes les ressources : sa sélection ne compte que si son rôle change.</p>
+<h2>Suivre l'activité</h2>
+<p>L'onglet <strong>Activité</strong> montre les derniers événements de l'utilisateur dans le journal, avec un lien vers son journal complet.</p>
+<p>La liste des utilisateurs se filtre par rôle, et <strong>Sans MFA uniquement</strong> isole les comptes sans second facteur.</p>
+<h2>Modifier un utilisateur</h2>
+<p>Toute modification, même un simple changement de rôle, demande de saisir un <strong>nouveau mot de passe</strong> pour le compte : le serveur l'exige. Cochez « doit changer son mot de passe » pour que l'utilisateur le remplace aussitôt.</p>
+<p>Un changement de rôle s'applique <strong>immédiatement</strong>, y compris aux connexions déjà ouvertes : une rétrogradation retire les droits sans attendre la reconnexion.</p>
+<h2>Supprimer un utilisateur</h2>
+<ul><li>Supprime le compte, ses passkeys et ses affectations. Ses connexions en cours cessent d'être valides.</li><li>Le journal d'audit <strong>conserve</strong> toutes ses traces : la suppression ne réécrit pas l'historique.</li><li>Vous ne pouvez pas supprimer votre propre compte, ni rétrograder ou supprimer le <strong>dernier administrateur</strong>.</li></ul>
+<h2>Mot de passe</h2>
+<p>Politique appliquée par le serveur à chaque création et changement :</p>
+<ul><li>8 caractères minimum ;</li><li>au moins une majuscule, une minuscule et un chiffre.</li></ul>
+<p>C'est un plancher. Demandez des phrases de passe longues, et un second facteur.</p>
+<p>Les mots de passe sont stockés hachés avec <strong>scrypt</strong> et un sel par compte ; ils ne sont jamais réversibles.</p>
+<h2>Protection contre la force brute</h2>
+<p>Les échecs de connexion sont comptés <strong>par identifiant et par adresse IP</strong>, sur une fenêtre glissante de 5 minutes. Au-delà de 10 échecs, les tentatives sont bloquées pour une durée croissante, de 30 secondes à 30 minutes ; même un mot de passe correct est refusé pendant le blocage. Chaque blocage est journalisé (<code>auth.login.rate_limited</code>).</p>
+<p>Derrière un reverse-proxy, déclarez-le dans <code>ENDORIUMFORT_TRUSTED_PROXIES</code> pour que le compteur par IP voie la vraie adresse des clients (<a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>).</p>
+<h2>Événements</h2>
+<p><code>user.create</code>, <code>user.update</code>, <code>user.delete</code>, <code>user.password.change</code>, ainsi que <code>auth.login.success</code>, <code>auth.login.failure</code> et <code>auth.logout</code>.</p>
+<h2>Au-delà de la CE</h2>
+<p>Fédération d'identité (SSO, annuaire), provisionnement automatique des comptes et accès temporaires relèvent de l'édition Enterprise.</p>
+<nav class="pager"><a class="prev" href="../../docs/relais/"><span>Précédent</span>Relais de site</a><a class="next" href="../../docs/mfa/"><span>Suivant</span>MFA (TOTP &amp; passkeys)</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

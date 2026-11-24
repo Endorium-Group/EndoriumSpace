@@ -247,10 +247,11 @@ code, .mono { font-family: var(--mono); font-size: 0.9em; }
 /* Footer ---------------------------------------------------------------- */
 .footer { border-top: 1px solid var(--line); background: var(--panel-2); padding: 48px 0 32px; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 28px; }
-.footer h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 14px; }
+.footer h4, .footer .footer-title { font-family: var(--display); font-weight: 600; margin-top: 0; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 14px; }
 .footer a { display: block; color: var(--text-2); font-size: 14px; padding: 4px 0; }
 .footer a:hover { color: var(--text); text-decoration: none; }
 .footer .legal { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); }
+.footer .legal a { display: inline; padding: 0; }
 
 /* Reveal animation ------------------------------------------------------ */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }

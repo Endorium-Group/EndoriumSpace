@@ -1,0 +1,157 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TLS &amp; reverse-proxy — Documentation EndoriumFort</title>
+  <meta name="description" content="Servir EndoriumFort en HTTPS : Let's Encrypt intégré, reverse-proxy existant (Caddy, nginx) ou certificat personnel, domaine des passkeys, en-têtes." />
+  <link rel="canonical" href="https://endorium.space/docs/tls-reverse-proxy/" />
+  <meta property="og:title" content="TLS &amp; reverse-proxy — Documentation EndoriumFort" />
+  <meta property="og:description" content="Servir EndoriumFort en HTTPS : Let's Encrypt intégré, reverse-proxy existant (Caddy, nginx) ou certificat personnel, domaine des passkeys, en-têtes." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/tls-reverse-proxy/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"TLS & reverse-proxy","item":"https://endorium.space/docs/tls-reverse-proxy/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/" class="active" aria-current="page">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>TLS &amp; reverse-proxy</h1>
+<p>Le bastion se sert <strong>uniquement en HTTPS</strong> en production : les mots de passe, les codes MFA et le contenu des sessions y transitent, et les passkeys refusent de fonctionner sans HTTPS.</p>
+<p>Le conteneur sert déjà HTTPS sur le port <code>443</code>, avec un certificat <strong>auto-signé</strong> intégré à l'image.</p>
+<blockquote><p><strong>Ne le gardez pas en production.</strong> Ce certificat est généré une fois, à la construction de l'image : sa clé privée est <strong>la même pour toutes les installations</strong> qui utilisent cette image, et n'importe qui peut l'en extraire. Il sert aux essais et au saut interne derrière un reverse-proxy, rien de plus.</p></blockquote>
+<p>Trois façons de le remplacer.</p>
+<h2>Option 1 — Let's Encrypt intégré</h2>
+<p>Le plus simple si le bastion est joignable depuis Internet sur le port 80, sous un nom DNS public.</p>
+<pre><code>ACME_ENABLED=1
+ACME_DOMAIN=bastion.example.com
+ACME_EMAIL=admin@example.com</code></pre>
+<p>Au démarrage, le conteneur obtient le certificat (validation HTTP sur le port 80), l'installe et le renouvelle seul. Montez <code>/etc/letsencrypt</code> sur un volume pour le conserver entre deux redémarrages — le fichier compose fourni le fait déjà.</p>
+<p>En cas d'échec, le certificat courant est conservé et la raison apparaît dans <code>docker logs endoriumfort</code>.</p>
+<h2>Option 2 — derrière un reverse-proxy existant</h2>
+<p>Caddy, Traefik, nginx ou HAProxy terminent le TLS et relaient vers le bastion.</p>
+<p>Points à respecter :</p>
+<ul><li><strong>WebSocket</strong> — les terminaux SSH et le navigateur isolé utilisent des WebSocket de longue durée. Le proxy doit les relayer, avec des délais d'inactivité d'au moins une heure.</li><li><strong>En-têtes</strong> — transmettez <code>Host</code>, <code>X-Forwarded-For</code> et <code>X-Forwarded-Proto: https</code>. Ce dernier active l'en-tête HSTS.</li><li><strong>Vraie adresse IP</strong> — déclarez l'adresse du proxy pour que le journal et la limitation de débit voient l'IP des clients et non celle du proxy :</li></ul>
+<pre><code>ENDORIUMFORT_TRUSTED_PROXIES=10.0.0.5,172.18.0.0/16</code></pre>
+<p>Adresses ou plages CIDR, séparées par des virgules. Vide par défaut : personne n'est cru, et un client ne peut pas choisir l'adresse qui sera journalisée.</p>
+<ul><li><strong>Taille des requêtes</strong> — autorisez des corps de requête assez gros pour les transferts de fichiers (le partage de fichiers accepte 2 Go par défaut).</li></ul>
+<h3>Exemple Caddy</h3>
+<pre><code>bastion.example.com {
+    reverse_proxy https://endoriumfort:443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}</code></pre>
+<p>Le bastion reste en HTTPS derrière le proxy (certificat auto-signé, d'où <code>tls_insecure_skip_verify</code> sur ce seul saut interne). Caddy relaie les WebSocket sans réglage supplémentaire.</p>
+<h3>Exemple nginx</h3>
+<pre><code>location / {
+    proxy_pass https://127.0.0.1:8443;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_read_timeout 3600s;
+    proxy_send_timeout 3600s;
+    client_max_body_size 2g;
+}</code></pre>
+<h2>Option 3 — votre propre certificat</h2>
+<p>Montez le certificat et sa clé à l'emplacement attendu par nginx dans le conteneur :</p>
+<pre><code>volumes:
+  - ./certs/fullchain.pem:/etc/nginx/tls/tls.crt:ro
+  - ./certs/privkey.pem:/etc/nginx/tls/tls.key:ro</code></pre>
+<p>Pour le paquet Debian, voir <a href="../../docs/installation-debian/">Installation (paquet Debian)</a>.</p>
+<h2>Domaine et passkeys</h2>
+<p>Quel que soit le choix, déclarez le nom définitif :</p>
+<pre><code>ENDORIUMFORT_WEBAUTHN_RP_ID=bastion.example.com
+ENDORIUMFORT_WEBAUTHN_ORIGIN=https://bastion.example.com</code></pre>
+<p>L'origine doit correspondre <strong>exactement</strong> à l'URL tapée par les utilisateurs, port compris s'il n'est pas 443.</p>
+<h2>En-têtes de sécurité</h2>
+<p>Le bastion applique d'office une politique de sécurité du contenu stricte (<code>default-src 'self'</code>), interdit l'intégration dans un cadre tiers, désactive les API sensibles du navigateur (caméra, micro, géolocalisation, USB…) et interdit la mise en cache des réponses. HSTS est envoyé dès que la requête arrive en HTTPS.</p>
+<h2>Vérifier</h2>
+<pre><code>curl -sI https://bastion.example.com/ | grep -i strict-transport</code></pre>
+<nav class="pager"><a class="prev" href="../../docs/rapports/"><span>Précédent</span>Rapports</a><a class="next" href="../../docs/base-de-donnees/"><span>Suivant</span>Base de données</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

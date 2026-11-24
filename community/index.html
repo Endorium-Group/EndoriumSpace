@@ -3,8 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Communauté — EndoriumFort</title>
-  <meta name="description" content="Communauté EndoriumFort : entraide, questions fréquentes, idées, signalement de bugs et de vulnérabilités." />
+  <title>Communauté et questions fréquentes — EndoriumFort</title>
+  <meta name="description" content="Communauté EndoriumFort : questions fréquentes sur l'installation, le coffre, la MFA et l'audit, entraide, idées, bugs et signalement de vulnérabilités." />
+  <link rel="canonical" href="https://endorium.space/community/" />
+  <meta property="og:title" content="Communauté et questions fréquentes — EndoriumFort" />
+  <meta property="og:description" content="Questions fréquentes sur le bastion PAM EndoriumFort, entraide, idées, bugs et signalement de vulnérabilités." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://endorium.space/community/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
   <link rel="icon" type="image/png" href="../assets/logo-mark.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,9 +22,9 @@
 <body>
   <header class="hdr">
     <div class="hdr-in">
-      <a class="brand" href="../index.html"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <a class="brand" href="../"><img src="../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
       <nav>
-        <a href="../index.html">Site</a>
+        <a href="../">Site</a>
         <a href="../docs/">Docs</a>
         <a href="./" class="active">Communauté</a>
       </nav>
@@ -41,61 +48,180 @@
 
     <section class="channels" aria-label="Canaux">
       <a class="channel" href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/categories/q-a" target="_blank" rel="noopener">
-        <h3>Questions &amp; réponses</h3>
+        <h2>Questions &amp; réponses</h2>
         <p>Un problème d'installation, de configuration ou d'usage ? Cherchez, puis posez votre question dans les discussions.</p>
         <span class="go">Discussions Q&amp;A ↗</span>
       </a>
       <a class="channel" href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/categories/ideas" target="_blank" rel="noopener">
-        <h3>Idées</h3>
+        <h2>Idées</h2>
         <p>Une fonctionnalité qui vous manque ? Décrivez le besoin, votez pour les idées des autres.</p>
         <span class="go">Proposer une idée ↗</span>
       </a>
       <a class="channel" href="https://github.com/Endorium-Group/EndoriumFort-CE/issues/new/choose" target="_blank" rel="noopener">
-        <h3>Signaler un bug</h3>
+        <h2>Signaler un bug</h2>
         <p>Un comportement reproductible et contraire à la documentation ? Ouvrez une issue avec la version et les étapes.</p>
         <span class="go">Ouvrir une issue ↗</span>
       </a>
       <a class="channel" href="mailto:security@endorium.space">
-        <h3>Sécurité</h3>
+        <h2>Sécurité</h2>
         <p>Une vulnérabilité ne se signale <strong>jamais</strong> publiquement. Écrivez-nous en privé ; accusé de réception sous 72 h.</p>
         <span class="go">security@endorium.space</span>
       </a>
       <a class="channel" href="https://github.com/Endorium-Group/EndoriumFort-CE" target="_blank" rel="noopener">
-        <h3>Contribuer</h3>
+        <h2>Contribuer</h2>
         <p>Corrections, traductions, documentation : les contributions passent par une pull request sur le dépôt d'origine.</p>
         <span class="go">Dépôt EndoriumFort-CE ↗</span>
       </a>
       <a class="channel" href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/categories/announcements" target="_blank" rel="noopener">
-        <h3>Annonces</h3>
+        <h2>Annonces</h2>
         <p>Nouvelles versions et changements importants, publiés par l'équipe.</p>
         <span class="go">Suivre les annonces ↗</span>
       </a>
     </section>
 
-    <div class="callout"><strong>Avant de poster</strong> — consultez la <a href="../docs/">documentation</a>, en particulier <a href="../docs/#/depannage">Dépannage</a>. Indiquez l'édition, la version et le mode de déploiement, joignez les journaux utiles, et <strong>retirez tout secret</strong> (clés, mots de passe, jetons) de vos extraits.</div>
+    <div class="callout"><strong>Avant de poster</strong> — consultez la <a href="../docs/">documentation</a>, en particulier <a href="../docs/depannage/">Dépannage</a>. Indiquez l'édition, la version et le mode de déploiement, joignez les journaux utiles, et <strong>retirez tout secret</strong> (clés, mots de passe, jetons) de vos extraits.</div>
 
     <h2 class="sec-title">Questions fréquentes</h2>
     <p class="sec-sub">Réponses rédigées par l'équipe aux questions qui reviennent. Chacune renvoie à la page de documentation qui fait foi.</p>
     <div class="tagbar" id="tagbar"></div>
-    <div class="qlist" id="qlist"></div>
+    <div class="qlist" id="qlist">
+      <!-- qlist:start -->
+      <div class="qrow" data-slug="mot-de-passe-admin-initial">
+        <div>
+          <h3><a href="mot-de-passe-admin-initial/">Quels identifiants utiliser au premier démarrage ?</a></h3>
+          <p class="excerpt">Je viens de lancer EndoriumFort CE et j'arrive sur l'écran de connexion. Quel compte utiliser ?</p>
+          <div class="meta"><span class="tag">installation</span> <span class="tag">premiers-pas</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="secrets-en-clair-vault-key">
+        <div>
+          <h3><a href="secrets-en-clair-vault-key/">Mes mots de passe de cibles sont-ils vraiment chiffrés ?</a></h3>
+          <p class="excerpt">J'ai enregistré des identifiants SSH dans le coffre. Comment savoir s'ils sont chiffrés en base ?</p>
+          <div class="meta"><span class="tag">securite</span> <span class="tag">coffre</span> <span class="tag">configuration</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="deposer-iso-hyperviseur-rbi">
+        <div>
+          <h3><a href="deposer-iso-hyperviseur-rbi/">Déposer une image ISO sur un hyperviseur à travers le navigateur isolé ?</a></h3>
+          <p class="excerpt">J'administre un hyperviseur par le navigateur isolé du bastion. Je voudrais téléverser une ISO sur un datastore : c'est possible alors que le navigateur tourne sur le ser…</p>
+          <div class="meta"><span class="tag">rbi</span> <span class="tag">transfert-fichiers</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="atteindre-reseau-distant">
+        <div>
+          <h3><a href="atteindre-reseau-distant/">Atteindre des machines sur un autre site depuis mon bastion ?</a></h3>
+          <p class="excerpt">Mon bastion tourne sur un site, mais je dois administrer des serveurs sur un second site, derrière un NAT. Comment faire en CE ?</p>
+          <div class="meta"><span class="tag">reseau</span> <span class="tag">architecture</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="chiffrer-base-au-repos">
+        <div>
+          <h3><a href="chiffrer-base-au-repos/">La base de données est-elle chiffrée au repos ?</a></h3>
+          <p class="excerpt">Pour un audit, je dois garantir que les données sont chiffrées au repos. Qu'est ce que la CE fait ?</p>
+          <div class="meta"><span class="tag">securite</span> <span class="tag">chiffrement</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="mfa-obligatoire">
+        <div>
+          <h3><a href="mfa-obligatoire/">Peut-on rendre la MFA obligatoire pour tout le monde ?</a></h3>
+          <p class="excerpt">Je veux que personne ne puisse utiliser le bastion sans second facteur. Est ce configurable ?</p>
+          <div class="meta"><span class="tag">mfa</span> <span class="tag">securite</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="verifier-integrite-audit">
+        <div>
+          <h3><a href="verifier-integrite-audit/">Comment prouver que le journal d'audit n'a pas été modifié ?</a></h3>
+          <p class="excerpt">Un auditeur me demande une preuve d'intégrité du journal. Qu'est ce qu'EndoriumFort fournit ?</p>
+          <div class="meta"><span class="tag">audit</span> <span class="tag">conformite</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="ports-exposes">
+        <div>
+          <h3><a href="ports-exposes/">Quels ports exposer ?</a></h3>
+          <p class="excerpt">Le fichier compose publie 80 et 443. Puis je me passer du 80 ? Et le port 8080 ?</p>
+          <div class="meta"><span class="tag">installation</span> <span class="tag">reseau</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="sauvegarde-cles">
+        <div>
+          <h3><a href="sauvegarde-cles/">Que faut-il sauvegarder exactement ?</a></h3>
+          <p class="excerpt">Je mets en place des sauvegardes. Les volumes suffisent ils ?</p>
+          <div class="meta"><span class="tag">exploitation</span> <span class="tag">sauvegarde</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="passkey-ne-fonctionne-pas">
+        <div>
+          <h3><a href="passkey-ne-fonctionne-pas/">« Passkey sign-in failed » : pourquoi ma passkey est refusée ?</a></h3>
+          <p class="excerpt">Le TOTP fonctionne, mais l'ajout ou l'utilisation d'une passkey échoue.</p>
+          <div class="meta"><span class="tag">mfa</span> <span class="tag">depannage</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="commande-bloquee-garde-fou">
+        <div>
+          <h3><a href="commande-bloquee-garde-fou/">« Command blocked by bastion guard » sur une commande anodine</a></h3>
+          <p class="excerpt">Sur une ressource SSH, une commande sans danger est refusée avec ce message. Pourquoi ?</p>
+          <div class="meta"><span class="tag">ssh</span> <span class="tag">depannage</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="ssh-cle-publique">
+        <div>
+          <h3><a href="ssh-cle-publique/">Le bastion peut-il se connecter aux cibles par clé SSH ?</a></h3>
+          <p class="excerpt">Nos serveurs n'acceptent que l'authentification par clé. Comment les déclarer ?</p>
+          <div class="meta"><span class="tag">ssh</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="derriere-reverse-proxy">
+        <div>
+          <h3><a href="derriere-reverse-proxy/">Faire tourner le bastion derrière Caddy ou Traefik</a></h3>
+          <p class="excerpt">J'ai déjà un reverse proxy qui gère mes certificats. Que faut il régler ?</p>
+          <div class="meta"><span class="tag">reseau</span> <span class="tag">tls</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="licence-ce-usage-pro">
+        <div>
+          <h3><a href="licence-ce-usage-pro/">Puis-je utiliser la CE en production dans mon entreprise ?</a></h3>
+          <p class="excerpt">La CE est gratuite et son code est public. Puis je la déployer pour administrer les serveurs de production de ma société ?</p>
+          <div class="meta"><span class="tag">licence</span> <span class="tag">editions</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="postgresql">
+        <div>
+          <h3><a href="postgresql/">Utiliser PostgreSQL plutôt que SQLite ?</a></h3>
+          <p class="excerpt">Nous avons un PostgreSQL géré et sauvegardé. Le bastion peut il l'utiliser ?</p>
+          <div class="meta"><span class="tag">exploitation</span> <span class="tag">base-de-donnees</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <div class="qrow" data-slug="signaler-vulnerabilite">
+        <div>
+          <h3><a href="signaler-vulnerabilite/">Comment signaler une faille de sécurité ?</a></h3>
+          <p class="excerpt">Je pense avoir trouvé une vulnérabilité. Où la signaler ?</p>
+          <div class="meta"><span class="tag">securite</span> <span class="tag">contribuer</span><span class="who">Équipe EndoriumFort · 2026-11-04</span></div>
+        </div>
+      </div>
+      <!-- qlist:end -->
+    </div>
+    <div class="empty-q" id="qempty" hidden>Aucune question ne correspond. <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/new?category=q-a" target="_blank" rel="noopener">Posez-la dans les discussions ↗</a></div>
 
     <p class="disclaimer">Le support des clients de l'édition Enterprise passe par leur contact dédié : <a href="mailto:contact@endorium.space">contact@endorium.space</a>.</p>
   </main>
 
   <script src="../assets/md.js"></script>
   <script src="data/questions.js"></script>
+  <script src="../assets/page.js"></script>
   <script>
   (function () {
     "use strict";
-    var Q = (window.EFQA || []).slice();
-    var qlist = document.getElementById("qlist");
+    // La liste est pré-rendue par scripts/build.mjs ; ici, seulement le filtre
+    // par étiquette (?tag=, même URL canonique) et la recherche.
+    var Q = window.EFQA || [];
+    var byslug = {};
+    Q.forEach(function (q) { byslug[q.slug] = q; });
+    var rows = Array.prototype.slice.call(document.querySelectorAll("#qlist .qrow"));
     var tagbar = document.getElementById("tagbar");
     var search = document.getElementById("search");
+    var empty = document.getElementById("qempty");
     var activeTag = new URLSearchParams(location.search).get("tag");
 
-    function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-
-    // Tags uniques
     var tags = {};
     Q.forEach(function (q) { (q.tags || []).forEach(function (t) { tags[t] = (tags[t] || 0) + 1; }); });
     if (activeTag && !tags[activeTag]) activeTag = null;
@@ -112,42 +238,22 @@
       tagbar.appendChild(a);
     });
 
-    function excerpt(md) { var t = EFMD.strip(md); return t.length > 170 ? t.slice(0, 170) + "…" : t; }
-
-    function render() {
-      var q = search.value.trim().toLowerCase();
-      var rows = Q.filter(function (item) {
-        if (activeTag && (item.tags || []).indexOf(activeTag) < 0) return false;
-        if (q.length >= 2) {
-          var hay = (item.title + " " + EFMD.strip(item.body) + " " + (item.answers || []).map(function (a) { return EFMD.strip(a.body); }).join(" ") + " " + (item.tags || []).join(" ")).toLowerCase();
-          if (hay.indexOf(q) < 0) return false;
-        }
-        return true;
-      });
-
-      if (!rows.length) { qlist.innerHTML = '<div class="empty-q">Aucune question ne correspond. <a href="https://github.com/Endorium-Group/EndoriumFort-CE/discussions/new?category=q-a" target="_blank" rel="noopener">Posez-la dans les discussions ↗</a></div>'; return; }
-
-      qlist.innerHTML = rows.map(function (item) {
-        var tagsHtml = (item.tags || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join(" ");
-        return '' +
-          '<div class="qrow">' +
-            "<div>" +
-              '<h3><a href="question.html?id=' + item.id + '">' + esc(item.title) + "</a></h3>" +
-              '<p class="excerpt">' + esc(excerpt(item.body)) + "</p>" +
-              '<div class="meta">' + tagsHtml + '<span class="who">Équipe EndoriumFort · ' + esc(item.date) + "</span></div>" +
-            "</div>" +
-          "</div>";
-      }).join("");
+    function hay(item) {
+      if (!item._hay) item._hay = (item.title + " " + EFMD.strip(item.body) + " " + (item.answers || []).map(function (a) { return EFMD.strip(a.body); }).join(" ") + " " + (item.tags || []).join(" ")).toLowerCase();
+      return item._hay;
     }
-
+    function render() {
+      var q = search.value.trim().toLowerCase(), shown = 0;
+      rows.forEach(function (row) {
+        var item = byslug[row.dataset.slug], ok = !!item;
+        if (ok && activeTag && (item.tags || []).indexOf(activeTag) < 0) ok = false;
+        if (ok && q.length >= 2 && hay(item).indexOf(q) < 0) ok = false;
+        row.hidden = !ok; if (ok) shown++;
+      });
+      empty.hidden = shown > 0;
+    }
     search.addEventListener("input", render);
     render();
-
-    document.getElementById("themeToggle").addEventListener("click", function () {
-      var n = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", n);
-      try { localStorage.setItem("ef-theme", n); } catch (e) {}
-    });
   })();
   </script>
 </body>

@@ -1,0 +1,129 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MFA (TOTP &amp; passkeys) — Documentation EndoriumFort</title>
+  <meta name="description" content="MFA dans EndoriumFort : qui doit enrôler un second facteur, enrôler un TOTP ou une passkey (WebAuthn), connexion, perte d'un facteur, bonnes pratiques." />
+  <link rel="canonical" href="https://endorium.space/docs/mfa/" />
+  <meta property="og:title" content="MFA (TOTP &amp; passkeys) — Documentation EndoriumFort" />
+  <meta property="og:description" content="MFA dans EndoriumFort : qui doit enrôler un second facteur, enrôler un TOTP ou une passkey (WebAuthn), connexion, perte d'un facteur, bonnes pratiques." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/mfa/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"MFA (TOTP & passkeys)","item":"https://endorium.space/docs/mfa/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/" class="active" aria-current="page">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>MFA — TOTP &amp; passkeys</h1>
+<p>EndoriumFort prend en charge deux seconds facteurs :</p>
+<ul><li><strong>TOTP</strong> — un code à 6 chiffres renouvelé toutes les 30 secondes, produit par une application d'authentification (FreeOTP, Aegis, Google Authenticator, 1Password…) ;</li><li><strong>passkeys / WebAuthn</strong> — empreinte, reconnaissance faciale, code de l'appareil ou clé de sécurité FIDO2 (YubiKey, SoloKey…).</li></ul>
+<h2>Qui doit enrôler un second facteur</h2>
+<table><thead><tr><th>Compte</th><th>Second facteur</th></tr></thead><tbody><tr><td><strong>Administrateurs</strong></td><td><strong>obligatoire</strong> : un nouvel administrateur ne peut rien faire tant qu'il n'en a pas enrôlé un.</td></tr><tr><td><strong>Opérateurs et auditeurs</strong></td><td>recommandé, à l'initiative de chacun.</td></tr></tbody></table>
+<p>L'obligation est appliquée <strong>côté serveur</strong> : tant que l'enrôlement n'est pas fait, le compte n'accède qu'aux écrans de configuration initiale, et aucun jeton ne permet de le contourner.</p>
+<p>Un administrateur ne peut pas retirer son <strong>dernier</strong> facteur : pour supprimer son TOTP, il doit avoir une passkey, et inversement.</p>
+<p>Le bilan <strong>Administration → Sécurité</strong> signale les administrateurs sans MFA.</p>
+<h2>Enrôler un TOTP</h2>
+<ol><li><strong>Mon compte → Sécurité</strong>, ou l'écran de configuration initiale.</li><li>Scannez le QR code avec votre application, ou saisissez le secret affiché.</li><li>Validez avec le code à 6 chiffres.</li></ol>
+<p>L'heure du serveur et celle du téléphone doivent être justes : un décalage de plus de quelques dizaines de secondes fait échouer les codes.</p>
+<h2>Enrôler une passkey</h2>
+<ol><li><strong>Mon compte → Sécurité → Ajouter une passkey.</strong></li><li>Suivez l'invite du navigateur : biométrie, code de l'appareil ou clé de sécurité.</li></ol>
+<p>Vous pouvez enregistrer plusieurs passkeys, par exemple une sur l'ordinateur et une clé physique de secours. Chacune peut être retirée individuellement.</p>
+<h3>Prérequis des passkeys</h3>
+<p>Les passkeys sont liées au <strong>nom de domaine</strong> du bastion. Elles exigent :</p>
+<ul><li>un accès en <strong>HTTPS</strong> avec un certificat valide (sauf <code>localhost</code> en test) ;</li><li>un domaine stable, déclaré au bastion :</li></ul>
+<pre><code>ENDORIUMFORT_WEBAUTHN_RP_ID=bastion.example.com
+ENDORIUMFORT_WEBAUTHN_ORIGIN=https://bastion.example.com</code></pre>
+<p>Changer de domaine plus tard rend les passkeys existantes inutilisables : chacun devra en enrôler une nouvelle. Le bilan <strong>Sécurité</strong> signale une configuration invalide.</p>
+<h2>Se connecter</h2>
+<p>Après le mot de passe, la console demande le second facteur. Si vous en avez deux, elle propose d'abord votre <strong>méthode préférée</strong> (TOTP, passkey, ou « au choix »), réglable dans <strong>Mon compte → Sécurité</strong>.</p>
+<h2>Perte d'un facteur</h2>
+<ul><li><strong>Un facteur perdu sur deux</strong> : connectez-vous avec l'autre, retirez le facteur perdu et enrôlez-en un nouveau.</li><li><strong>Seul facteur perdu</strong> : la console ne propose pas de réinitialisation de MFA. Un administrateur supprime le compte puis le recrée sous le même identifiant ; l'historique reste dans le journal d'audit. Pensez à réaffecter ses ressources.</li><li><strong>Tous les administrateurs bloqués</strong> : il n'existe pas de procédure de secours intégrée. D'où l'importance d'un second facteur de secours et d'un compte <code>admin</code> de réserve. Voir <a href="../../docs/depannage/">Dépannage</a>.</li></ul>
+<h2>Bonnes pratiques</h2>
+<ul><li>Enrôlez <strong>au moins deux facteurs</strong> : une passkey et un TOTP de secours, ou deux clés physiques.</li><li>Préférez les passkeys : elles résistent à l'hameçonnage, un code TOTP non.</li><li>Demandez aux opérateurs d'enrôler un second facteur, même s'il ne leur est pas imposé.</li></ul>
+<h2>Événements</h2>
+<p><code>user.webauthn.register</code> et <code>user.webauthn.delete</code> tracent l'ajout et le retrait des passkeys ; les connexions apparaissent sous <code>auth.login.success</code> et <code>auth.login.failure</code>.</p>
+<nav class="pager"><a class="prev" href="../../docs/utilisateurs/"><span>Précédent</span>Utilisateurs &amp; rôles</a><a class="next" href="../../docs/coffre/"><span>Suivant</span>Coffre-fort de secrets</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

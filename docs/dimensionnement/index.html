@@ -1,0 +1,144 @@
+<!doctype html>
+<!-- Généré par scripts/build.mjs : ne pas modifier à la main. -->
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dimensionnement — Documentation EndoriumFort</title>
+  <meta name="description" content="Dimensionner un bastion EndoriumFort : CPU, mémoire, disque pour les enregistrements et journaux, bande passante, limites à relever, SQLite ou PostgreSQL." />
+  <link rel="canonical" href="https://endorium.space/docs/dimensionnement/" />
+  <meta property="og:title" content="Dimensionnement — Documentation EndoriumFort" />
+  <meta property="og:description" content="Dimensionner un bastion EndoriumFort : CPU, mémoire, disque pour les enregistrements et journaux, bande passante, limites à relever, SQLite ou PostgreSQL." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://endorium.space/docs/dimensionnement/" />
+  <meta property="og:image" content="https://endorium.space/assets/logo-full-blue.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="../../assets/logo-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/app.css" />
+  <script>(function(){try{var t=localStorage.getItem("ef-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Documentation","item":"https://endorium.space/docs/"},{"@type":"ListItem","position":2,"name":"Dimensionnement","item":"https://endorium.space/docs/dimensionnement/"}]}</script>
+</head>
+<body data-root="../../">
+  <header class="hdr">
+    <div class="hdr-in">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Sommaire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <a class="brand" href="../../"><img src="../../assets/logo-mark.png" alt="" /><span>Endorium<b>Fort</b></span></a>
+      <nav>
+        <a href="../../">Site</a>
+        <a href="../../docs/" class="active">Docs</a>
+        <a href="../../community/">Communauté</a>
+      </nav>
+      <span class="spacer"></span>
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="search" type="search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher dans la documentation" />
+        <div class="search-results" id="searchResults" hidden></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Thème"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <p class="side-group">Prise en main</p>
+      <a href="../../docs/">Introduction</a>
+      <a href="../../docs/concepts/">Concepts</a>
+      <a href="../../docs/dimensionnement/" class="active" aria-current="page">Dimensionnement</a>
+      <a href="../../docs/installation/">Installation (Docker)</a>
+      <a href="../../docs/installation-debian/">Installation (Debian)</a>
+      <a href="../../docs/kubernetes/">Installation (Kubernetes)</a>
+      <a href="../../docs/premier-demarrage/">Premier démarrage</a>
+      <a href="../../docs/console/">Visite de la console</a>
+      <p class="side-group">Accès</p>
+      <a href="../../docs/ressources/">Déclarer une ressource</a>
+      <a href="../../docs/regles-acces/">Règles d'accès</a>
+      <a href="../../docs/session-ssh/">Session SSH</a>
+      <a href="../../docs/garde-fou-ssh/">Garde-fou de commandes SSH</a>
+      <a href="../../docs/proxy-rbi/">Navigateur isolé (RBI)</a>
+      <a href="../../docs/machine-de-rebond/">Machine de rebond</a>
+      <a href="../../docs/acces-direct/">Accès direct aux applications</a>
+      <a href="../../docs/rdp-navigateur/">RDP navigateur &amp; RemoteApp</a>
+      <a href="../../docs/partage-fichiers/">Partage de fichiers</a>
+      <a href="../../docs/workspace/">Endorium Workspace</a>
+      <a href="../../docs/sessions/">Sessions</a>
+      <a href="../../docs/relais/">Relais de site</a>
+      <p class="side-group">Identités &amp; secrets</p>
+      <a href="../../docs/utilisateurs/">Utilisateurs &amp; rôles</a>
+      <a href="../../docs/mfa/">MFA (TOTP &amp; passkeys)</a>
+      <a href="../../docs/coffre/">Coffre-fort de secrets</a>
+      <p class="side-group">Traçabilité</p>
+      <a href="../../docs/audit/">Journal d'audit</a>
+      <a href="../../docs/rapports/">Rapports</a>
+      <p class="side-group">Exploitation</p>
+      <a href="../../docs/tls-reverse-proxy/">TLS &amp; reverse-proxy</a>
+      <a href="../../docs/base-de-donnees/">Base de données</a>
+      <a href="../../docs/sauvegarde/">Sauvegarde &amp; restauration</a>
+      <a href="../../docs/mise-a-jour/">Mise à jour</a>
+      <a href="../../docs/durcissement/">Durcissement</a>
+      <a href="../../docs/depannage/">Dépannage</a>
+      <p class="side-group">Référence</p>
+      <a href="../../docs/configuration/">Variables d'environnement</a>
+      <a href="../../docs/api/">API REST</a>
+      <a href="../../docs/glossaire/">Glossaire</a>
+      <a href="../../docs/editions/">Éditions (CE/EE)</a>
+    </aside>
+    <main class="content">
+      <article class="content-inner md" id="content">
+<h1>Dimensionnement</h1>
+<p>Ce dont un bastion EndoriumFort a besoin en CPU, mémoire, disque et bande passante, et quels réglages relever quand on dépasse les valeurs livrées.</p>
+<p>En bref : <strong>le nombre de cibles et de comptes compte à peine. Ce qui consomme, c'est le nombre de sessions ouvertes en même temps, leur type, et la durée de conservation des enregistrements.</strong> Une session de navigateur isolé (RBI) coûte autant de mémoire qu'une centaine de sessions SSH, et les enregistrements sont presque toujours le premier poste de disque.</p>
+<blockquote><p>Pas envie de calculer à la main ? Le <a href="../../#sizing">calculateur de la page d'accueil</a> fait ces calculs à partir de vos chiffres et donne les réglages Docker Compose ou Helm à appliquer.</p></blockquote>
+<p>Les chiffres ci-dessous viennent de mesures de l'image actuelle, arrondis vers le haut. Quand ils dépendent de l'usage, ils sont donnés en fourchette. Vérifiez-les sur votre installation après quelques semaines (voir « Vérifier en production » en bas de page).</p>
+<h2>Profils types</h2>
+<table><thead><tr><th>Profil</th><th>Sessions simultanées</th><th>Cibles / comptes</th><th>vCPU</th><th>RAM</th><th>Disque des enregistrements</th><th>Base</th></tr></thead><tbody><tr><td><strong>Lab / PoC</strong></td><td>jusqu'à 10 SSH, 1 à 2 RBI</td><td>≤ 50 / ≤ 20</td><td>2–3</td><td>2–3 Go</td><td>20 Go (30 jours)</td><td>SQLite</td></tr><tr><td><strong>Petite équipe</strong></td><td>jusqu'à 50 SSH ou tunnels, ≤ 5 RBI</td><td>≤ 500 / ≤ 100</td><td>2–4</td><td>4–6 Go</td><td>0,3–1 To (1 an)</td><td>SQLite</td></tr><tr><td><strong>Taille moyenne</strong></td><td>jusqu'à 200 SSH ou tunnels, ≤ 12 RBI</td><td>≤ 2 000 / ≤ 500</td><td>4–8</td><td>8–12 Go</td><td>1–3 To (1 an)</td><td>PostgreSQL conseillé</td></tr><tr><td><strong>Grande taille</strong></td><td>500 et plus, 20 RBI et plus</td><td>5 000+ / 1 000+</td><td>8–16</td><td>16–32 Go</td><td>3 To et plus (1 an)</td><td>PostgreSQL externe</td></tr></tbody></table>
+<ul><li>La colonne <strong>disque</strong> suppose l'enregistrement RBI actif (Enterprise). Avec des terminaux seulement, divisez-la par dix ou plus.</li><li><strong>Simultanées</strong> veut dire ouvertes au même moment, pas utilisateurs par jour. Une équipe de 100 administrateurs a rarement plus de 20 à 30 sessions ouvertes à la fois.</li><li>Pour la <strong>grande taille</strong>, placez des relais au plus près de chaque zone réseau : ils déchargent le bastion du trafic des tunnels.</li><li>Le service de partage de fichiers se dimensionne à part : son disque est la somme des quotas des espaces utilisateurs (<code>EF_FS_QUOTA_MB</code>, 10 Go par utilisateur par défaut). Voir <a href="../../docs/partage-fichiers/">Partage de fichiers</a>.</li></ul>
+<h2>Ce que coûte chaque élément</h2>
+<h3>Mémoire et CPU</h3>
+<table><thead><tr><th>Élément</th><th>Mémoire</th><th>CPU</th><th>Remarques</th></tr></thead><tbody><tr><td>Bastion au repos (backend et nginx)</td><td>~30 Mo</td><td>~0</td><td>Mesuré : le backend seul prend 15 Mo avec une base vide</td></tr><tr><td>Système et marge</td><td>512 Mo à 1 Go</td><td>—</td><td>À garder quel que soit le profil</td></tr><tr><td>Terminal SSH web</td><td>2–5 Mo</td><td>&lt; 1 % d'un cœur</td><td>Un thread de lecture par session</td></tr><tr><td>Shell Kubernetes (Enterprise)</td><td>40–60 Mo</td><td>faible</td><td>Chaque shell lance son propre processus <code>kubectl exec</code></td></tr><tr><td>Tunnel agent : RDP natif, VNC, TCP</td><td>1–2 Mo</td><td>suit le trafic</td><td>Les octets sont relayés, pas décodés</td></tr><tr><td>VNC dans le navigateur (noVNC)</td><td>1–2 Mo</td><td>faible</td><td>Le bastion relaie le flux RFB</td></tr><tr><td>Session du proxy de base de données (Enterprise)</td><td>1–3 Mo</td><td>faible</td><td>Plus une ligne en base par requête SQL (voir le disque)</td></tr><tr><td><strong>Navigateur isolé (RBI)</strong></td><td><strong>300–500 Mo</strong></td><td><strong>0,3 à 1 cœur</strong> quand la page bouge</td><td>Mesuré : un Chromium headless prend ~290 Mo et 77 threads sur une page simple. Les applications web lourdes (vCenter, Grafana) dépassent 500 Mo</td></tr><tr><td>1 000 cibles ou comptes</td><td>~5–10 Mo</td><td>~0</td><td>Gardés en mémoire ; leur nombre n'est pas un facteur de dimensionnement</td></tr></tbody></table>
+<h3>Formules</h3>
+<pre><code>RAM   ≈ 1 Go
+      + 5 Mo   × sessions SSH, tunnels et proxy de base simultanés
+      + 50 Mo  × shells Kubernetes simultanés
+      + 400 Mo × sessions RBI simultanées
+      puis 30 % de marge
+
+vCPU  ≈ 1
+      + 0,5 × sessions RBI simultanées
+      + 1 par tranche de ~300 sessions SSH simultanées
+      + 1 par tranche de ~500 Mbit/s de trafic de tunnel (TLS)
+      minimum 2</code></pre>
+<p>Exemple : 60 sessions SSH, 10 tunnels et 6 sessions RBI. RAM ≈ 1 Go + 70 × 5 Mo + 6 × 400 Mo ≈ 3,75 Go, donc 5 Go avec la marge. vCPU ≈ 1 + 3 + 1 = 5, donc 4 à 6 vCPU.</p>
+<h2>Disque : enregistrements et journaux</h2>
+<p>Les enregistrements sont gardés jusqu'à ce que vous les supprimiez : <strong>il n'y a pas de purge automatique</strong>. Dimensionnez le volume des enregistrements pour toute la durée de conservation voulue, et surveillez-le.</p>
+<table><thead><tr><th>Donnée</th><th>Emplacement</th><th>Taille typique</th><th>Remarques</th></tr></thead><tbody><tr><td>Enregistrement SSH ou Kubernetes (<code>.cast</code>, Enterprise)</td><td>volume des enregistrements</td><td>0,1–1 Mo par heure de travail interactif</td><td>Les commandes qui affichent beaucoup (<code>tail -f</code>, <code>cat</code> de logs, builds) montent à 10–100 Mo par heure</td></tr><tr><td>Enregistrement RBI (<code>.efr</code>, Enterprise)</td><td>volume des enregistrements</td><td>0,3–1 Go par heure d'utilisation</td><td>Images JPEG, écrites seulement quand la page change. Jusqu'à ~5 Go par heure pour un contenu toujours en mouvement (vidéo, tableaux de bord rafraîchis en continu)</td></tr><tr><td>Index de recherche des enregistrements (Enterprise)</td><td>base</td><td>une fraction de la taille des <code>.cast</code></td><td>Seul le texte visible est indexé, pas les séquences d'échappement</td></tr><tr><td>Journal d'audit</td><td>volume de données</td><td>~0,5 Ko par événement, 20 à 50 événements par session</td><td>~1 Mo pour 1 000 sessions. Il grossit tant que le bastion tourne : exportez-le vers un SIEM pour la conservation longue (<a href="../../docs/audit/">Journal d'audit</a>)</td></tr><tr><td>Journal des requêtes du proxy de base (Enterprise)</td><td>base</td><td>0,3–1 Ko par requête SQL</td><td>Une application qui envoie des milliers de requêtes par minute à travers le proxy le remplit vite</td></tr><tr><td>Base (comptes, cibles, sessions)</td><td>volume de données ou PostgreSQL</td><td>&lt; 100 Mo pour la plupart des installations</td><td></td></tr></tbody></table>
+<pre><code>Disque des enregistrements ≈ heures de session par jour × taille par heure × jours de conservation × 1,2</code></pre>
+<p>Exemple, sur un an de conservation :</p>
+<ul><li>40 administrateurs × 4 h de SSH par jour × 0,5 Mo/h × 365 jours ≈ <strong>30 Go</strong> ;</li><li>5 utilisateurs × 2 h de RBI par jour × 0,5 Go/h × 365 jours ≈ <strong>1,8 To</strong>.</li></ul>
+<p>L'enregistrement RBI est de loin le premier poste. Pour le réduire, baissez <code>ENDORIUMFORT_RBI_MAX_FPS</code> (20 par défaut) et <code>ENDORIUMFORT_RBI_JPEG_QUALITY</code> (55 par défaut). Avec une licence Enterprise, toutes les sessions RBI sont enregistrées : prévoyez le disque plutôt que de compter le désactiver cible par cible.</p>
+<p>Mettez le volume de données sur un stockage rapide en écriture : la base SQLite et le journal d'audit sont écrits à chaque action. Un stockage de capacité convient au volume des enregistrements.</p>
+<h2>Bande passante</h2>
+<p>Par session simultanée, entre le navigateur de l'opérateur et le bastion :</p>
+<table><thead><tr><th>Session</th><th>Bande passante</th></tr></thead><tbody><tr><td>Terminal SSH ou Kubernetes</td><td>quelques Ko/s</td></tr><tr><td>RDP natif par le tunnel agent</td><td>0,1–2 Mbit/s ; 10 Mbit/s et plus avec de la vidéo</td></tr><tr><td>VNC (tunnel ou noVNC)</td><td>1–5 Mbit/s</td></tr><tr><td>RBI</td><td>2–12 Mbit/s quand la page bouge, presque rien quand elle est fixe</td></tr><tr><td>Proxy de base de données</td><td>ce qu'envoie l'application</td></tr></tbody></table>
+<p>Le bastion consomme la même bande passante une seconde fois vers les cibles, sauf si un relais porte ce trajet.</p>
+<h2>Limites à relever</h2>
+<p>Les fichiers livrés sont réglés pour une petite installation. Relevez ces limites en même temps que la machine.</p>
+<table><thead><tr><th>Où</th><th>Réglage</th><th>Valeur livrée</th><th>Quand la changer</th></tr></thead><tbody><tr><td><code>docker-compose.prod.yml</code></td><td><code>mem_limit</code>, <code>cpus</code></td><td>1 Go, 1,5</td><td>Au-delà d'environ 50 sessions simultanées, ou dès que vous utilisez le RBI : mettez le résultat des formules</td></tr><tr><td><code>docker-compose.prod.yml</code></td><td><code>pids_limit</code></td><td>256</td><td><strong>Dès que vous utilisez le RBI.</strong> Chaque navigateur isolé utilise environ 80 threads, et la limite compte les threads : à 256, seules deux ou trois sessions RBI démarrent. Comptez 100 par session RBI plus 100 (par exemple 1 400 pour 12 sessions RBI)</td></tr><tr><td>Helm <code>values.yaml</code></td><td><code>resources.limits</code></td><td>1 CPU, 1 Gi</td><td>Même règle que <code>mem_limit</code> et <code>cpus</code></td></tr><tr><td>Helm <code>values.yaml</code></td><td><code>persistence</code></td><td>données 2 Gi, enregistrements 10 Gi</td><td>Taille des enregistrements selon la formule du disque</td></tr><tr><td>Environnement</td><td><code>ENDORIUMFORT_RBI_MAX_SESSIONS</code></td><td>12</td><td>Baissez-la si la machine n'a pas 400 Mo à donner par session. Au-delà du plafond, les nouvelles sessions RBI sont refusées proprement au lieu d'épuiser la mémoire</td></tr><tr><td><code>docker-compose.prod.yml</code></td><td><code>ulimits.nofile</code></td><td>65 535</td><td>Suffit pour plusieurs milliers de sessions, rien à changer</td></tr></tbody></table>
+<h2>SQLite ou PostgreSQL</h2>
+<ul><li><strong>SQLite</strong> (par défaut) ne demande aucun serveur et suffit pour les profils Lab et Petite équipe. Il fonctionne sur un seul nœud.</li><li><strong>PostgreSQL</strong> est conseillé à partir de la taille moyenne, quand le proxy de base de données Enterprise journalise beaucoup de requêtes, et dès que plusieurs instances du bastion partagent une même base. Voir <a href="../../docs/base-de-donnees/">Base de données</a>.</li></ul>
+<h2>Vérifier en production</h2>
+<ul><li><strong>Mémoire et CPU</strong> : <code>docker stats endoriumfort</code>, ou les métriques du pod sous Kubernetes. Regardez les pics aux heures de travail, pas la moyenne.</li><li><strong>Sessions</strong> : la métrique Prometheus <code>endoriumfort_sessions_active</code> (par protocole), exposée sur <code>/api/metrics</code>, donne les sessions simultanées.</li><li><strong>Disque</strong> : <code>du -sh</code> sur les volumes des enregistrements et des données, une fois par semaine le premier mois, puis extrapolez à votre durée de conservation.</li><li><strong>RBI</strong> : le message « Server at RBI capacity, retry shortly » signale que <code>ENDORIUMFORT_RBI_MAX_SESSIONS</code> est atteint. Un navigateur qui ne démarre pas signale en général un <code>pids_limit</code> ou une mémoire épuisés.</li></ul>
+<nav class="pager"><a class="prev" href="../../docs/concepts/"><span>Précédent</span>Concepts</a><a class="next" href="../../docs/installation/"><span>Suivant</span>Installation (Docker)</a></nav>
+      </article>
+    </main>
+  </div>
+
+  <script src="../../assets/md.js"></script>
+  <script src="../../docs/nav.js"></script>
+  <script src="../../assets/page.js"></script>
+  <script src="../../assets/docs.js"></script>
+</body>
+</html>

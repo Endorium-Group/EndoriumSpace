@@ -27,8 +27,10 @@ sombre.
 
 Trois espaces s'ajoutent à la page d'accueil : la documentation, un fil de
 questions communautaires, et les pages légales. Leur contenu est écrit en
-Markdown et rendu côté client, donc ajouter une page ne demande aucune
-recompilation.
+Markdown. Pour les moteurs de recherche, chaque page de documentation et
+chaque question a sa propre URL (`/docs/coffre/`, `/community/postgresql/`),
+pré-rendue en HTML par `scripts/build.mjs` et versionnée : le site reste servi
+tel quel, sans étape de build au déploiement.
 
 ---
 
@@ -39,21 +41,30 @@ EndoriumSpace/
 ├── index.html          page d'accueil, toutes les sections
 ├── styles.css          système de design (clair + sombre)
 ├── main.js             thème, menu mobile, onglets, copie, animations
+├── robots.txt          déclare le sitemap
+├── sitemap.xml         URL de référence (généré)
 ├── assets/
 │   ├── logo-*.png      logos repris du produit
 │   ├── app.css         styles des espaces docs/community/legal
-│   ├── md.js           rendu Markdown côté client
+│   ├── md.js           rendu Markdown (navigateur et générateur)
+│   ├── page.js         thème, sommaire mobile, copie (pages générées)
+│   ├── docs.js         recherche de la doc, anciens liens docs/#/<page>
 │   └── sizing.js       calculateur de dimensionnement (section #sizing)
 ├── docs/
-│   ├── index.html      espace documentation
-│   └── content/        pages Markdown
+│   ├── nav.js          sommaire : sections, pages, meta descriptions
+│   ├── content/        pages Markdown (source)
+│   ├── index.html      introduction (généré)
+│   └── <page>/         une page par entrée du sommaire (généré)
 ├── community/
-│   ├── index.html      liste des questions
-│   ├── question.html   vue d'une question
-│   └── data/           contenu des questions
+│   ├── index.html      liste des questions (liste générée entre marqueurs)
+│   ├── data/           contenu des questions (source)
+│   ├── <slug>/         une page par question (généré)
+│   └── question.html   anciens liens ?id= → page de la question
 ├── legal/
 │   ├── index.html      espace légal
 │   └── content/        mentions, politiques
+├── scripts/build.mjs   générateur des pages statiques (Node, sans dépendance)
+├── nginx.conf          redirections (index.html → /, /demo/ → GitHub Pages), 404
 ├── Dockerfile          image nginx servant le site
 └── docker-compose.yml  service pour un reverse-proxy Caddy existant
 ```
@@ -75,8 +86,31 @@ python3 -m http.server 8080
 | PHP | `php -S localhost:8080` |
 | Caddy | `caddy file-server --listen :8080` |
 
-Ouvrir `index.html` par `file://` casse le rendu Markdown des espaces `docs/`,
-`community/` et `legal/` : il faut passer par un serveur HTTP.
+Ouvrir `index.html` par `file://` casse le rendu Markdown de l'espace `legal/`
+et la recherche : il faut passer par un serveur HTTP.
+
+---
+
+## Pages générées et référencement
+
+Après toute modification de `docs/content/`, `docs/nav.js` ou
+`community/data/questions.js` :
+
+```bash
+node scripts/build.mjs           # régénère docs/<page>/, community/<slug>/, sitemap.xml
+node scripts/build.mjs --check   # ce que vérifie la CI (workflows Site check et Pages)
+```
+
+- **Ajouter une page de doc** : le fichier dans `docs/content/`, une entrée dans
+  `docs/nav.js` avec une `description` de 120 à 155 caractères (meta description).
+- **Ajouter une question** : un bloc dans `community/data/questions.js`, avec
+  `slug` et `description` ; `seoTitle` raccourcit le `<title>` si la question
+  est longue. Une réponse courte se positionne mal : viser 300 mots, avec des
+  exemples de configuration.
+- Les liens internes s'écrivent comme avant (`#/coffre`, `../docs/#/coffre`) :
+  le générateur les réécrit vers les URL statiques, et échoue sur une page inconnue.
+- Chaque page porte une URL canonique sur `https://endorium.space/` (les filtres
+  `community/?tag=…` pointent vers `/community/`, la copie GitHub Pages vers le domaine).
 
 ---
 
@@ -165,6 +199,9 @@ endorium.space {
     reverse_proxy endoriumspace:80
 }
 ```
+
+`nginx.conf` (dans l'image) redirige déjà `…/index.html` vers `…/` (301) et
+`/demo/` vers la démo publiée sur GitHub Pages (302) : rien à ajouter côté Caddy.
 
 Recharger ensuite Caddy (`caddy reload`, ou
 `docker exec <caddy> caddy reload --config /etc/caddy/Caddyfile`). Pour publier
